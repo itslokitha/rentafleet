@@ -78,7 +78,7 @@ class RAF_Admin {
             __( 'Locations', 'rentafleet' ),
             'manage_options',
             'raf-locations',
-            array( $this, 'page_placeholder' )
+            array( 'RAF_Admin_Locations', 'render' )
         );
 
         // Submenu: Bookings
@@ -118,18 +118,10 @@ class RAF_Admin {
             __( 'Pricing & Rates', 'rentafleet' ),
             'manage_options',
             'raf-pricing',
-            array( $this, 'page_placeholder' )
+            array( 'RAF_Admin_Pricing', 'render' )
         );
 
-        // Submenu: Extras & Insurance
-        add_submenu_page(
-            'rentafleet',
-            __( 'Extras & Insurance', 'rentafleet' ),
-            __( 'Extras & Insurance', 'rentafleet' ),
-            'manage_options',
-            'raf-extras',
-            array( $this, 'page_placeholder' )
-        );
+        // Note: Extras & Insurance are managed under Pricing & Rates tabs
 
         // Submenu: Coupons
         add_submenu_page(
@@ -168,7 +160,7 @@ class RAF_Admin {
             __( 'Settings', 'rentafleet' ),
             'manage_options',
             'raf-settings',
-            array( $this, 'page_placeholder' )
+            array( 'RAF_Admin_Settings', 'render' )
         );
     }
 
@@ -199,6 +191,15 @@ class RAF_Admin {
                 break;
             case 'raf-bookings':
                 RAF_Admin_Bookings::handle_action( $action );
+                break;
+            case 'raf-pricing':
+                RAF_Admin_Pricing::handle_action( $action );
+                break;
+            case 'raf-locations':
+                RAF_Admin_Locations::handle_action( $action );
+                break;
+            case 'raf-settings':
+                RAF_Admin_Settings::handle_action( $action );
                 break;
             // Future pages will be added here as they are built:
             // case 'raf-locations':

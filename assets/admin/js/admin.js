@@ -220,6 +220,83 @@
     } );
 
     /* ================================================================
+       LOCATION IMAGE (uses same media library pattern)
+       ============================================================= */
+
+    $( '#raf-location-image-upload' ).on( 'click', function( e ) {
+        e.preventDefault();
+        var frame = wp.media({ title: 'Select Image', multiple: false, library: { type: 'image' } });
+        frame.on( 'select', function() {
+            var attachment = frame.state().get( 'selection' ).first().toJSON();
+            $( '#raf-location-image-id' ).val( attachment.id );
+            var url = attachment.sizes && attachment.sizes.medium ? attachment.sizes.medium.url : attachment.url;
+            $( '#raf-location-image-preview' ).html( '<img src="' + url + '" style="max-width:100%;height:auto;">' );
+            $( '#raf-location-image-remove' ).show();
+        } );
+        frame.open();
+    } );
+
+    $( '#raf-location-image-remove' ).on( 'click', function() {
+        $( '#raf-location-image-id' ).val( '' );
+        $( '#raf-location-image-preview' ).empty();
+        $( this ).hide();
+    } );
+
+    /* ================================================================
+       COMPANY LOGO (Settings page)
+       ============================================================= */
+
+    $( '#raf-company-logo-upload' ).on( 'click', function( e ) {
+        e.preventDefault();
+        var frame = wp.media({ title: 'Select Logo', multiple: false, library: { type: 'image' } });
+        frame.on( 'select', function() {
+            var attachment = frame.state().get( 'selection' ).first().toJSON();
+            $( '#raf-company-logo-id' ).val( attachment.id );
+            var url = attachment.sizes && attachment.sizes.medium ? attachment.sizes.medium.url : attachment.url;
+            $( '#raf-company-logo-preview' ).html( '<img src="' + url + '" style="max-width:200px;height:auto;">' );
+            $( '#raf-company-logo-remove' ).show();
+        } );
+        frame.open();
+    } );
+
+    $( '#raf-company-logo-remove' ).on( 'click', function() {
+        $( '#raf-company-logo-id' ).val( '' );
+        $( '#raf-company-logo-preview' ).empty();
+        $( this ).hide();
+    } );
+
+    /* ================================================================
+       OPENING HOURS TOGGLE
+       ============================================================= */
+
+    $( '.raf-hours-toggle' ).on( 'change', function() {
+        var row = $( this ).closest( 'tr' );
+        row.find( '.raf-hours-input' ).prop( 'disabled', ! this.checked );
+        row.css( 'opacity', this.checked ? 1 : 0.5 );
+    } ).trigger( 'change' );
+
+    /* ================================================================
+       RATE ASSIGN TYPE TOGGLE (vehicle vs category)
+       ============================================================= */
+
+    function rafToggleRateAssign() {
+        var type = $( '#raf-rate-assign-type' ).val();
+        if ( type === 'vehicle' ) {
+            $( '.raf-rate-vehicle-field' ).show();
+            $( '.raf-rate-category-field' ).hide();
+        } else {
+            $( '.raf-rate-vehicle-field' ).hide();
+            $( '.raf-rate-category-field' ).show();
+        }
+    }
+
+    $( '#raf-rate-assign-type' ).on( 'change', rafToggleRateAssign );
+    // Run on page load
+    if ( $( '#raf-rate-assign-type' ).length ) {
+        rafToggleRateAssign();
+    }
+
+    /* ================================================================
        DATEPICKER INIT (for future pages that need it)
        ============================================================= */
 

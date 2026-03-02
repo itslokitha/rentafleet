@@ -806,3 +806,48 @@
     color: #444;
     font-style: italic;
 }
+
+/* ================================================================
+   FIELD ROW (side-by-side fields)
+   ============================================================= */
+
+.raf-field-row {
+    display: flex;
+    gap: 12px;
+}
+
+.raf-field-row > .raf-field {
+    flex: 1;
+}
+
+/* ================================================================
+   OPENING HOURS TABLE
+   ============================================================= */
+
+.raf-hours-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.raf-hours-table th,
+.raf-hours-table td {
+    padding: 8px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--raf-border-light);
+    vertical-align: middle;
+}
+
+.raf-hours-table thead th {
+    font-weight: 600;
+    color: #666;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.raf-hours-table input[type="time"] {
+    width: 130px;
+}
+
+.raf-hours-table tr {
+    transition: opacity 0.15s;
+}
