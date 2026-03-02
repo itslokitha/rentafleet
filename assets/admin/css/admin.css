@@ -1,0 +1,808 @@
+/**
+ * RentAFleet — Admin Stylesheet
+ *
+ * Provides styling for all admin pages: dashboard, vehicles, locations,
+ * bookings, etc.  Builds on top of WordPress admin defaults.
+ *
+ * @package RentAFleet
+ * @since   1.0.0
+ */
+
+/* ================================================================
+   BASE RESETS & VARIABLES
+   ============================================================= */
+
+:root {
+    --raf-primary: #0073aa;
+    --raf-primary-hover: #005a87;
+    --raf-success: #46b450;
+    --raf-warning: #ffb900;
+    --raf-danger: #dc3232;
+    --raf-info: #00a0d2;
+    --raf-muted: #999;
+    --raf-bg: #f0f0f1;
+    --raf-white: #fff;
+    --raf-border: #ccd0d4;
+    --raf-border-light: #e2e4e7;
+    --raf-radius: 4px;
+    --raf-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
+/* ================================================================
+   PANELS — The main content cards
+   ============================================================= */
+
+.raf-panel {
+    background: var(--raf-white);
+    border: 1px solid var(--raf-border);
+    border-radius: var(--raf-radius);
+    box-shadow: var(--raf-shadow);
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.raf-panel > h2 {
+    margin: 0;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--raf-border-light);
+    background: #fafafa;
+}
+
+.raf-panel > .form-table,
+.raf-panel > table.form-table {
+    margin: 0;
+}
+
+.raf-panel > .form-table th {
+    width: 180px;
+    padding-left: 16px;
+}
+
+.raf-panel > .form-table td {
+    padding-right: 16px;
+}
+
+.raf-panel > p,
+.raf-panel > .description,
+.raf-panel > .raf-field,
+.raf-panel > .raf-checkbox-grid,
+.raf-panel > .raf-locations-table,
+.raf-panel > .raf-publish-inside {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.raf-panel > p.description:first-of-type {
+    padding-top: 12px;
+}
+
+/* ================================================================
+   TAB WRAPPER override
+   ============================================================= */
+
+.raf-tab-wrapper {
+    margin-bottom: 20px;
+}
+
+/* ================================================================
+   FILTER BAR (search + dropdowns)
+   ============================================================= */
+
+.raf-filter-form {
+    margin-top: 8px;
+}
+
+.raf-filter-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.raf-filter-bar select {
+    max-width: 200px;
+}
+
+.raf-filter-bar input[type="search"] {
+    width: 220px;
+}
+
+/* ================================================================
+   VEHICLES TABLE
+   ============================================================= */
+
+.raf-vehicles-table .column-cb {
+    width: 2.2em;
+}
+
+.raf-vehicles-table .column-image {
+    width: 70px;
+}
+
+.raf-vehicles-table .column-image img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+.raf-no-image {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: var(--raf-bg);
+    border-radius: 3px;
+    font-size: 24px;
+    color: var(--raf-muted);
+}
+
+.raf-license-plate {
+    display: inline-block;
+    background: #f0f0f1;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 11px;
+    font-family: monospace;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.raf-vehicles-table .column-specs {
+    font-size: 12px;
+    color: #666;
+}
+
+/* ================================================================
+   STATUS BADGES
+   ============================================================= */
+
+.raf-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.6;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.raf-badge-active,
+.raf-badge-confirmed,
+.raf-badge-completed,
+.raf-badge-paid {
+    background: #edf7ee;
+    color: #1e7e34;
+}
+
+.raf-badge-inactive,
+.raf-badge-cancelled,
+.raf-badge-refunded {
+    background: #fce4e4;
+    color: #c62828;
+}
+
+.raf-badge-pending {
+    background: #fff8e1;
+    color: #f57f17;
+}
+
+.raf-badge-draft,
+.raf-badge-noshow,
+.raf-badge-no_show {
+    background: #f0f0f1;
+    color: #666;
+}
+
+.raf-badge-partial {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.raf-badge-failed {
+    background: #fce4e4;
+    color: #c62828;
+}
+
+.raf-muted {
+    color: var(--raf-muted);
+}
+
+/* ================================================================
+   BACK LINK
+   ============================================================= */
+
+.raf-back-link {
+    display: inline-block;
+    margin: 12px 0 8px;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+/* ================================================================
+   VEHICLE FORM — Two-column layout with sidebar
+   ============================================================= */
+
+#post-body.columns-2 #post-body-content {
+    float: left;
+    width: calc(100% - 320px);
+    margin-right: 20px;
+}
+
+#post-body.columns-2 #postbox-container-1 {
+    float: right;
+    width: 300px;
+}
+
+@media screen and (max-width: 960px) {
+    #post-body.columns-2 #post-body-content {
+        float: none;
+        width: 100%;
+        margin-right: 0;
+    }
+    #post-body.columns-2 #postbox-container-1 {
+        float: none;
+        width: 100%;
+    }
+}
+
+/* ================================================================
+   PUBLISH BOX (sidebar)
+   ============================================================= */
+
+.raf-publish-box .raf-publish-inside {
+    padding: 12px 16px 16px;
+}
+
+.raf-publish-box .raf-field {
+    margin-bottom: 12px;
+    padding: 0;
+}
+
+.raf-publish-box .raf-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.raf-publish-box .raf-field select,
+.raf-publish-box .raf-field input {
+    width: 100%;
+}
+
+.raf-publish-box .raf-field input.small-text {
+    width: 80px;
+}
+
+.raf-publish-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    margin-top: 12px;
+    border-top: 1px solid var(--raf-border-light);
+}
+
+.raf-publish-actions .submitdelete {
+    color: var(--raf-danger);
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.raf-publish-actions .submitdelete:hover {
+    color: #a00;
+}
+
+/* ================================================================
+   IMAGE PANEL (featured + gallery sidebar)
+   ============================================================= */
+
+.raf-image-panel > h2 + div,
+.raf-image-panel > h2 + input + div {
+    padding: 12px 16px;
+}
+
+.raf-image-panel p {
+    padding: 0 16px 12px;
+    margin: 0;
+}
+
+.raf-featured-image-wrap {
+    padding: 12px 16px;
+}
+
+#raf-featured-image-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 3px;
+    margin-bottom: 8px;
+}
+
+/* Gallery grid */
+.raf-gallery-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px 8px;
+}
+
+.raf-gallery-thumb {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.raf-gallery-thumb img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 3px;
+    border: 1px solid var(--raf-border);
+}
+
+.raf-gallery-remove {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--raf-danger);
+    color: #fff;
+    border: 2px solid #fff;
+    font-size: 12px;
+    line-height: 14px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.raf-gallery-remove:hover {
+    background: #a00;
+}
+
+/* ================================================================
+   CHECKBOX GRID (features)
+   ============================================================= */
+
+.raf-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 6px 16px;
+    padding: 12px 16px 16px;
+}
+
+.raf-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.raf-checkbox-item input[type="checkbox"] {
+    margin: 0;
+}
+
+/* ================================================================
+   LOCATIONS TABLE (in vehicle form)
+   ============================================================= */
+
+.raf-locations-table {
+    margin: 12px 16px 16px !important;
+    width: calc(100% - 32px) !important;
+    max-width: 600px !important;
+}
+
+.raf-locations-table th {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.raf-locations-table input[type="number"] {
+    width: 70px;
+}
+
+.raf-locations-table input[type="number"]:disabled {
+    opacity: 0.4;
+}
+
+/* ================================================================
+   TWO-COLUMN LAYOUT (categories)
+   ============================================================= */
+
+.raf-two-col-layout {
+    display: flex;
+    gap: 20px;
+    margin-top: 16px;
+}
+
+.raf-col-form {
+    flex: 0 0 340px;
+    min-width: 0;
+}
+
+.raf-col-list {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+@media screen and (max-width: 960px) {
+    .raf-two-col-layout {
+        flex-direction: column;
+    }
+    .raf-col-form {
+        flex: none;
+        width: 100%;
+    }
+}
+
+.raf-col-form .raf-panel {
+    padding-bottom: 16px;
+}
+
+.raf-col-form .raf-field {
+    margin-bottom: 12px;
+    padding: 0 16px;
+}
+
+.raf-col-form .raf-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+.raf-col-form .raf-field .widefat {
+    width: 100%;
+}
+
+#raf-cat-image-preview img {
+    max-width: 120px;
+    height: auto;
+    border-radius: 3px;
+    margin-bottom: 8px;
+}
+
+/* ================================================================
+   DASHBOARD — Stats Grid
+   ============================================================= */
+
+.raf-dashboard .raf-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.raf-stat-card {
+    background: var(--raf-white);
+    border: 1px solid var(--raf-border);
+    border-radius: var(--raf-radius);
+    padding: 16px 20px;
+    box-shadow: var(--raf-shadow);
+}
+
+.raf-stat-card h3 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #666;
+}
+
+.raf-stat-number {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1d2327;
+}
+
+.raf-stat-revenue .raf-stat-number {
+    color: var(--raf-success);
+}
+
+/* Dashboard columns */
+.raf-dashboard-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media screen and (max-width: 782px) {
+    .raf-dashboard-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+.raf-dashboard .raf-panel {
+    padding-bottom: 0;
+}
+
+.raf-dashboard .raf-panel > h2 {
+    font-size: 14px;
+}
+
+.raf-dashboard .raf-panel table {
+    border: none;
+    box-shadow: none;
+}
+
+/* Quick stats list */
+.raf-quick-stats {
+    margin: 0;
+    padding: 12px 16px 16px;
+    list-style: none;
+}
+
+.raf-quick-stats li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--raf-border-light);
+    font-size: 13px;
+}
+
+.raf-quick-stats li:last-child {
+    border-bottom: none;
+}
+
+/* ================================================================
+   GENERAL FORM IMPROVEMENTS
+   ============================================================= */
+
+.raf-form .form-table th {
+    vertical-align: top;
+    padding-top: 16px;
+    font-weight: 600;
+}
+
+.raf-form .form-table .description {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.raf-form .form-table select {
+    min-width: 150px;
+}
+
+/* ================================================================
+   CLEARFIX & UTILITY
+   ============================================================= */
+
+#poststuff::after,
+#post-body::after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+/* Smooth transitions */
+.raf-panel,
+.raf-stat-card,
+.button {
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.raf-panel:hover {
+    box-shadow: 0 1px 6px rgba(0,0,0,.1);
+}
+
+/* ================================================================
+   RESPONSIVE TABLE
+   ============================================================= */
+
+@media screen and (max-width: 782px) {
+    .raf-vehicles-table .column-specs,
+    .raf-vehicles-table .column-image {
+        display: none;
+    }
+}
+
+/* ================================================================
+   BOOKINGS TABLE
+   ============================================================= */
+
+.raf-bookings-table .column-booking-number {
+    width: 130px;
+}
+
+/* ================================================================
+   BOOKING VIEW — Two-column Grid
+   ============================================================= */
+
+.raf-view-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    margin-top: 16px;
+}
+
+@media screen and (max-width: 1100px) {
+    .raf-view-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.raf-view-main {
+    min-width: 0;
+}
+
+.raf-view-sidebar {
+    min-width: 0;
+}
+
+.raf-view-sidebar .raf-field label {
+    display: block;
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+/* ================================================================
+   DETAIL TABLE (key-value pairs, 4-column layout)
+   ============================================================= */
+
+.raf-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.raf-detail-table th,
+.raf-detail-table td {
+    padding: 10px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--raf-border-light);
+    vertical-align: top;
+}
+
+.raf-detail-table th {
+    font-weight: 600;
+    color: #666;
+    width: 25%;
+    white-space: nowrap;
+}
+
+.raf-detail-table tr:last-child th,
+.raf-detail-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* ================================================================
+   VEHICLE SUMMARY (in booking view)
+   ============================================================= */
+
+.raf-vehicle-summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+}
+
+.raf-vehicle-thumb img {
+    width: 100px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+.raf-vehicle-info {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ================================================================
+   PRICING TABLE
+   ============================================================= */
+
+.raf-pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.raf-pricing-table td {
+    padding: 10px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--raf-border-light);
+}
+
+.raf-price-col {
+    text-align: right;
+    white-space: nowrap;
+    width: 120px;
+}
+
+.raf-discount-row td {
+    color: var(--raf-success);
+}
+
+.raf-total-row td {
+    border-top: 2px solid var(--raf-border);
+    font-size: 14px;
+}
+
+.raf-balance-row td {
+    background: #fff8e1;
+}
+
+.raf-text-danger {
+    color: var(--raf-danger);
+}
+
+.raf-coupon-tag {
+    display: inline-block;
+    background: #f0f0f1;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 11px;
+    font-family: monospace;
+    margin-left: 4px;
+}
+
+/* ================================================================
+   TIMELINE (Activity Log)
+   ============================================================= */
+
+.raf-timeline {
+    padding: 12px 16px;
+    position: relative;
+}
+
+.raf-timeline::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 20px;
+    bottom: 20px;
+    width: 2px;
+    background: var(--raf-border-light);
+}
+
+.raf-timeline-item {
+    display: flex;
+    gap: 12px;
+    padding-bottom: 16px;
+    position: relative;
+}
+
+.raf-timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.raf-timeline-dot {
+    flex: 0 0 12px;
+    width: 12px;
+    height: 12px;
+    background: var(--raf-primary);
+    border-radius: 50%;
+    margin-top: 3px;
+    position: relative;
+    z-index: 1;
+}
+
+.raf-timeline-content {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.raf-timeline-date {
+    color: var(--raf-muted);
+    font-size: 12px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.raf-timeline-note {
+    margin: 4px 0 0;
+    color: #444;
+    font-style: italic;
+}

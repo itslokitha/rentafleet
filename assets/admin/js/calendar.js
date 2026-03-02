@@ -1,0 +1,7 @@
+/**
+ * RentAFleet — Calendar JavaScript
+ * Placeholder — will be built with the Calendar admin module.
+ *
+ * @package RentAFleet
+ * @since   1.0.0
+ */
