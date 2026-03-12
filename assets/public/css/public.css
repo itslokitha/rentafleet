@@ -1,7 +1,1263 @@
 /**
  * RentAFleet — Public Stylesheet
- * Placeholder — will be built with the Frontend module.
  *
  * @package RentAFleet
  * @since   1.0.0
  */
+
+/* ═══════════════════════════════════════════════
+   CSS Custom Properties
+   ═══════════════════════════════════════════════ */
+:root {
+    --raf-primary: #2563eb;
+    --raf-primary-hover: #1d4ed8;
+    --raf-primary-light: #dbeafe;
+    --raf-secondary: #64748b;
+    --raf-success: #16a34a;
+    --raf-success-light: #dcfce7;
+    --raf-warning: #f59e0b;
+    --raf-warning-light: #fef3c7;
+    --raf-danger: #dc2626;
+    --raf-danger-light: #fee2e2;
+    --raf-info: #0ea5e9;
+    --raf-info-light: #e0f2fe;
+    --raf-text: #1e293b;
+    --raf-text-light: #64748b;
+    --raf-border: #e2e8f0;
+    --raf-bg: #f8fafc;
+    --raf-white: #fff;
+    --raf-radius: 8px;
+    --raf-radius-sm: 4px;
+    --raf-radius-lg: 12px;
+    --raf-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+    --raf-shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+    --raf-shadow-lg: 0 10px 15px rgba(0,0,0,.1), 0 4px 6px rgba(0,0,0,.05);
+    --raf-transition: .2s ease;
+    --raf-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ═══════════════════════════════════════════════
+   Base Reset
+   ═══════════════════════════════════════════════ */
+[class*="raf-"] {
+    box-sizing: border-box;
+}
+
+/* ═══════════════════════════════════════════════
+   Buttons — .raf-btn
+   ═══════════════════════════════════════════════ */
+.raf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    font-family: var(--raf-font);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    border: 2px solid transparent;
+    border-radius: var(--raf-radius);
+    cursor: pointer;
+    transition: all var(--raf-transition);
+    white-space: nowrap;
+}
+
+.raf-btn:hover { text-decoration: none; }
+.raf-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.raf-btn-primary {
+    background: var(--raf-primary);
+    color: var(--raf-white);
+    border-color: var(--raf-primary);
+}
+.raf-btn-primary:hover {
+    background: var(--raf-primary-hover);
+    border-color: var(--raf-primary-hover);
+    color: var(--raf-white);
+}
+
+.raf-btn-outline {
+    background: var(--raf-white);
+    color: var(--raf-primary);
+    border-color: var(--raf-primary);
+}
+.raf-btn-outline:hover {
+    background: var(--raf-primary-light);
+}
+
+.raf-btn-secondary {
+    background: var(--raf-secondary);
+    color: var(--raf-white);
+    border-color: var(--raf-secondary);
+}
+.raf-btn-secondary:hover {
+    opacity: .9;
+}
+
+.raf-btn-danger {
+    background: var(--raf-danger);
+    color: var(--raf-white);
+    border-color: var(--raf-danger);
+}
+.raf-btn-danger:hover {
+    opacity: .9;
+}
+
+.raf-btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+/* ═══════════════════════════════════════════════
+   Badges — .raf-badge
+   ═══════════════════════════════════════════════ */
+.raf-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    border-radius: 20px;
+    line-height: 1.5;
+}
+.raf-badge-pending   { background: var(--raf-warning-light); color: #92400e; }
+.raf-badge-confirmed { background: var(--raf-info-light); color: #075985; }
+.raf-badge-active    { background: var(--raf-success-light); color: #166534; }
+.raf-badge-completed { background: var(--raf-info-light); color: #075985; }
+.raf-badge-cancelled { background: var(--raf-danger-light); color: #991b1b; }
+.raf-badge-mandatory { background: var(--raf-warning-light); color: #92400e; font-size: 10px; }
+
+/* ═══════════════════════════════════════════════
+   Notices — .raf-notice
+   ═══════════════════════════════════════════════ */
+.raf-notice {
+    padding: 12px 16px;
+    border-radius: var(--raf-radius);
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    border-left: 4px solid;
+}
+.raf-notice-info    { background: var(--raf-info-light); border-color: var(--raf-info); color: #075985; }
+.raf-notice-warning { background: var(--raf-warning-light); border-color: var(--raf-warning); color: #92400e; }
+.raf-notice-error   { background: var(--raf-danger-light); border-color: var(--raf-danger); color: #991b1b; }
+.raf-notice-success { background: var(--raf-success-light); border-color: var(--raf-success); color: #166534; }
+
+/* ═══════════════════════════════════════════════
+   Loading / Spinner
+   ═══════════════════════════════════════════════ */
+.raf-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--raf-text-light);
+}
+
+.raf-spinner {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--raf-border);
+    border-top-color: var(--raf-primary);
+    border-radius: 50%;
+    animation: raf-spin .7s linear infinite;
+    margin-bottom: 12px;
+}
+
+@keyframes raf-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════════
+   Form Fields — .raf-field
+   ═══════════════════════════════════════════════ */
+.raf-field {
+    margin-bottom: 12px;
+}
+.raf-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--raf-text);
+    margin-bottom: 4px;
+}
+.raf-field select,
+.raf-field input[type="text"],
+.raf-field input[type="email"],
+.raf-field input[type="tel"],
+.raf-field input[type="date"],
+.raf-field input[type="number"],
+.raf-field textarea {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 14px;
+    border: 1px solid var(--raf-border);
+    border-radius: var(--raf-radius-sm);
+    background: var(--raf-white);
+    color: var(--raf-text);
+    transition: border-color var(--raf-transition);
+}
+.raf-field select:focus,
+.raf-field input:focus,
+.raf-field textarea:focus {
+    outline: none;
+    border-color: var(--raf-primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+}
+
+.raf-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--raf-text);
+    margin-bottom: 4px;
+}
+
+/* Form Grid */
+.raf-form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.raf-form-group {
+    flex: 1 1 0;
+    min-width: 0;
+}
+.raf-form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--raf-text);
+    margin-bottom: 4px;
+}
+.raf-form-group select,
+.raf-form-group input[type="text"],
+.raf-form-group input[type="email"],
+.raf-form-group input[type="tel"],
+.raf-form-group input[type="date"],
+.raf-form-group input[type="number"],
+.raf-form-group textarea {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 14px;
+    border: 1px solid var(--raf-border);
+    border-radius: var(--raf-radius-sm);
+    background: var(--raf-white);
+    color: var(--raf-text);
+    transition: border-color var(--raf-transition);
+}
+.raf-form-group select:focus,
+.raf-form-group input:focus,
+.raf-form-group textarea:focus {
+    outline: none;
+    border-color: var(--raf-primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+}
+
+.raf-col-3  { flex: 0 0 calc(25% - 12px); }
+.raf-col-4  { flex: 0 0 calc(33.333% - 11px); }
+.raf-col-6  { flex: 0 0 calc(50% - 8px); }
+.raf-col-12 { flex: 0 0 100%; }
+
+/* ═══════════════════════════════════════════════
+   1. Search Form — .raf-search-form-wrap
+   ═══════════════════════════════════════════════ */
+.raf-search-form-wrap {
+    font-family: var(--raf-font);
+    color: var(--raf-text);
+}
+
+/* Horizontal layout */
+.raf-search-horizontal .raf-search-fields {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    background: var(--raf-white);
+    padding: 20px;
+    border-radius: var(--raf-radius-lg);
+    box-shadow: var(--raf-shadow-md);
+}
+.raf-search-horizontal .raf-field {
+    flex: 1 1 160px;
+    margin-bottom: 0;
+}
+.raf-search-horizontal .raf-field-submit {
+    flex: 0 0 auto;
+}
+.raf-search-horizontal .raf-field-different-dropoff {
+    flex: 0 0 100%;
+}
+
+/* Vertical layout */
+.raf-search-vertical .raf-search-fields {
+    background: var(--raf-white);
+    padding: 24px;
+    border-radius: var(--raf-radius-lg);
+    box-shadow: var(--raf-shadow-md);
+}
+.raf-search-vertical .raf-field {
+    margin-bottom: 14px;
+}
+.raf-search-vertical .raf-field-submit {
+    margin-bottom: 0;
+}
+.raf-search-vertical .raf-search-btn {
+    width: 100%;
+}
+
+/* Different dropoff checkbox */
+.raf-field-different-dropoff label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+    font-size: 13px;
+    cursor: pointer;
+}
+.raf-field-different-dropoff input[type="checkbox"] {
+    width: auto;
+}
+
+/* Search Results */
+.raf-search-results {
+    margin-top: 24px;
+}
+.raf-results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.raf-results-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--raf-text);
+    margin: 0;
+}
+.raf-results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+.raf-no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--raf-text-light);
+}
+.raf-inline-results {
+    margin-top: 20px;
+}
+
+/* ═══════════════════════════════════════════════
+   2. Vehicle Listing — .raf-vehicles-wrap
+   ═══════════════════════════════════════════════ */
+.raf-vehicles-wrap {
+    font-family: var(--raf-font);
+    color: var(--raf-text);
+}
+
+/* Category Filter */
+.raf-vehicles-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+.raf-filter-btn {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--raf-border);
+    border-radius: 20px;
+    background: var(--raf-white);
+    color: var(--raf-text);
+    cursor: pointer;
+    transition: all var(--raf-transition);
+}
+.raf-filter-btn:hover {
+    border-color: var(--raf-primary);
+    color: var(--raf-primary);
+}
+.raf-filter-btn.active {
+    background: var(--raf-primary);
+    color: var(--raf-white);
+    border-color: var(--raf-primary);
+}
+
+/* Vehicle Grid */
+.raf-vehicles-grid {
+    display: grid;
+    gap: 24px;
+}
+.raf-vehicles-wrap[data-columns="1"] .raf-vehicles-grid { grid-template-columns: 1fr; }
+.raf-vehicles-wrap[data-columns="2"] .raf-vehicles-grid { grid-template-columns: repeat(2, 1fr); }
+.raf-vehicles-wrap[data-columns="3"] .raf-vehicles-grid,
+.raf-vehicles-wrap:not([data-columns]) .raf-vehicles-grid { grid-template-columns: repeat(3, 1fr); }
+.raf-vehicles-wrap[data-columns="4"] .raf-vehicles-grid { grid-template-columns: repeat(4, 1fr); }
+
+.raf-no-vehicles {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: var(--raf-text-light);
+}
+
+/* Vehicle Card */
+.raf-vehicle-card {
+    background: var(--raf-white);
+    border-radius: var(--raf-radius-lg);
+    box-shadow: var(--raf-shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow var(--raf-transition), transform var(--raf-transition);
+}
+.raf-vehicle-card:hover {
+    box-shadow: var(--raf-shadow-lg);
+    transform: translateY(-2px);
+}
+
+.raf-vehicle-image {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--raf-bg);
+}
+.raf-vehicle-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.raf-vehicle-no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--raf-border);
+    font-size: 48px;
+}
+
+/* Rating Badge */
+.raf-vehicle-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,.7);
+    color: #fbbf24;
+    padding: 4px 8px;
+    border-radius: var(--raf-radius-sm);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.raf-stars { color: var(--raf-white); }
+.raf-star-icon { font-size: 14px; }
+
+/* Vehicle Info */
+.raf-vehicle-info {
+    padding: 16px;
+    flex: 1;
+}
+.raf-vehicle-name {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: var(--raf-text);
+}
+.raf-vehicle-desc {
+    font-size: 13px;
+    color: var(--raf-text-light);
+    margin: 0 0 10px;
+    line-height: 1.4;
+}
+
+/* Specs */
+.raf-vehicle-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.raf-spec {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--raf-text-light);
+    background: var(--raf-bg);
+    padding: 3px 8px;
+    border-radius: var(--raf-radius-sm);
+}
+.raf-spec-icon {
+    font-size: 13px;
+}
+
+/* Features */
+.raf-vehicle-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+.raf-feature-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    background: var(--raf-primary-light);
+    color: var(--raf-primary);
+    border-radius: var(--raf-radius-sm);
+    font-weight: 500;
+}
+.raf-feature-more {
+    font-size: 11px;
+    padding: 2px 8px;
+    background: var(--raf-bg);
+    color: var(--raf-text-light);
+    border-radius: var(--raf-radius-sm);
+}
+
+/* Price & Action */
+.raf-vehicle-price-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-top: 1px solid var(--raf-border);
+    background: var(--raf-bg);
+}
+.raf-vehicle-price {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+}
+.raf-price-amount {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--raf-primary);
+}
+.raf-price-period {
+    font-size: 13px;
+    color: var(--raf-text-light);
+}
+
+/* ═══════════════════════════════════════════════
+   3. Booking Form — .raf-booking-wrap
+   ═══════════════════════════════════════════════ */
+.raf-booking-wrap {
+    font-family: var(--raf-font);
+    color: var(--raf-text);
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* Steps Progress */
+.raf-booking-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+    padding: 0;
+    list-style: none;
+}
+.raf-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: .4;
+    transition: opacity var(--raf-transition);
+}
+.raf-step.active { opacity: 1; }
+.raf-step.completed { opacity: .7; }
+
+.raf-step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--raf-border);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--raf-text-light);
+}
+.raf-step.active .raf-step-number {
+    background: var(--raf-primary);
+    color: var(--raf-white);
+}
+.raf-step.completed .raf-step-number {
+    background: var(--raf-success);
+    color: var(--raf-white);
+}
+.raf-step-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--raf-text-light);
+}
+.raf-step.active .raf-step-label {
+    color: var(--raf-text);
+}
+.raf-step-line {
+    width: 40px;
+    height: 2px;
+    background: var(--raf-border);
+    margin: 0 8px;
+}
+
+/* Booking Form Layout */
+.raf-booking-form {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+    align-items: start;
+}
+
+.raf-booking-step-content {
+    background: var(--raf-white);
+    border-radius: var(--raf-radius-lg);
+    box-shadow: var(--raf-shadow);
+    padding: 24px;
+}
+.raf-booking-step-content h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--raf-border);
+}
+
+/* Sidebar */
+.raf-booking-sidebar {
+    position: sticky;
+    top: 20px;
+}
+
+.raf-selected-vehicle-card {
+    background: var(--raf-white);
+    border-radius: var(--raf-radius-lg);
+    box-shadow: var(--raf-shadow);
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+.raf-selected-vehicle-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+.raf-selected-vehicle-info {
+    padding: 14px;
+}
+.raf-selected-vehicle-info h4 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* Price Summary */
+.raf-price-summary {
+    background: var(--raf-white);
+    border-radius: var(--raf-radius-lg);
+    box-shadow: var(--raf-shadow);
+    padding: 20px;
+}
+.raf-price-summary h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--raf-border);
+}
+.raf-summary-content {
+    font-size: 14px;
+}
+.raf-summary-placeholder {
+    text-align: center;
+    padding: 20px;
+    color: var(--raf-text-light);
+    font-size: 13px;
+}
+.raf-price-breakdown {
+    margin-bottom: 12px;
+}
+.raf-price-breakdown > div {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 13px;
+}
+.raf-discount-row {
+    color: var(--raf-success);
+}
+.raf-total-row {
+    font-weight: 700;
+    font-size: 15px;
+    border-top: 2px solid var(--raf-border);
+    padding-top: 10px;
+    margin-top: 6px;
+}
+.raf-amount {
+    font-weight: 600;
+}
+
+/* Selected Vehicle */
+.raf-selected-vehicle {
+    background: var(--raf-bg);
+    border-radius: var(--raf-radius);
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+.raf-selected-vehicle img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--raf-radius-sm);
+}
+.raf-booking-vehicle h4 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* Extras Grid */
+.raf-extras-section {
+    margin-bottom: 20px;
+}
+.raf-extras-section h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 12px;
+}
+.raf-extras-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+.raf-extra-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--raf-border);
+    border-radius: var(--raf-radius);
+    transition: border-color var(--raf-transition);
+    cursor: pointer;
+}
+.raf-extra-item:hover {
+    border-color: var(--raf-primary);
+}
+.raf-extra-checkbox {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+.raf-extra-label {
+    flex: 1;
+}
+.raf-extra-info {
+    flex: 1;
+}
+.raf-extra-name {
+    font-size: 14px;
+    font-weight: 600;
+    display: block;
+}
+.raf-extra-desc {
+    font-size: 12px;
+    color: var(--raf-text-light);
+    margin-top: 2px;
+    display: block;
+}
+.raf-extra-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--raf-primary);
+    white-space: nowrap;
+}
+.raf-extra-qty {
+    width: 60px;
+    padding: 4px 6px;
+    font-size: 13px;
+    border: 1px solid var(--raf-border);
+    border-radius: var(--raf-radius-sm);
+}
+
+/* Insurance Grid */
+.raf-insurance-section {
+    margin-bottom: 20px;
+}
+.raf-insurance-section h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 12px;
+}
+.raf-insurance-grid {
+    display: grid;
+    gap: 12px;
+}
+.raf-insurance-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px;
+    border: 1px solid var(--raf-border);
+    border-radius: var(--raf-radius);
+    transition: border-color var(--raf-transition);
+}
+.raf-insurance-item:hover {
+    border-color: var(--raf-primary);
+}
+.raf-insurance-item.raf-mandatory {
+    background: var(--raf-warning-light);
+    border-color: var(--raf-warning);
+}
+.raf-insurance-checkbox {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+.raf-insurance-label {
+    flex: 1;
+}
+.raf-insurance-info {
+    flex: 1;
+}
+.raf-insurance-name {
+    font-size: 14px;
+    font-weight: 600;
+    display: block;
+}
+.raf-insurance-desc {
+    font-size: 12px;
+    color: var(--raf-text-light);
+    margin-top: 2px;
+    display: block;
+}
+.raf-insurance-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--raf-primary);
+    white-space: nowrap;
+}
+.raf-coverage {
+    font-size: 12px;
+    color: var(--raf-text-light);
+    margin-top: 4px;
+}
+
+/* Coupon */
+.raf-coupon-section {
+    margin-top: 16px;
+    padding: 14px;
+    border: 1px dashed var(--raf-border);
+    border-radius: var(--raf-radius);
+}
+.raf-coupon-input {
+    display: flex;
+    gap: 8px;
+}
+.raf-coupon-input input {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid var(--raf-border);
+    border-radius: var(--raf-radius-sm);
+}
+.raf-coupon-message {
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+/* Review Section */
+.raf-review-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.raf-review-section h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    color: var(--raf-text);
+}
+.raf-review-details {
+    font-size: 14px;
+    line-height: 1.8;
+}
+.raf-review-details strong {
+    color: var(--raf-text);
+}
+.raf-sub {
+    font-size: 12px;
+    color: var(--raf-text-light);
+}
+
+/* Terms */
+.raf-terms-section {
+    margin-top: 16px;
+    padding: 14px;
+    background: var(--raf-bg);
+    border-radius: var(--raf-radius);
+}
+.raf-terms-section label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* Booking Nav */
+.raf-booking-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--raf-border);
+}
+
+/* Inline Search in Booking */
+.raf-vehicle-search-inline {
+    margin-bottom: 20px;
+}
+
+/* ═══════════════════════════════════════════════
+   4. Confirmation — .raf-confirmation-wrap
+   ═══════════════════════════════════════════════ */
+.raf-confirmation-wrap {
+    font-family: var(--raf-font);
+    color: var(--raf-text);
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.raf-confirmation-header {
+    text-align: center;
+    padding: 32px 20px;
+    background: var(--raf-success-light);
+    border-radius: var(--raf-radius-lg) var(--raf-radius-lg) 0 0;
+}
+.raf-confirmation-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--raf-success);
+    color: var(--raf-white);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+.raf-confirmation-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 6px;
+}
+.raf-confirmation-status {
+    font-size: 14px;
+    color: var(--raf-text-light);
+}
+.raf-booking-ref {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.raf-confirmation-details {
+    background: var(--raf-white);
+    border: 1px solid var(--raf-border);
+    border-top: none;
+    border-radius: 0 0 var(--raf-radius-lg) var(--raf-radius-lg);
+    padding: 24px;
+}
+.raf-conf-section {
+    margin-bottom: 20px;
+}
+.raf-conf-section h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--raf-border);
+}
+.raf-conf-vehicle {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.raf-conf-vehicle img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--raf-radius-sm);
+}
+
+/* Confirmation Tables */
+.raf-conf-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.raf-conf-table th,
+.raf-conf-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--raf-border);
+}
+.raf-conf-table th {
+    font-weight: 600;
+    color: var(--raf-text-light);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+.raf-price-table td:last-child {
+    text-align: right;
+    font-weight: 600;
+}
+.raf-price-table tr:last-child td {
+    font-weight: 700;
+    font-size: 15px;
+    border-top: 2px solid var(--raf-border);
+}
+
+.raf-confirmation-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+/* ═══════════════════════════════════════════════
+   5. My Bookings — .raf-my-bookings-wrap
+   ═══════════════════════════════════════════════ */
+.raf-my-bookings-wrap {
+    font-family: var(--raf-font);
+    color: var(--raf-text);
+}
+
+.raf-bookings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.raf-booking-card {
+    background: var(--raf-white);
+    border-radius: var(--raf-radius-lg);
+    box-shadow: var(--raf-shadow);
+    overflow: hidden;
+}
+
+.raf-booking-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: var(--raf-bg);
+    border-bottom: 1px solid var(--raf-border);
+}
+.raf-booking-number {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.raf-booking-card-body {
+    display: flex;
+    gap: 16px;
+    padding: 16px 20px;
+    align-items: center;
+}
+.raf-booking-card-body img {
+    width: 100px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: var(--raf-radius-sm);
+    flex-shrink: 0;
+}
+.raf-booking-dates {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--raf-text-light);
+}
+.raf-booking-total {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--raf-primary);
+    white-space: nowrap;
+}
+
+.raf-booking-card-footer {
+    display: flex;
+    gap: 8px;
+    padding: 12px 20px;
+    border-top: 1px solid var(--raf-border);
+    justify-content: flex-end;
+}
+
+/* ═══════════════════════════════════════════════
+   6. Widget Styles
+   ═══════════════════════════════════════════════ */
+.raf-widget-search-form .raf-widget-field {
+    margin-bottom: 12px;
+}
+.raf-widget-search-form .raf-widget-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--raf-text);
+}
+.raf-widget-search-form .raf-widget-field select,
+.raf-widget-search-form .raf-widget-field input {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 13px;
+    border: 1px solid var(--raf-border);
+    border-radius: var(--raf-radius-sm);
+}
+.raf-widget-submit {
+    width: 100%;
+    margin-top: 4px;
+}
+
+/* Vehicles Widget */
+.raf-widget-vehicles {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.raf-widget-vehicle-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.raf-widget-vehicle-item img {
+    width: 80px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: var(--raf-radius-sm);
+    flex-shrink: 0;
+}
+.raf-widget-vehicle-info h4 {
+    margin: 0 0 2px;
+    font-size: 14px;
+}
+.raf-widget-vehicle-info h4 a {
+    color: var(--raf-text);
+    text-decoration: none;
+}
+.raf-widget-vehicle-info h4 a:hover {
+    color: var(--raf-primary);
+}
+.raf-widget-vehicle-meta {
+    display: flex;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--raf-text-light);
+}
+.raf-widget-vehicle-price {
+    font-size: 14px;
+    color: var(--raf-primary);
+    margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .raf-search-horizontal .raf-search-fields {
+        flex-direction: column;
+    }
+    .raf-search-horizontal .raf-field {
+        flex: 1 1 100%;
+    }
+
+    .raf-results-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .raf-vehicles-wrap[data-columns="3"] .raf-vehicles-grid,
+    .raf-vehicles-wrap[data-columns="4"] .raf-vehicles-grid,
+    .raf-vehicles-wrap:not([data-columns]) .raf-vehicles-grid {
+        grid-template-columns: 1fr;
+    }
+    .raf-vehicles-wrap[data-columns="2"] .raf-vehicles-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .raf-booking-form {
+        grid-template-columns: 1fr;
+    }
+    .raf-booking-sidebar {
+        position: static;
+    }
+
+    .raf-form-row {
+        flex-direction: column;
+    }
+    .raf-col-3,
+    .raf-col-4,
+    .raf-col-6 {
+        flex: 0 0 100%;
+    }
+
+    .raf-extras-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .raf-booking-card-body {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .raf-booking-steps {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    .raf-step-line {
+        width: 20px;
+    }
+    .raf-step-label {
+        display: none;
+    }
+
+    .raf-confirmation-actions {
+        flex-direction: column;
+    }
+
+    .raf-results-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .raf-vehicles-wrap[data-columns="4"] .raf-vehicles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .raf-vehicles-wrap[data-columns="3"] .raf-vehicles-grid,
+    .raf-vehicles-wrap:not([data-columns]) .raf-vehicles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .raf-results-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .raf-booking-form {
+        grid-template-columns: 1fr 280px;
+    }
+}
