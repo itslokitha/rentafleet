@@ -308,7 +308,7 @@ class RAF_Admin_Vehicles {
                                 RAF_Admin::admin_url( 'raf-vehicles', array( 'raf_action' => 'delete_vehicle', 'id' => $v->id ) ),
                                 'raf_delete_vehicle_' . $v->id
                             );
-                            $thumb      = $v->featured_image_id ? wp_get_attachment_image( $v->featured_image_id, array( 60, 60 ) ) : '<span class="raf-no-image dashicons dashicons-car"></span>';
+                            $thumb      = $v->featured_image_id ? wp_get_attachment_image( $v->featured_image_id, array( 60, 60 ) ) : '<span class="raf-no-image dashicons dashicons-motorcycle"></span>';
                             $locations  = RAF_Vehicle::get_locations( $v->id );
                             $loc_names  = wp_list_pluck( $locations, 'name' );
                             ?>
@@ -332,10 +332,9 @@ class RAF_Admin_Vehicles {
                                 <td class="column-specs">
                                     <?php
                                     $specs = array();
-                                    if ( $v->transmission ) $specs[] = ucfirst( $v->transmission );
-                                    if ( $v->fuel_type )    $specs[] = ucfirst( str_replace( '_', ' ', $v->fuel_type ) );
-                                    if ( $v->seats )        $specs[] = $v->seats . ' ' . __( 'seats', 'rentafleet' );
-                                    if ( $v->doors )        $specs[] = $v->doors . ' ' . __( 'doors', 'rentafleet' );
+                                    $bike_types = RAF_Helpers::get_bike_types();
+                                    if ( $v->bike_type && isset( $bike_types[ $v->bike_type ] ) ) $specs[] = $bike_types[ $v->bike_type ];
+                                    if ( $v->engine_cc ) $specs[] = $v->engine_cc . 'cc';
                                     echo esc_html( implode( ' · ', $specs ) );
                                     ?>
                                 </td>
@@ -412,13 +411,8 @@ class RAF_Admin_Vehicles {
             'license_plate'      => '',
             'vin'                => '',
             'color'              => '',
-            'transmission'       => 'automatic',
-            'fuel_type'          => 'gasoline',
-            'seats'              => 5,
-            'doors'              => 4,
-            'luggage_capacity'   => 2,
-            'mileage_limit'      => 0,
-            'extra_mileage_cost' => '0.00',
+            'engine_cc'          => 0,
+            'bike_type'          => 'standard',
             'min_rental_days'    => 1,
             'max_rental_days'    => 365,
             'min_driver_age'     => 21,
@@ -443,14 +437,13 @@ class RAF_Admin_Vehicles {
         }
 
         $gallery_ids  = $is_edit ? RAF_Vehicle::get_gallery( $v ) : array();
-        $feature_list = RAF_Helpers::get_vehicle_features();
+        $feature_list = RAF_Helpers::get_bike_features();
         $selected_features = $is_edit ? RAF_Vehicle::get_features( $v ) : array();
-        $transmissions = RAF_Helpers::get_transmissions();
-        $fuel_types    = RAF_Helpers::get_fuel_types();
+        $bike_types = RAF_Helpers::get_bike_types();
 
         ?>
         <h1><?php echo esc_html( $title ); ?></h1>
-        <?php RAF_Admin::back_link( 'raf-vehicles', __( '← Back to Vehicles', 'rentafleet' ) ); ?>
+        <?php RAF_Admin::back_link( 'raf-vehicles', __( '← Back to Bikes', 'rentafleet' ) ); ?>
 
         <form method="post" id="raf-vehicle-form" class="raf-form">
             <input type="hidden" name="raf_action" value="save_vehicle">
@@ -472,7 +465,7 @@ class RAF_Admin_Vehicles {
                                     <th><label for="vehicle_name"><?php esc_html_e( 'Vehicle Name *', 'rentafleet' ); ?></label></th>
                                     <td>
                                         <input type="text" name="name" id="vehicle_name" value="<?php echo esc_attr( $v->name ); ?>" class="regular-text" required>
-                                        <p class="description"><?php esc_html_e( 'Display name. E.g. "Toyota Corolla 2024 — White"', 'rentafleet' ); ?></p>
+                                        <p class="description"><?php esc_html_e( 'Display name. E.g. "Honda CBR 500R — Red"', 'rentafleet' ); ?></p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -484,11 +477,11 @@ class RAF_Admin_Vehicles {
                                 </tr>
                                 <tr>
                                     <th><label for="vehicle_make"><?php esc_html_e( 'Make', 'rentafleet' ); ?></label></th>
-                                    <td><input type="text" name="make" id="vehicle_make" value="<?php echo esc_attr( $v->make ); ?>" class="regular-text" placeholder="Toyota"></td>
+                                    <td><input type="text" name="make" id="vehicle_make" value="<?php echo esc_attr( $v->make ); ?>" class="regular-text" placeholder="Honda"></td>
                                 </tr>
                                 <tr>
                                     <th><label for="vehicle_model"><?php esc_html_e( 'Model', 'rentafleet' ); ?></label></th>
-                                    <td><input type="text" name="model" id="vehicle_model" value="<?php echo esc_attr( $v->model ); ?>" class="regular-text" placeholder="Corolla"></td>
+                                    <td><input type="text" name="model" id="vehicle_model" value="<?php echo esc_attr( $v->model ); ?>" class="regular-text" placeholder="CBR 500R"></td>
                                 </tr>
                                 <tr>
                                     <th><label for="vehicle_year"><?php esc_html_e( 'Year', 'rentafleet' ); ?></label></th>
@@ -541,38 +534,20 @@ class RAF_Admin_Vehicles {
                                     <td><input type="text" name="color" id="vehicle_color" value="<?php echo esc_attr( $v->color ); ?>" class="regular-text"></td>
                                 </tr>
                                 <tr>
-                                    <th><label for="vehicle_transmission"><?php esc_html_e( 'Transmission', 'rentafleet' ); ?></label></th>
+                                    <th><label for="vehicle_bike_type"><?php esc_html_e( 'Bike Type', 'rentafleet' ); ?></label></th>
                                     <td>
-                                        <select name="transmission" id="vehicle_transmission">
-                                            <?php foreach ( $transmissions as $key => $label ) : ?>
-                                                <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $v->transmission, $key ); ?>><?php echo esc_html( $label ); ?></option>
+                                        <select name="bike_type" id="vehicle_bike_type">
+                                            <?php foreach ( $bike_types as $key => $label ) : ?>
+                                                <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $v->bike_type, $key ); ?>><?php echo esc_html( $label ); ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><label for="vehicle_fuel"><?php esc_html_e( 'Fuel Type', 'rentafleet' ); ?></label></th>
+                                    <th><label for="vehicle_engine_cc"><?php esc_html_e( 'Engine (cc)', 'rentafleet' ); ?></label></th>
                                     <td>
-                                        <select name="fuel_type" id="vehicle_fuel">
-                                            <?php foreach ( $fuel_types as $key => $label ) : ?>
-                                                <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $v->fuel_type, $key ); ?>><?php echo esc_html( $label ); ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th><label for="vehicle_seats"><?php esc_html_e( 'Seats', 'rentafleet' ); ?></label></th>
-                                    <td><input type="number" name="seats" id="vehicle_seats" value="<?php echo esc_attr( $v->seats ); ?>" min="1" max="50" class="small-text"></td>
-                                </tr>
-                                <tr>
-                                    <th><label for="vehicle_doors"><?php esc_html_e( 'Doors', 'rentafleet' ); ?></label></th>
-                                    <td><input type="number" name="doors" id="vehicle_doors" value="<?php echo esc_attr( $v->doors ); ?>" min="1" max="10" class="small-text"></td>
-                                </tr>
-                                <tr>
-                                    <th><label for="vehicle_luggage"><?php esc_html_e( 'Luggage Capacity', 'rentafleet' ); ?></label></th>
-                                    <td>
-                                        <input type="number" name="luggage_capacity" id="vehicle_luggage" value="<?php echo esc_attr( $v->luggage_capacity ); ?>" min="0" max="20" class="small-text">
-                                        <span class="description"><?php esc_html_e( 'Number of large bags', 'rentafleet' ); ?></span>
+                                        <input type="number" name="engine_cc" id="vehicle_engine_cc" value="<?php echo esc_attr( $v->engine_cc ); ?>" min="0" max="9999" class="small-text">
+                                        <span class="description"><?php esc_html_e( 'Engine displacement in cubic centimetres', 'rentafleet' ); ?></span>
                                     </td>
                                 </tr>
                             </table>
@@ -590,20 +565,6 @@ class RAF_Admin_Vehicles {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><label for="vehicle_mileage_limit"><?php esc_html_e( 'Daily Mileage Limit', 'rentafleet' ); ?></label></th>
-                                    <td>
-                                        <input type="number" name="mileage_limit" id="vehicle_mileage_limit" value="<?php echo esc_attr( $v->mileage_limit ); ?>" min="0" class="small-text">
-                                        <span class="description"><?php esc_html_e( 'km/day. 0 = unlimited.', 'rentafleet' ); ?></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th><label for="vehicle_extra_mileage"><?php esc_html_e( 'Extra Mileage Cost', 'rentafleet' ); ?></label></th>
-                                    <td>
-                                        <input type="number" name="extra_mileage_cost" id="vehicle_extra_mileage" value="<?php echo esc_attr( $v->extra_mileage_cost ); ?>" min="0" step="0.01" class="small-text">
-                                        <span class="description"><?php esc_html_e( 'per km over limit', 'rentafleet' ); ?></span>
-                                    </td>
-                                </tr>
-                                <tr>
                                     <th><label for="vehicle_min_days"><?php esc_html_e( 'Min Rental Days', 'rentafleet' ); ?></label></th>
                                     <td><input type="number" name="min_rental_days" id="vehicle_min_days" value="<?php echo esc_attr( $v->min_rental_days ); ?>" min="1" class="small-text"></td>
                                 </tr>
@@ -612,7 +573,7 @@ class RAF_Admin_Vehicles {
                                     <td><input type="number" name="max_rental_days" id="vehicle_max_days" value="<?php echo esc_attr( $v->max_rental_days ); ?>" min="1" class="small-text"></td>
                                 </tr>
                                 <tr>
-                                    <th><label for="vehicle_min_age"><?php esc_html_e( 'Min Driver Age', 'rentafleet' ); ?></label></th>
+                                    <th><label for="vehicle_min_age"><?php esc_html_e( 'Min Rider Age', 'rentafleet' ); ?></label></th>
                                     <td><input type="number" name="min_driver_age" id="vehicle_min_age" value="<?php echo esc_attr( $v->min_driver_age ); ?>" min="16" max="99" class="small-text"></td>
                                 </tr>
                                 <tr>
@@ -926,16 +887,11 @@ class RAF_Admin_Vehicles {
             'color'              => sanitize_text_field( $_POST['color'] ),
             'description'        => wp_kses_post( $_POST['description'] ),
             'short_description'  => sanitize_textarea_field( $_POST['short_description'] ),
-            'transmission'       => sanitize_text_field( $_POST['transmission'] ),
-            'fuel_type'          => sanitize_text_field( $_POST['fuel_type'] ),
-            'seats'              => absint( $_POST['seats'] ),
-            'doors'              => absint( $_POST['doors'] ),
-            'luggage_capacity'   => absint( $_POST['luggage_capacity'] ),
-            'mileage_limit'      => absint( $_POST['mileage_limit'] ),
-            'extra_mileage_cost' => floatval( $_POST['extra_mileage_cost'] ),
+            'engine_cc'          => absint( $_POST['engine_cc'] ),
+            'bike_type'          => sanitize_text_field( $_POST['bike_type'] ),
             'min_rental_days'    => max( 1, absint( $_POST['min_rental_days'] ) ),
             'max_rental_days'    => max( 1, absint( $_POST['max_rental_days'] ) ),
-            'min_driver_age'     => max( 16, absint( $_POST['min_driver_age'] ) ),
+            'min_driver_age'     => max( 16, absint( $_POST['min_driver_age'] ?? 18 ) ),
             'deposit_amount'     => floatval( $_POST['deposit_amount'] ),
             'featured_image_id'  => absint( $_POST['featured_image_id'] ),
             'units'              => max( 1, absint( $_POST['units'] ) ),

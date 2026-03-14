@@ -1244,6 +1244,147 @@
     }
 }
 
+/* ═══════════════════════════════════════════════
+   7. Available Bikes Grid (Booking Step 2)
+   ═══════════════════════════════════════════════ */
+.raf-available-bikes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.raf-bike-card {
+    background: var(--raf-white);
+    border: 2px solid var(--raf-border);
+    border-radius: var(--raf-radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color var(--raf-transition), box-shadow var(--raf-transition), transform var(--raf-transition);
+}
+.raf-bike-card:hover {
+    border-color: var(--raf-primary);
+    box-shadow: var(--raf-shadow-md);
+    transform: translateY(-2px);
+}
+.raf-bike-card.selected {
+    border-color: var(--raf-primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.2), var(--raf-shadow-md);
+}
+.raf-bike-card.selected::after {
+    content: "\2713";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    background: var(--raf-primary);
+    color: var(--raf-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+}
+.raf-bike-card {
+    position: relative;
+}
+
+.raf-bike-card-image {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--raf-bg);
+}
+.raf-bike-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.raf-bike-card-body {
+    padding: 14px;
+}
+.raf-bike-card-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    color: var(--raf-text);
+}
+.raf-bike-card-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.raf-bike-card-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--raf-primary);
+}
+.raf-bike-card-price span {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--raf-text-light);
+}
+
+.raf-no-bikes {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--raf-text-light);
+}
+
+/* ═══════════════════════════════════════════════
+   8. Deposit Section
+   ═══════════════════════════════════════════════ */
+.raf-deposit-section {
+    margin-top: 16px;
+}
+.raf-deposit-row {
+    color: var(--raf-warning);
+    font-weight: 600;
+    padding-top: 6px;
+    font-size: 13px;
+}
+
+/* ═══════════════════════════════════════════════
+   9. Email Lookup (My Bookings)
+   ═══════════════════════════════════════════════ */
+.raf-lookup-form {
+    background: var(--raf-white);
+    border-radius: var(--raf-radius-lg);
+    box-shadow: var(--raf-shadow);
+    padding: 24px;
+    max-width: 480px;
+    margin: 0 auto 24px;
+}
+.raf-lookup-form h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+.raf-lookup-form p {
+    font-size: 13px;
+    color: var(--raf-text-light);
+    margin: 0 0 16px;
+}
+.raf-lookup-form .raf-form-group {
+    margin-bottom: 12px;
+}
+.raf-lookup-form .raf-btn {
+    width: 100%;
+}
+
+.raf-lookup-results {
+    margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+    .raf-available-bikes-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (min-width: 769px) and (max-width: 1024px) {
     .raf-vehicles-wrap[data-columns="4"] .raf-vehicles-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1259,5 +1400,9 @@
 
     .raf-booking-form {
         grid-template-columns: 1fr 280px;
+    }
+
+    .raf-available-bikes-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }

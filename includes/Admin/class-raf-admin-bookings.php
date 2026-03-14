@@ -416,29 +416,6 @@ class RAF_Admin_Bookings {
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <?php /* Mileage & Fuel */ ?>
-                        <?php if ( $booking->mileage_start || $booking->mileage_end || $booking->fuel_level_start ) : ?>
-                        <table class="raf-detail-table" style="margin-top:12px;">
-                            <tr>
-                                <th><?php esc_html_e( 'Mileage Start', 'rentafleet' ); ?></th>
-                                <td><?php echo $booking->mileage_start ? esc_html( number_format_i18n( $booking->mileage_start ) ) . ' km' : '—'; ?></td>
-                                <th><?php esc_html_e( 'Mileage End', 'rentafleet' ); ?></th>
-                                <td><?php echo $booking->mileage_end ? esc_html( number_format_i18n( $booking->mileage_end ) ) . ' km' : '—'; ?></td>
-                            </tr>
-                            <tr>
-                                <th><?php esc_html_e( 'Fuel Start', 'rentafleet' ); ?></th>
-                                <td><?php echo $booking->fuel_level_start ? esc_html( ucfirst( $booking->fuel_level_start ) ) : '—'; ?></td>
-                                <th><?php esc_html_e( 'Fuel End', 'rentafleet' ); ?></th>
-                                <td><?php echo $booking->fuel_level_end ? esc_html( ucfirst( $booking->fuel_level_end ) ) : '—'; ?></td>
-                            </tr>
-                            <?php if ( $booking->mileage_start && $booking->mileage_end ) : ?>
-                            <tr>
-                                <th><?php esc_html_e( 'Total Driven', 'rentafleet' ); ?></th>
-                                <td colspan="3"><strong><?php echo esc_html( number_format_i18n( $booking->mileage_end - $booking->mileage_start ) ); ?> km</strong></td>
-                            </tr>
-                            <?php endif; ?>
-                        </table>
-                        <?php endif; ?>
                     <?php else : ?>
                         <p class="raf-muted" style="padding:12px 16px;"><?php esc_html_e( 'Vehicle not found.', 'rentafleet' ); ?></p>
                     <?php endif; ?>
@@ -517,21 +494,12 @@ class RAF_Admin_Bookings {
                     </table>
                 </div>
 
-                <?php /* Driver Info */ ?>
-                <?php if ( $booking->driver_name || $booking->driver_license ) : ?>
+                <?php /* Rider Info */ ?>
+                <?php if ( $booking->rider_name ) : ?>
                 <div class="raf-panel">
-                    <h2><?php esc_html_e( 'Driver Information', 'rentafleet' ); ?></h2>
+                    <h2><?php esc_html_e( 'Rider Information', 'rentafleet' ); ?></h2>
                     <table class="raf-detail-table">
-                        <?php if ( $booking->driver_name ) : ?>
-                        <tr><th><?php esc_html_e( 'Driver Name', 'rentafleet' ); ?></th><td><?php echo esc_html( $booking->driver_name ); ?></td>
-                            <th><?php esc_html_e( 'Driver Age', 'rentafleet' ); ?></th><td><?php echo $booking->driver_age ? esc_html( $booking->driver_age ) : '—'; ?></td></tr>
-                        <?php endif; ?>
-                        <?php if ( $booking->driver_license ) : ?>
-                        <tr><th><?php esc_html_e( 'License #', 'rentafleet' ); ?></th><td colspan="3"><?php echo esc_html( $booking->driver_license ); ?></td></tr>
-                        <?php endif; ?>
-                        <?php if ( $booking->additional_drivers ) : ?>
-                        <tr><th><?php esc_html_e( 'Additional Drivers', 'rentafleet' ); ?></th><td colspan="3"><?php echo nl2br( esc_html( $booking->additional_drivers ) ); ?></td></tr>
-                        <?php endif; ?>
+                        <tr><th><?php esc_html_e( 'Rider Name', 'rentafleet' ); ?></th><td colspan="3"><?php echo esc_html( $booking->rider_name ); ?></td></tr>
                     </table>
                 </div>
                 <?php endif; ?>
@@ -762,14 +730,7 @@ class RAF_Admin_Bookings {
             'payment_status'      => 'pending',
             'payment_method'      => '',
             'status'              => 'pending',
-            'driver_name'         => '',
-            'driver_age'          => '',
-            'driver_license'      => '',
-            'additional_drivers'  => '',
-            'mileage_start'       => '',
-            'mileage_end'         => '',
-            'fuel_level_start'    => '',
-            'fuel_level_end'      => '',
+            'rider_name'          => '',
             'notes'               => '',
             'admin_notes'         => '',
             'source'              => 'admin',
@@ -782,7 +743,6 @@ class RAF_Admin_Bookings {
         $customers  = $wpdb->get_results( "SELECT id, first_name, last_name, email FROM " . RAF_Helpers::table( 'customers' ) . " ORDER BY first_name, last_name LIMIT 500" );
         $statuses   = RAF_Helpers::get_booking_statuses();
         $pay_stats  = RAF_Helpers::get_payment_statuses();
-        $fuel_levels = array( '' => '—', 'full' => __( 'Full', 'rentafleet' ), '3/4' => '3/4', '1/2' => '1/2', '1/4' => '1/4', 'empty' => __( 'Empty', 'rentafleet' ) );
 
         // Format dates for datetime-local input
         $pickup_dt  = $b->pickup_date  ? date( 'Y-m-d\TH:i', strtotime( $b->pickup_date ) ) : '';
@@ -934,59 +894,15 @@ class RAF_Admin_Bookings {
                             </table>
                         </div>
 
-                        <?php /* Driver Info */ ?>
+                        <?php /* Rider Info */ ?>
                         <div class="raf-panel">
-                            <h2><?php esc_html_e( 'Driver Information', 'rentafleet' ); ?></h2>
+                            <h2><?php esc_html_e( 'Rider Information', 'rentafleet' ); ?></h2>
                             <table class="form-table">
                                 <tr>
-                                    <th><label><?php esc_html_e( 'Driver Name', 'rentafleet' ); ?></label></th>
-                                    <td><input type="text" name="driver_name" value="<?php echo esc_attr( $b->driver_name ); ?>" class="regular-text"></td>
-                                </tr>
-                                <tr>
-                                    <th><label><?php esc_html_e( 'Driver Age', 'rentafleet' ); ?></label></th>
-                                    <td><input type="number" name="driver_age" value="<?php echo esc_attr( $b->driver_age ); ?>" min="16" max="99" class="small-text"></td>
-                                </tr>
-                                <tr>
-                                    <th><label><?php esc_html_e( 'License Number', 'rentafleet' ); ?></label></th>
-                                    <td><input type="text" name="driver_license" value="<?php echo esc_attr( $b->driver_license ); ?>" class="regular-text"></td>
-                                </tr>
-                                <tr>
-                                    <th><label><?php esc_html_e( 'Additional Drivers', 'rentafleet' ); ?></label></th>
-                                    <td><textarea name="additional_drivers" rows="3" class="large-text"><?php echo esc_textarea( $b->additional_drivers ); ?></textarea></td>
+                                    <th><label><?php esc_html_e( 'Rider Name', 'rentafleet' ); ?></label></th>
+                                    <td><input type="text" name="rider_name" value="<?php echo esc_attr( $b->rider_name ); ?>" class="regular-text"></td>
                                 </tr>
                             </table>
-                        </div>
-
-                        <?php /* Mileage & Fuel */ ?>
-                        <div class="raf-panel">
-                            <h2><?php esc_html_e( 'Mileage & Fuel', 'rentafleet' ); ?></h2>
-                            <table class="form-table">
-                                <tr>
-                                    <th><label><?php esc_html_e( 'Mileage Start (km)', 'rentafleet' ); ?></label></th>
-                                    <td><input type="number" name="mileage_start" value="<?php echo esc_attr( $b->mileage_start ); ?>" min="0" class="small-text"></td>
-                                </tr>
-                                <tr>
-                                    <th><label><?php esc_html_e( 'Mileage End (km)', 'rentafleet' ); ?></label></th>
-                                    <td><input type="number" name="mileage_end" value="<?php echo esc_attr( $b->mileage_end ); ?>" min="0" class="small-text"></td>
-                                </tr>
-                                <tr>
-                                    <th><label><?php esc_html_e( 'Fuel Level Start', 'rentafleet' ); ?></label></th>
-                                    <td>
-                                        <select name="fuel_level_start">
-                                            <?php foreach ( $fuel_levels as $fk => $fl ) : ?>
-                                                <option value="<?php echo esc_attr( $fk ); ?>" <?php selected( $b->fuel_level_start, $fk ); ?>><?php echo esc_html( $fl ); ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th><label><?php esc_html_e( 'Fuel Level End', 'rentafleet' ); ?></label></th>
-                                    <td>
-                                        <select name="fuel_level_end">
-                                            <?php foreach ( $fuel_levels as $fk => $fl ) : ?>
-                                                <option value="<?php echo esc_attr( $fk ); ?>" <?php selected( $b->fuel_level_end, $fk ); ?>><?php echo esc_html( $fl ); ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
                                     </td>
                                 </tr>
                             </table>
@@ -1092,14 +1008,7 @@ class RAF_Admin_Bookings {
             'payment_status'      => sanitize_text_field( $_POST['payment_status'] ),
             'payment_method'      => sanitize_text_field( $_POST['payment_method'] ),
             'status'              => sanitize_text_field( $_POST['status'] ),
-            'driver_name'         => sanitize_text_field( $_POST['driver_name'] ),
-            'driver_age'          => ! empty( $_POST['driver_age'] ) ? absint( $_POST['driver_age'] ) : null,
-            'driver_license'      => sanitize_text_field( $_POST['driver_license'] ),
-            'additional_drivers'  => sanitize_textarea_field( $_POST['additional_drivers'] ),
-            'mileage_start'       => ! empty( $_POST['mileage_start'] ) ? absint( $_POST['mileage_start'] ) : null,
-            'mileage_end'         => ! empty( $_POST['mileage_end'] ) ? absint( $_POST['mileage_end'] ) : null,
-            'fuel_level_start'    => sanitize_text_field( $_POST['fuel_level_start'] ),
-            'fuel_level_end'      => sanitize_text_field( $_POST['fuel_level_end'] ),
+            'rider_name'          => sanitize_text_field( $_POST['rider_name'] ?? '' ),
             'notes'               => sanitize_textarea_field( $_POST['notes'] ),
             'admin_notes'         => sanitize_textarea_field( $_POST['admin_notes'] ),
         );

@@ -224,17 +224,12 @@ class RAF_Admin_Customers {
                                 <td><?php echo $customer->phone ? esc_html( $customer->phone ) : '&mdash;'; ?></td>
                             </tr>
                             <tr>
-                                <th><?php esc_html_e( 'Address', 'rentafleet' ); ?></th>
-                                <td>
-                                    <?php
-                                    $addr = array_filter( array( $customer->address, $customer->city, $customer->state, $customer->country, $customer->zip ) );
-                                    echo $addr ? esc_html( implode( ', ', $addr ) ) : '&mdash;';
-                                    ?>
-                                </td>
+                                <th><?php esc_html_e( 'Passport Number', 'rentafleet' ); ?></th>
+                                <td><?php echo $customer->passport_number ? esc_html( $customer->passport_number ) : '&mdash;'; ?></td>
                             </tr>
                             <tr>
-                                <th><?php esc_html_e( 'License Number', 'rentafleet' ); ?></th>
-                                <td><?php echo $customer->license_number ? esc_html( $customer->license_number ) : '&mdash;'; ?></td>
+                                <th><?php esc_html_e( 'Citizenship', 'rentafleet' ); ?></th>
+                                <td><?php echo $customer->citizenship ? esc_html( $customer->citizenship ) : '&mdash;'; ?></td>
                             </tr>
                             <?php if ( ! empty( $customer->notes ) ) : ?>
                             <tr>
@@ -335,19 +330,15 @@ class RAF_Admin_Customers {
         $title    = $is_edit ? __( 'Edit Customer', 'rentafleet' ) : __( 'Add Customer', 'rentafleet' );
 
         $defaults = (object) array(
-            'id'             => 0,
-            'first_name'     => '',
-            'last_name'      => '',
-            'email'          => '',
-            'phone'          => '',
-            'address'        => '',
-            'city'           => '',
-            'state'          => '',
-            'country'        => '',
-            'zip'            => '',
-            'license_number' => '',
-            'notes'          => '',
-            'status'         => 'active',
+            'id'              => 0,
+            'first_name'      => '',
+            'last_name'       => '',
+            'email'           => '',
+            'phone'           => '',
+            'passport_number' => '',
+            'citizenship'     => '',
+            'notes'           => '',
+            'status'          => 'active',
         );
         $c = $is_edit ? $customer : $defaults;
 
@@ -382,39 +373,16 @@ class RAF_Admin_Customers {
                                     <td><input type="email" name="email" value="<?php echo esc_attr( $c->email ); ?>" class="regular-text" required></td>
                                 </tr>
                                 <tr>
-                                    <th><label><?php esc_html_e( 'Phone', 'rentafleet' ); ?></label></th>
-                                    <td><input type="text" name="phone" value="<?php echo esc_attr( $c->phone ); ?>" class="regular-text"></td>
+                                    <th><label><?php esc_html_e( 'Phone *', 'rentafleet' ); ?></label></th>
+                                    <td><input type="text" name="phone" value="<?php echo esc_attr( $c->phone ); ?>" class="regular-text" required></td>
                                 </tr>
                                 <tr>
-                                    <th><label><?php esc_html_e( 'License Number', 'rentafleet' ); ?></label></th>
-                                    <td><input type="text" name="license_number" value="<?php echo esc_attr( $c->license_number ); ?>" class="regular-text"></td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <!-- Address -->
-                        <div class="raf-panel">
-                            <h2><?php esc_html_e( 'Address', 'rentafleet' ); ?></h2>
-                            <table class="form-table">
-                                <tr>
-                                    <th><label><?php esc_html_e( 'Street Address', 'rentafleet' ); ?></label></th>
-                                    <td><textarea name="address" rows="2" class="large-text"><?php echo esc_textarea( $c->address ); ?></textarea></td>
+                                    <th><label><?php esc_html_e( 'Passport Number', 'rentafleet' ); ?></label></th>
+                                    <td><input type="text" name="passport_number" value="<?php echo esc_attr( $c->passport_number ); ?>" class="regular-text"></td>
                                 </tr>
                                 <tr>
-                                    <th><label><?php esc_html_e( 'City', 'rentafleet' ); ?></label></th>
-                                    <td><input type="text" name="city" value="<?php echo esc_attr( $c->city ); ?>" class="regular-text"></td>
-                                </tr>
-                                <tr>
-                                    <th><label><?php esc_html_e( 'State / Province', 'rentafleet' ); ?></label></th>
-                                    <td><input type="text" name="state" value="<?php echo esc_attr( $c->state ); ?>" class="regular-text"></td>
-                                </tr>
-                                <tr>
-                                    <th><label><?php esc_html_e( 'Country', 'rentafleet' ); ?></label></th>
-                                    <td><input type="text" name="country" value="<?php echo esc_attr( $c->country ); ?>" class="regular-text"></td>
-                                </tr>
-                                <tr>
-                                    <th><label><?php esc_html_e( 'Zip / Postal Code', 'rentafleet' ); ?></label></th>
-                                    <td><input type="text" name="zip" value="<?php echo esc_attr( $c->zip ); ?>" class="small-text"></td>
+                                    <th><label><?php esc_html_e( 'Citizenship', 'rentafleet' ); ?></label></th>
+                                    <td><input type="text" name="citizenship" value="<?php echo esc_attr( $c->citizenship ); ?>" class="regular-text"></td>
                                 </tr>
                             </table>
                         </div>
@@ -480,18 +448,14 @@ class RAF_Admin_Customers {
         $id = absint( $_POST['customer_id'] );
 
         $data = array(
-            'first_name'     => sanitize_text_field( $_POST['first_name'] ),
-            'last_name'      => sanitize_text_field( $_POST['last_name'] ),
-            'email'          => sanitize_email( $_POST['email'] ),
-            'phone'          => sanitize_text_field( $_POST['phone'] ),
-            'address'        => sanitize_textarea_field( $_POST['address'] ),
-            'city'           => sanitize_text_field( $_POST['city'] ),
-            'state'          => sanitize_text_field( $_POST['state'] ),
-            'country'        => sanitize_text_field( $_POST['country'] ),
-            'zip'            => sanitize_text_field( $_POST['zip'] ),
-            'license_number' => sanitize_text_field( $_POST['license_number'] ),
-            'notes'          => sanitize_textarea_field( $_POST['notes'] ),
-            'status'         => sanitize_text_field( $_POST['status'] ),
+            'first_name'      => sanitize_text_field( $_POST['first_name'] ),
+            'last_name'       => sanitize_text_field( $_POST['last_name'] ),
+            'email'           => sanitize_email( $_POST['email'] ),
+            'phone'           => sanitize_text_field( $_POST['phone'] ),
+            'passport_number' => sanitize_text_field( $_POST['passport_number'] ?? '' ),
+            'citizenship'     => sanitize_text_field( $_POST['citizenship'] ?? '' ),
+            'notes'           => sanitize_textarea_field( $_POST['notes'] ),
+            'status'          => sanitize_text_field( $_POST['status'] ),
         );
 
         // Validate required fields.
