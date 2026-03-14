@@ -136,6 +136,7 @@ final class RentAFleet {
 
         wp_localize_script( 'raf-admin', 'rafAdmin', array(
             'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
+            'adminUrl'  => admin_url( 'admin.php' ),
             'restUrl'   => rest_url( 'rentafleet/v1/' ),
             'nonce'     => wp_create_nonce( 'raf_admin_nonce' ),
             'restNonce' => wp_create_nonce( 'wp_rest' ),

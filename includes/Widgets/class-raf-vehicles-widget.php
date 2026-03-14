@@ -18,7 +18,7 @@ class RAF_Vehicles_Widget extends WP_Widget {
     }
 
     public function widget( $args, $instance ) {
-        $title    = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Our Vehicles', 'rentafleet' );
+        $title    = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Our Bikes', 'rentafleet' );
         $title    = apply_filters( 'widget_title', $title, $instance, $this->id_base );
         $count    = ! empty( $instance['count'] ) ? intval( $instance['count'] ) : 3;
         $category = ! empty( $instance['category'] ) ? intval( $instance['category'] ) : 0;
@@ -54,11 +54,13 @@ class RAF_Vehicles_Widget extends WP_Widget {
                 <div class="raf-widget-vehicle-info">
                     <h4><a href="<?php echo esc_url( $booking_url ); ?>"><?php echo esc_html( $vehicle->name ); ?></a></h4>
                     <div class="raf-widget-vehicle-meta">
-                        <?php if ( $vehicle->seats ) : ?>
-                            <span><?php echo esc_html( $vehicle->seats ); ?> <?php esc_html_e( 'seats', 'rentafleet' ); ?></span>
+                        <?php if ( $vehicle->engine_cc ) : ?>
+                            <span><?php echo esc_html( $vehicle->engine_cc . 'cc' ); ?></span>
                         <?php endif; ?>
-                        <?php if ( $vehicle->transmission ) : ?>
-                            <span><?php echo esc_html( ucfirst( $vehicle->transmission ) ); ?></span>
+                        <?php if ( $vehicle->bike_type ) :
+                            $bike_types = RAF_Helpers::get_bike_types();
+                        ?>
+                            <span><?php echo esc_html( isset( $bike_types[ $vehicle->bike_type ] ) ? $bike_types[ $vehicle->bike_type ] : ucfirst( $vehicle->bike_type ) ); ?></span>
                         <?php endif; ?>
                     </div>
                     <?php if ( $daily_rate > 0 ) : ?>
@@ -79,7 +81,7 @@ class RAF_Vehicles_Widget extends WP_Widget {
     }
 
     public function form( $instance ) {
-        $title    = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Our Vehicles', 'rentafleet' );
+        $title    = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Our Bikes', 'rentafleet' );
         $count    = ! empty( $instance['count'] ) ? intval( $instance['count'] ) : 3;
         $category = ! empty( $instance['category'] ) ? intval( $instance['category'] ) : 0;
 

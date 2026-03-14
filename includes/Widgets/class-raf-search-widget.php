@@ -18,7 +18,7 @@ class RAF_Search_Widget extends WP_Widget {
     }
 
     public function widget( $args, $instance ) {
-        $title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Rent a Car', 'rentafleet' );
+        $title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Rent a Bike', 'rentafleet' );
         $title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
         $locations  = RAF_Location::get_all( array( 'type' => 'pickup' ) );
@@ -72,7 +72,7 @@ class RAF_Search_Widget extends WP_Widget {
     }
 
     public function form( $instance ) {
-        $title       = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Rent a Car', 'rentafleet' );
+        $title       = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Rent a Bike', 'rentafleet' );
         $target_page = ! empty( $instance['target_page'] ) ? $instance['target_page'] : '';
 
         $pages = get_pages();

@@ -47,7 +47,7 @@ class RAF_Admin {
             'manage_options',
             'rentafleet',
             array( 'RAF_Admin_Dashboard', 'render' ),
-            'dashicons-car',
+            'dashicons-motorcycle',
             26
         );
 
@@ -108,7 +108,7 @@ class RAF_Admin {
             __( 'Calendar', 'rentafleet' ),
             'manage_options',
             'raf-calendar',
-            array( $this, 'page_placeholder' )
+            array( $this, 'page_calendar' )
         );
 
         // Submenu: Pricing & Rates
@@ -253,6 +253,20 @@ class RAF_Admin {
         }
 
         delete_transient( 'raf_admin_notices' );
+    }
+
+    /* ─────────────────────────────────────────────
+     *  CALENDAR PAGE
+     * ───────────────────────────────────────────── */
+
+    /**
+     * Render the bookings calendar page.
+     */
+    public function page_calendar() {
+        $calendar = new RAF_Calendar();
+        echo '<div class="wrap"><h1>' . esc_html__( 'Bookings Calendar', 'rentafleet' ) . '</h1>';
+        echo $calendar->render_admin_calendar();
+        echo '</div>';
     }
 
     /* ─────────────────────────────────────────────

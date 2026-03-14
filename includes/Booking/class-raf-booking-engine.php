@@ -45,20 +45,13 @@ class RAF_Booking_Engine {
 
         // Get or create customer
         $customer_data = array(
-            'first_name' => sanitize_text_field( $data['first_name'] ?? '' ),
-            'last_name'  => sanitize_text_field( $data['last_name'] ?? '' ),
-            'email'      => sanitize_email( $data['email'] ?? '' ),
-            'phone'      => sanitize_text_field( $data['phone'] ?? '' ),
-            'address'    => sanitize_textarea_field( $data['address'] ?? '' ),
-            'city'       => sanitize_text_field( $data['city'] ?? '' ),
-            'state'      => sanitize_text_field( $data['state'] ?? '' ),
-            'country'    => sanitize_text_field( $data['country'] ?? '' ),
-            'zip'        => sanitize_text_field( $data['zip'] ?? '' ),
+            'first_name'      => sanitize_text_field( $data['first_name'] ?? '' ),
+            'last_name'       => sanitize_text_field( $data['last_name'] ?? '' ),
+            'email'           => sanitize_email( $data['email'] ?? '' ),
+            'phone'           => sanitize_text_field( $data['phone'] ?? '' ),
+            'passport_number' => sanitize_text_field( $data['passport_number'] ?? '' ),
+            'citizenship'     => sanitize_text_field( $data['citizenship'] ?? '' ),
         );
-
-        if ( is_user_logged_in() ) {
-            $customer_data['user_id'] = get_current_user_id();
-        }
 
         $customer_id = RAF_Customer::get_or_create( $customer_data );
         if ( ! $customer_id ) {
@@ -107,9 +100,7 @@ class RAF_Booking_Engine {
             'currency'            => $pricing['currency'],
             'status'              => $status,
             'payment_status'      => 'pending',
-            'driver_name'         => sanitize_text_field( $data['driver_name'] ?? '' ),
-            'driver_age'          => intval( $data['driver_age'] ?? 0 ),
-            'driver_license'      => sanitize_text_field( $data['driver_license'] ?? '' ),
+            'rider_name'          => sanitize_text_field( $data['rider_name'] ?? '' ),
             'notes'               => sanitize_textarea_field( $data['notes'] ?? '' ),
             'ip_address'          => $_SERVER['REMOTE_ADDR'] ?? '',
             'user_agent'          => $_SERVER['HTTP_USER_AGENT'] ?? '',
@@ -207,11 +198,8 @@ class RAF_Booking_Engine {
                 'make'          => $v->make,
                 'model'         => $v->model,
                 'year'          => $v->year,
-                'transmission'  => $v->transmission,
-                'fuel_type'     => $v->fuel_type,
-                'seats'         => $v->seats,
-                'doors'         => $v->doors,
-                'luggage'       => $v->luggage_capacity,
+                'engine_cc'     => $v->engine_cc,
+                'bike_type'     => $v->bike_type,
                 'image'         => $v->featured_image_id ? wp_get_attachment_image_url( $v->featured_image_id, 'medium' ) : '',
                 'features'      => RAF_Vehicle::get_features( $v ),
                 'rating'        => RAF_Vehicle::get_average_rating( $v->id ),
@@ -236,10 +224,6 @@ class RAF_Booking_Engine {
     public function ajax_create_booking() {
         check_ajax_referer( 'raf_public_nonce', 'nonce' );
 
-        if ( get_option( 'raf_require_login', 0 ) && ! is_user_logged_in() ) {
-            wp_send_json_error( __( 'Please log in to make a booking.', 'rentafleet' ) );
-        }
-
         $data = array(
             'vehicle_id'          => intval( $_POST['vehicle_id'] ?? 0 ),
             'pickup_date'         => sanitize_text_field( $_POST['pickup_date'] ?? '' ),
@@ -250,14 +234,9 @@ class RAF_Booking_Engine {
             'last_name'           => sanitize_text_field( $_POST['last_name'] ?? '' ),
             'email'               => sanitize_email( $_POST['email'] ?? '' ),
             'phone'               => sanitize_text_field( $_POST['phone'] ?? '' ),
-            'address'             => sanitize_textarea_field( $_POST['address'] ?? '' ),
-            'city'                => sanitize_text_field( $_POST['city'] ?? '' ),
-            'state'               => sanitize_text_field( $_POST['state'] ?? '' ),
-            'country'             => sanitize_text_field( $_POST['country'] ?? '' ),
-            'zip'                 => sanitize_text_field( $_POST['zip'] ?? '' ),
-            'driver_name'         => sanitize_text_field( $_POST['driver_name'] ?? '' ),
-            'driver_age'          => intval( $_POST['driver_age'] ?? 0 ),
-            'driver_license'      => sanitize_text_field( $_POST['driver_license'] ?? '' ),
+            'passport_number'     => sanitize_text_field( $_POST['passport_number'] ?? '' ),
+            'citizenship'         => sanitize_text_field( $_POST['citizenship'] ?? '' ),
+            'rider_name'          => sanitize_text_field( $_POST['rider_name'] ?? '' ),
             'extras'              => isset( $_POST['extras'] ) ? (array) $_POST['extras'] : array(),
             'insurance'           => isset( $_POST['insurance'] ) ? array_map( 'intval', (array) $_POST['insurance'] ) : array(),
             'coupon_code'         => sanitize_text_field( $_POST['coupon_code'] ?? '' ),

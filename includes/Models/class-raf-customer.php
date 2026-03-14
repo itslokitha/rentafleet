@@ -19,14 +19,7 @@ class RAF_Customer {
         ) );
     }
 
-    public static function get_by_user_id( $user_id ) {
-        global $wpdb;
-        return $wpdb->get_row( $wpdb->prepare(
-            "SELECT * FROM " . RAF_Helpers::table( self::$table ) . " WHERE user_id = %d", $user_id
-        ) );
-    }
-
-    public static function get_all( $args = array() ) {
+public static function get_all( $args = array() ) {
         global $wpdb;
         $table = RAF_Helpers::table( self::$table );
         $defaults = array(

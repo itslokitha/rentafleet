@@ -58,7 +58,7 @@ class RAF_Calendar {
         <div class="raf-calendar-wrapper">
             <div class="raf-calendar-controls">
                 <select id="raf-calendar-vehicle">
-                    <option value="0"><?php _e( 'All Vehicles', 'rentafleet' ); ?></option>
+                    <option value="0"><?php _e( 'All Bikes', 'rentafleet' ); ?></option>
                     <?php foreach ( $vehicles as $v ) : ?>
                         <option value="<?php echo esc_attr( $v->id ); ?>"><?php echo esc_html( $v->name ); ?></option>
                     <?php endforeach; ?>

@@ -161,49 +161,41 @@ class RAF_Helpers {
     }
 
     /**
-     * Get transmission types
+     * Get bike types
      */
-    public static function get_transmissions() {
+    public static function get_bike_types() {
         return array(
-            'automatic' => __( 'Automatic', 'rentafleet' ),
-            'manual'    => __( 'Manual', 'rentafleet' ),
-            'cvt'       => __( 'CVT', 'rentafleet' ),
+            'standard'  => __( 'Standard', 'rentafleet' ),
+            'sport'     => __( 'Sport', 'rentafleet' ),
+            'cruiser'   => __( 'Cruiser', 'rentafleet' ),
+            'adventure' => __( 'Adventure', 'rentafleet' ),
+            'touring'   => __( 'Touring', 'rentafleet' ),
+            'scooter'   => __( 'Scooter', 'rentafleet' ),
+            'dirt'      => __( 'Dirt / Off-road', 'rentafleet' ),
+            'naked'     => __( 'Naked / Streetfighter', 'rentafleet' ),
         );
     }
 
     /**
-     * Get fuel types
+     * Get bike features list
      */
-    public static function get_fuel_types() {
+    public static function get_bike_features() {
         return array(
-            'gasoline' => __( 'Gasoline', 'rentafleet' ),
-            'diesel'   => __( 'Diesel', 'rentafleet' ),
-            'hybrid'   => __( 'Hybrid', 'rentafleet' ),
-            'electric' => __( 'Electric', 'rentafleet' ),
-            'lpg'      => __( 'LPG', 'rentafleet' ),
-        );
-    }
-
-    /**
-     * Get vehicle features list
-     */
-    public static function get_vehicle_features() {
-        return array(
-            'ac'              => __( 'Air Conditioning', 'rentafleet' ),
-            'gps'             => __( 'GPS Navigation', 'rentafleet' ),
-            'bluetooth'       => __( 'Bluetooth', 'rentafleet' ),
-            'usb'             => __( 'USB Port', 'rentafleet' ),
-            'cruise_control'  => __( 'Cruise Control', 'rentafleet' ),
-            'parking_sensors' => __( 'Parking Sensors', 'rentafleet' ),
-            'backup_camera'   => __( 'Backup Camera', 'rentafleet' ),
-            'heated_seats'    => __( 'Heated Seats', 'rentafleet' ),
-            'sunroof'         => __( 'Sunroof', 'rentafleet' ),
-            'leather_seats'   => __( 'Leather Seats', 'rentafleet' ),
-            'four_wd'         => __( '4WD/AWD', 'rentafleet' ),
-            'child_seat_compatible' => __( 'Child Seat Compatible', 'rentafleet' ),
-            'keyless_entry'   => __( 'Keyless Entry', 'rentafleet' ),
-            'apple_carplay'   => __( 'Apple CarPlay', 'rentafleet' ),
-            'android_auto'    => __( 'Android Auto', 'rentafleet' ),
+            'abs'              => __( 'ABS', 'rentafleet' ),
+            'traction_control' => __( 'Traction Control', 'rentafleet' ),
+            'riding_modes'     => __( 'Riding Modes', 'rentafleet' ),
+            'quick_shifter'    => __( 'Quick Shifter', 'rentafleet' ),
+            'heated_grips'     => __( 'Heated Grips', 'rentafleet' ),
+            'windscreen'       => __( 'Windscreen', 'rentafleet' ),
+            'panniers'         => __( 'Panniers / Side Cases', 'rentafleet' ),
+            'top_box'          => __( 'Top Box', 'rentafleet' ),
+            'gps'              => __( 'GPS Navigation', 'rentafleet' ),
+            'usb_charger'      => __( 'USB Charger', 'rentafleet' ),
+            'led_lights'       => __( 'LED Lights', 'rentafleet' ),
+            'keyless_ignition' => __( 'Keyless Ignition', 'rentafleet' ),
+            'cruise_control'   => __( 'Cruise Control', 'rentafleet' ),
+            'center_stand'     => __( 'Centre Stand', 'rentafleet' ),
+            'phone_mount'      => __( 'Phone Mount', 'rentafleet' ),
         );
     }
 
