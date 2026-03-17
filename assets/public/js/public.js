@@ -100,7 +100,7 @@
 
                 apiGet('search', data)
                     .done(function (res) {
-                        var vehicles = res.data || res;
+                        var vehicles = res.vehicles || res.data || [];
                         $loading.hide();
 
                         if (!vehicles.length) {
@@ -136,8 +136,9 @@
         },
 
         vehicleCard: function (v) {
-            var img = v.image_url
-                ? '<img src="' + v.image_url + '" alt="' + v.name + '" loading="lazy">'
+            var imgUrl = v.image_url || v.image || '';
+            var img = imgUrl
+                ? '<img src="' + imgUrl + '" alt="' + v.name + '" loading="lazy">'
                 : '<div class="raf-vehicle-no-image"><span class="dashicons dashicons-motorcycle"></span></div>';
 
             var price = v.daily_rate > 0
@@ -168,8 +169,9 @@
          * Build a selectable bike card for Step 2 of booking flow.
          */
         bikeCard: function (v) {
-            var img = v.image_url
-                ? '<img src="' + v.image_url + '" alt="' + v.name + '" loading="lazy">'
+            var imgUrl = v.image_url || v.image || '';
+            var img = imgUrl
+                ? '<img src="' + imgUrl + '" alt="' + v.name + '" loading="lazy">'
                 : '<div class="raf-vehicle-no-image"><span class="dashicons dashicons-motorcycle"></span></div>';
 
             var price = v.daily_rate > 0
@@ -359,7 +361,7 @@
 
             apiGet('search', data)
                 .done(function (res) {
-                    var bikes = res.data || res;
+                    var bikes = res.vehicles || res.data || [];
                     $loading.hide();
 
                     if (!bikes.length) {

@@ -13,7 +13,7 @@ class RAF_Availability_Checker {
         }
 
         // Get total units
-        $total_units = $vehicle->units;
+        $total_units = (int) $vehicle->units;
         if ( $location_id ) {
             global $wpdb;
             $units = $wpdb->get_var( $wpdb->prepare(
@@ -24,6 +24,8 @@ class RAF_Availability_Checker {
             if ( $units !== null ) {
                 $total_units = (int) $units;
             }
+            // If no vehicle_locations entry exists, the vehicle is available at all locations.
+            // In that case, use the vehicle's total units (already set above).
         }
 
         // Check blocked dates
@@ -46,19 +48,37 @@ class RAF_Availability_Checker {
             $args['category_id'] = $category_id;
         }
 
-        // If location specified, get vehicles at that location
-        if ( $location_id ) {
-            $vehicles = RAF_Vehicle::get_by_location( $location_id );
-        } else {
-            $vehicles = RAF_Vehicle::get_all( $args );
-        }
+        // Always get all active vehicles first, then filter by location.
+        // Using get_by_location() alone would miss vehicles that are available
+        // at "all locations" (i.e. have no entries in vehicle_locations table).
+        $vehicles = RAF_Vehicle::get_all( $args );
 
         $available = array();
         foreach ( $vehicles as $vehicle ) {
+            // If a location is specified, check whether this vehicle is assigned there.
+            // Vehicles with NO vehicle_locations entries are treated as available everywhere.
+            if ( $location_id ) {
+                $vehicle_locations = RAF_Vehicle::get_locations( $vehicle->id );
+                if ( ! empty( $vehicle_locations ) ) {
+                    // Vehicle has explicit location assignments — check if the requested location is among them.
+                    $location_ids = array_map( function( $loc ) { return (int) $loc->id; }, $vehicle_locations );
+                    if ( ! in_array( (int) $location_id, $location_ids, true ) ) {
+                        continue;
+                    }
+                }
+                // If $vehicle_locations is empty, vehicle is available at all locations — don't skip.
+            }
+
             if ( self::is_available( $vehicle->id, $pickup_date, $dropoff_date, $location_id ) ) {
-                // Check min/max rental days
+                // Check min/max rental days (0 means no restriction)
                 $rental_days = RAF_Helpers::calculate_rental_days( $pickup_date, $dropoff_date );
-                if ( $rental_days < $vehicle->min_rental_days || $rental_days > $vehicle->max_rental_days ) {
+                $min_days = isset( $vehicle->min_rental_days ) ? (int) $vehicle->min_rental_days : 0;
+                $max_days = isset( $vehicle->max_rental_days ) ? (int) $vehicle->max_rental_days : 0;
+
+                if ( $min_days > 0 && $rental_days < $min_days ) {
+                    continue;
+                }
+                if ( $max_days > 0 && $rental_days > $max_days ) {
                     continue;
                 }
                 $available[] = $vehicle;

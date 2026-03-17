@@ -82,9 +82,6 @@ final class RentAFleet {
     }
 
     private function init_hooks() {
-        register_activation_hook( RAF_PLUGIN_FILE, array( 'RAF_Activator', 'activate' ) );
-        register_deactivation_hook( RAF_PLUGIN_FILE, array( 'RAF_Deactivator', 'deactivate' ) );
-
         add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );
         add_action( 'init', array( $this, 'init' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
@@ -98,7 +95,15 @@ final class RentAFleet {
         $installed = get_option( 'raf_db_version', '0' );
         if ( version_compare( $installed, RAF_DB_VERSION, '<' ) ) {
             RAF_Activator::create_tables();
+            RAF_Activator::create_default_options();
+            RAF_Activator::create_pages();
             update_option( 'raf_db_version', RAF_DB_VERSION );
+        }
+
+        // Safety net: ensure pages exist. Uses a transient to avoid running on every page load.
+        if ( false === get_transient( 'raf_pages_checked' ) ) {
+            RAF_Activator::create_pages();
+            set_transient( 'raf_pages_checked', 1, DAY_IN_SECONDS );
         }
     }
 
@@ -178,5 +183,10 @@ final class RentAFleet {
 function RentAFleet() {
     return RentAFleet::instance();
 }
+
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-raf-activator.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-raf-deactivator.php';
+register_activation_hook( __FILE__, array( 'RAF_Activator', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'RAF_Deactivator', 'deactivate' ) );
 
 RentAFleet();

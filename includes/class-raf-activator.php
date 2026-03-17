@@ -7,6 +7,10 @@ class RAF_Activator {
         self::create_tables();
         self::create_default_options();
         self::create_pages();
+
+        // Clear the transient so on_plugins_loaded safety net also runs after activation.
+        delete_transient( 'raf_pages_checked' );
+
         flush_rewrite_rules();
     }
 
@@ -564,36 +568,53 @@ class RAF_Activator {
         $pages = array(
             'raf_search_page'   => array(
                 'title'   => 'Rent a Bike',
-                'content' => '[rentafleet_search]',
+                'content' => '[raf_search]',
             ),
             'raf_vehicles_page' => array(
                 'title'   => 'Our Bikes',
-                'content' => '[rentafleet_vehicles]',
+                'content' => '[raf_vehicles]',
             ),
             'raf_booking_page'  => array(
                 'title'   => 'Complete Booking',
-                'content' => '[rentafleet_booking]',
+                'content' => '[raf_booking]',
             ),
             'raf_confirmation_page' => array(
                 'title'   => 'Booking Confirmation',
-                'content' => '[rentafleet_confirmation]',
+                'content' => '[raf_confirmation]',
             ),
             'raf_my_bookings_page' => array(
                 'title'   => 'My Bookings',
-                'content' => '[rentafleet_my_bookings]',
+                'content' => '[raf_my_bookings]',
             ),
         );
 
         foreach ( $pages as $option_key => $page ) {
-            $page_id = get_option( $option_key );
-            if ( ! $page_id || ! get_post( $page_id ) ) {
-                $page_id = wp_insert_post( array(
+            $page_id   = get_option( $option_key );
+            $existing  = $page_id ? get_post( $page_id ) : null;
+
+            if ( $existing && 'trash' === $existing->post_status ) {
+                // Page was trashed -- treat as deleted.
+                $existing = null;
+            }
+
+            if ( ! $page_id || ! $existing ) {
+                // Page does not exist or was deleted -- create it.
+                $new_id = wp_insert_post( array(
                     'post_title'   => $page['title'],
                     'post_content' => $page['content'],
                     'post_status'  => 'publish',
                     'post_type'    => 'page',
                 ) );
-                update_option( $option_key, $page_id );
+
+                if ( $new_id && ! is_wp_error( $new_id ) ) {
+                    update_option( $option_key, $new_id );
+                }
+            } elseif ( $existing && false === strpos( $existing->post_content, $page['content'] ) ) {
+                // Page exists but does NOT contain the correct shortcode -- update it.
+                wp_update_post( array(
+                    'ID'           => $existing->ID,
+                    'post_content' => $page['content'],
+                ) );
             }
         }
     }

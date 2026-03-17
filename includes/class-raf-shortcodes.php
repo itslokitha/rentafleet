@@ -18,6 +18,13 @@ class RAF_Shortcodes {
         add_shortcode( 'raf_booking', array( $this, 'booking_shortcode' ) );
         add_shortcode( 'raf_confirmation', array( $this, 'confirmation_shortcode' ) );
         add_shortcode( 'raf_my_bookings', array( $this, 'my_bookings_shortcode' ) );
+
+        // Aliases — pages created by the activator use the `rentafleet_*` prefix.
+        add_shortcode( 'rentafleet_search', array( $this, 'search_shortcode' ) );
+        add_shortcode( 'rentafleet_vehicles', array( $this, 'vehicles_shortcode' ) );
+        add_shortcode( 'rentafleet_booking', array( $this, 'booking_shortcode' ) );
+        add_shortcode( 'rentafleet_confirmation', array( $this, 'confirmation_shortcode' ) );
+        add_shortcode( 'rentafleet_my_bookings', array( $this, 'my_bookings_shortcode' ) );
     }
 
     /* ─────────────────────────────────────────────

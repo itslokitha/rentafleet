@@ -137,11 +137,11 @@ class RAF_Statistics {
 
         return $wpdb->get_results($wpdb->prepare(
             "SELECT b.*, c.first_name, c.last_name, c.phone,
-                    v.make, v.model, v.year, v.plate_number
+                    v.make, v.model, v.year, v.license_plate
              FROM {$bt} b
              LEFT JOIN {$ct} c ON b.customer_id = c.id
              LEFT JOIN {$vt} v ON b.vehicle_id = v.id
-             WHERE b.status = 'confirmed' 
+             WHERE b.status = 'confirmed'
                AND DATE(b.pickup_date) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL %d DAY)
              ORDER BY b.pickup_date ASC",
             $days
@@ -156,11 +156,11 @@ class RAF_Statistics {
 
         return $wpdb->get_results($wpdb->prepare(
             "SELECT b.*, c.first_name, c.last_name, c.phone,
-                    v.make, v.model, v.year, v.plate_number
+                    v.make, v.model, v.year, v.license_plate
              FROM {$bt} b
              LEFT JOIN {$ct} c ON b.customer_id = c.id
              LEFT JOIN {$vt} v ON b.vehicle_id = v.id
-             WHERE b.status = 'active' 
+             WHERE b.status = 'active'
                AND DATE(b.dropoff_date) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL %d DAY)
              ORDER BY b.dropoff_date ASC",
             $days
