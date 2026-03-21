@@ -35,12 +35,49 @@ class RAF_Booking_Engine {
             return new WP_Error( 'not_available', __( 'Vehicle is not available for the selected dates.', 'rentafleet' ) );
         }
 
-        // Check min booking advance
+        // Check min booking advance (legacy day-based check)
         $min_advance = (int) get_option( 'raf_min_booking_advance', 1 );
         $pickup_dt   = new DateTime( $data['pickup_date'] );
         $now_dt      = new DateTime( current_time( 'mysql' ) );
         if ( $pickup_dt->diff( $now_dt )->days < $min_advance && $pickup_dt > $now_dt ) {
             return new WP_Error( 'too_soon', sprintf( __( 'Bookings must be made at least %d day(s) in advance.', 'rentafleet' ), $min_advance ) );
+        }
+
+        // Check minimum advance booking hours (timezone-aware)
+        $min_hours = (int) get_option( 'raf_min_advance_hours', 24 );
+        if ( $min_hours > 0 ) {
+            $tz_string = get_option( 'raf_timezone', get_option( 'timezone_string', 'UTC' ) ) ?: 'UTC';
+            try {
+                $tz = new DateTimeZone( $tz_string );
+            } catch ( Exception $e ) {
+                $tz = new DateTimeZone( 'UTC' );
+            }
+
+            $now = new DateTime( 'now', $tz );
+
+            $pickup_date = $data['pickup_date'];
+            $pickup_time = isset( $data['pickup_time'] ) ? $data['pickup_time'] : '00:00';
+            $pickup_datetime_str = $pickup_date . ' ' . $pickup_time;
+
+            try {
+                $pickup_dt_check = new DateTime( $pickup_datetime_str, $tz );
+            } catch ( Exception $e ) {
+                return new WP_Error( 'invalid_date', __( 'Invalid pickup date or time.', 'rentafleet' ) );
+            }
+
+            $diff_seconds = $pickup_dt_check->getTimestamp() - $now->getTimestamp();
+            $diff_hours   = $diff_seconds / 3600;
+
+            if ( $diff_hours < $min_hours ) {
+                return new WP_Error(
+                    'booking_too_soon',
+                    sprintf(
+                        __( 'Bookings must be made at least %d hours in advance. Please select a later pickup time.', 'rentafleet' ),
+                        $min_hours
+                    ),
+                    array( 'status' => 400 )
+                );
+            }
         }
 
         // Get or create customer

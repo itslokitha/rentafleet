@@ -34,12 +34,13 @@ class RAF_Admin_Settings {
         self::render_tabs( $tab );
 
         switch ( $tab ) {
-            case 'booking':   self::render_booking();  break;
-            case 'deposit':   self::render_deposit();  break;
-            case 'email':     self::render_email();    break;
-            case 'company':   self::render_company();  break;
-            case 'pages':     self::render_pages();    break;
-            default:          self::render_general();  break;
+            case 'booking':       self::render_booking();       break;
+            case 'deposit':       self::render_deposit();       break;
+            case 'email':         self::render_email();         break;
+            case 'email_design':  self::render_email_design();  break;
+            case 'company':       self::render_company();       break;
+            case 'pages':         self::render_pages();         break;
+            default:              self::render_general();       break;
         }
 
         echo '</div>';
@@ -47,12 +48,13 @@ class RAF_Admin_Settings {
 
     private static function render_tabs( $active ) {
         $tabs = array(
-            'general' => __( 'General', 'rentafleet' ),
-            'booking' => __( 'Booking Rules', 'rentafleet' ),
-            'deposit' => __( 'Deposit & Payments', 'rentafleet' ),
-            'email'   => __( 'Email', 'rentafleet' ),
-            'company' => __( 'Company', 'rentafleet' ),
-            'pages'   => __( 'Pages', 'rentafleet' ),
+            'general'      => __( 'General', 'rentafleet' ),
+            'booking'      => __( 'Booking Rules', 'rentafleet' ),
+            'deposit'      => __( 'Deposit & Payments', 'rentafleet' ),
+            'email'        => __( 'Email', 'rentafleet' ),
+            'email_design' => __( 'Email Design', 'rentafleet' ),
+            'company'      => __( 'Company', 'rentafleet' ),
+            'pages'        => __( 'Pages', 'rentafleet' ),
         );
         echo '<nav class="nav-tab-wrapper raf-tab-wrapper">';
         foreach ( $tabs as $slug => $label ) {
@@ -196,6 +198,27 @@ class RAF_Admin_Settings {
                         </td>
                     </tr>
                     <tr>
+                        <th><label><?php esc_html_e( 'Minimum Advance Booking (hours)', 'rentafleet' ); ?></label></th>
+                        <td>
+                            <input type="number" name="raf_min_advance_hours" value="<?php echo esc_attr( get_option( 'raf_min_advance_hours', 24 ) ); ?>" min="0" step="1" class="small-text">
+                            <p class="description"><?php esc_html_e( 'Customers must book at least this many hours before the pickup time. Set to 0 to disable.', 'rentafleet' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label><?php esc_html_e( 'Plugin Timezone', 'rentafleet' ); ?></label></th>
+                        <td>
+                            <?php $current_tz = get_option( 'raf_timezone', get_option( 'timezone_string', 'UTC' ) ) ?: 'UTC'; ?>
+                            <select name="raf_timezone">
+                                <?php foreach ( DateTimeZone::listIdentifiers() as $tz_id ) : ?>
+                                    <option value="<?php echo esc_attr( $tz_id ); ?>" <?php selected( $current_tz, $tz_id ); ?>>
+                                        <?php echo esc_html( $tz_id ); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <p class="description"><?php esc_html_e( 'Used to calculate minimum advance booking times. Should match your business location.', 'rentafleet' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
                         <th><label><?php esc_html_e( 'Time Slot Interval (min)', 'rentafleet' ); ?></label></th>
                         <td>
                             <select name="raf_time_slot_interval">
@@ -219,6 +242,26 @@ class RAF_Admin_Settings {
                         <td>
                             <textarea name="raf_cancellation_policy" rows="5" class="large-text"><?php echo esc_textarea( get_option( 'raf_cancellation_policy', '' ) ); ?></textarea>
                             <p class="description"><?php esc_html_e( 'Displayed to customers during booking. Leave empty to hide.', 'rentafleet' ); ?></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="raf-panel" style="max-width:800px;">
+                <h2><?php esc_html_e( 'Terms & Conditions', 'rentafleet' ); ?></h2>
+                <table class="form-table">
+                    <tr>
+                        <th><label><?php esc_html_e( 'Terms & Conditions Text', 'rentafleet' ); ?></label></th>
+                        <td>
+                            <textarea name="raf_terms_content" rows="10" class="large-text"><?php echo esc_textarea( get_option( 'raf_terms_content', '' ) ); ?></textarea>
+                            <p class="description"><?php esc_html_e( 'Displayed in Step 3 of the booking modal. Customers must agree before confirming. HTML allowed.', 'rentafleet' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label><?php esc_html_e( 'Security Deposit Amount', 'rentafleet' ); ?></label></th>
+                        <td>
+                            <input type="number" name="raf_security_deposit" value="<?php echo esc_attr( get_option( 'raf_security_deposit', 100 ) ); ?>" step="0.01" min="0" class="small-text">
+                            <p class="description"><?php esc_html_e( 'Refundable security deposit amount shown in the booking modal price summary.', 'rentafleet' ); ?></p>
                         </td>
                     </tr>
                 </table>
@@ -489,6 +532,181 @@ class RAF_Admin_Settings {
     }
 
     /* ================================================================
+     *  TAB 7: EMAIL DESIGN
+     * ============================================================= */
+
+    private static function render_email_design() {
+        $logo_id    = absint( get_option( 'raf_email_logo_id', 0 ) );
+        $logo_url   = $logo_id ? wp_get_attachment_image_url( $logo_id, 'medium' ) : '';
+        $header_bg  = get_option( 'raf_email_header_bg', '#1a1a2e' );
+        $header_txt = get_option( 'raf_email_header_text', '#ffffff' );
+        $accent     = get_option( 'raf_email_accent_color', '#E85C24' );
+        $body_bg    = get_option( 'raf_email_body_bg', '#ffffff' );
+        $footer_bg  = get_option( 'raf_email_footer_bg', '#f5f5f5' );
+        $footer_clr = get_option( 'raf_email_footer_text_color', '#999999' );
+        $footer_txt = get_option( 'raf_email_footer_text', '© {year} {company_name}. All rights reserved.' );
+        $company    = get_option( 'raf_company_name', get_bloginfo( 'name' ) );
+        ?>
+        <form method="post">
+            <input type="hidden" name="raf_action" value="save_settings">
+            <input type="hidden" name="page" value="raf-settings">
+            <input type="hidden" name="settings_tab" value="email_design">
+            <?php RAF_Admin::nonce_field( 'save_settings' ); ?>
+
+            <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;">
+
+                <!-- LEFT: Settings Form -->
+                <div style="flex:1;min-width:380px;max-width:520px;">
+
+                    <div class="raf-panel">
+                        <h2><?php esc_html_e( 'Email Logo', 'rentafleet' ); ?></h2>
+                        <table class="form-table">
+                            <tr>
+                                <th><label><?php esc_html_e( 'Logo Image', 'rentafleet' ); ?></label></th>
+                                <td>
+                                    <input type="hidden" name="raf_email_logo_id" id="raf-email-logo-id" value="<?php echo esc_attr( $logo_id ); ?>">
+                                    <div id="raf-email-logo-preview" style="margin-bottom:8px;">
+                                        <?php if ( $logo_url ) : ?>
+                                            <img src="<?php echo esc_url( $logo_url ); ?>" style="max-width:180px;height:auto;">
+                                        <?php endif; ?>
+                                    </div>
+                                    <button type="button" class="button" id="raf-email-logo-upload"><?php esc_html_e( 'Upload Logo', 'rentafleet' ); ?></button>
+                                    <button type="button" class="button raf-remove-btn" id="raf-email-logo-remove" style="<?php echo $logo_id ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Remove', 'rentafleet' ); ?></button>
+                                    <p class="description"><?php esc_html_e( 'Recommended: transparent PNG, max 360px wide. Displayed at 180px in the email header.', 'rentafleet' ); ?></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="raf-panel">
+                        <h2><?php esc_html_e( 'Color Scheme', 'rentafleet' ); ?></h2>
+                        <table class="form-table">
+                            <tr>
+                                <th><label><?php esc_html_e( 'Header Background', 'rentafleet' ); ?></label></th>
+                                <td>
+                                    <input type="color" name="raf_email_header_bg" id="raf-email-header-bg" value="<?php echo esc_attr( $header_bg ); ?>">
+                                    <code id="raf-email-header-bg-hex"><?php echo esc_html( $header_bg ); ?></code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label><?php esc_html_e( 'Header Text Color', 'rentafleet' ); ?></label></th>
+                                <td>
+                                    <input type="color" name="raf_email_header_text" id="raf-email-header-text" value="<?php echo esc_attr( $header_txt ); ?>">
+                                    <code id="raf-email-header-text-hex"><?php echo esc_html( $header_txt ); ?></code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label><?php esc_html_e( 'Accent Color', 'rentafleet' ); ?></label></th>
+                                <td>
+                                    <input type="color" name="raf_email_accent_color" id="raf-email-accent-color" value="<?php echo esc_attr( $accent ); ?>">
+                                    <code id="raf-email-accent-color-hex"><?php echo esc_html( $accent ); ?></code>
+                                    <p class="description"><?php esc_html_e( 'Used for buttons and highlights.', 'rentafleet' ); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label><?php esc_html_e( 'Body Background', 'rentafleet' ); ?></label></th>
+                                <td>
+                                    <input type="color" name="raf_email_body_bg" id="raf-email-body-bg" value="<?php echo esc_attr( $body_bg ); ?>">
+                                    <code id="raf-email-body-bg-hex"><?php echo esc_html( $body_bg ); ?></code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label><?php esc_html_e( 'Footer Background', 'rentafleet' ); ?></label></th>
+                                <td>
+                                    <input type="color" name="raf_email_footer_bg" id="raf-email-footer-bg" value="<?php echo esc_attr( $footer_bg ); ?>">
+                                    <code id="raf-email-footer-bg-hex"><?php echo esc_html( $footer_bg ); ?></code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label><?php esc_html_e( 'Footer Text Color', 'rentafleet' ); ?></label></th>
+                                <td>
+                                    <input type="color" name="raf_email_footer_text_color" id="raf-email-footer-text-color" value="<?php echo esc_attr( $footer_clr ); ?>">
+                                    <code id="raf-email-footer-text-color-hex"><?php echo esc_html( $footer_clr ); ?></code>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="raf-panel">
+                        <h2><?php esc_html_e( 'Footer Content', 'rentafleet' ); ?></h2>
+                        <table class="form-table">
+                            <tr>
+                                <th><label><?php esc_html_e( 'Footer Text', 'rentafleet' ); ?></label></th>
+                                <td>
+                                    <textarea name="raf_email_footer_text" id="raf-email-footer-text-input" rows="3" class="large-text"><?php echo esc_textarea( $footer_txt ); ?></textarea>
+                                    <p class="description"><?php esc_html_e( 'Supports {year} and {company_name} placeholders.', 'rentafleet' ); ?></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p class="submit" style="display:flex;gap:12px;align-items:center;">
+                        <button type="submit" class="button button-primary"><?php esc_html_e( 'Save Design', 'rentafleet' ); ?></button>
+                        <button type="button" class="button" id="raf-send-test-email"><?php esc_html_e( 'Send Test Email', 'rentafleet' ); ?></button>
+                        <span id="raf-test-email-status" style="font-size:13px;"></span>
+                    </p>
+                </div>
+
+                <!-- RIGHT: Live Preview Panel -->
+                <div style="flex:1;min-width:340px;max-width:640px;position:sticky;top:32px;">
+                    <div class="raf-panel">
+                        <h2><?php esc_html_e( 'Live Preview', 'rentafleet' ); ?></h2>
+                        <div style="padding:16px;background:#f0f0f0;border-radius:0 0 4px 4px;">
+                            <div class="raf-email-preview" id="raf-email-preview" style="max-width:600px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;">
+                                <!-- Header -->
+                                <div id="raf-preview-header" style="background-color:<?php echo esc_attr( $header_bg ); ?>;padding:28px 30px;text-align:center;border-radius:8px 8px 0 0;">
+                                    <?php if ( $logo_url ) : ?>
+                                        <img id="raf-preview-logo" src="<?php echo esc_url( $logo_url ); ?>" alt="" style="max-width:180px;height:auto;">
+                                    <?php else : ?>
+                                        <span id="raf-preview-logo" style="display:none;"></span>
+                                    <?php endif; ?>
+                                    <h1 id="raf-preview-company" style="margin:0;font-size:26px;font-weight:700;color:<?php echo esc_attr( $header_txt ); ?>;<?php echo $logo_url ? 'display:none;' : ''; ?>"><?php echo esc_html( $company ); ?></h1>
+                                </div>
+                                <!-- Body -->
+                                <div id="raf-preview-body" style="background-color:<?php echo esc_attr( $body_bg ); ?>;padding:32px 30px;font-size:15px;line-height:1.6;color:#333;border-left:1px solid #e0e0e0;border-right:1px solid #e0e0e0;">
+                                    <h2 style="margin:0 0 12px;font-size:22px;font-weight:700;color:#333;">Booking Confirmed</h2>
+                                    <p>Dear <strong>John Smith</strong>,</p>
+                                    <p>Your booking <strong>#RAF-20260321-001</strong> has been confirmed.</p>
+                                    <h3 style="margin:16px 0 8px;font-size:17px;font-weight:600;color:#333;">Booking Details</h3>
+                                    <p>
+                                        <strong>Vehicle:</strong> Honda CBR 500R<br>
+                                        <strong>Pickup:</strong> March 25, 2026 at 09:00<br>
+                                        <strong>Return:</strong> March 28, 2026 at 17:00<br>
+                                        <strong>Total:</strong> $225.00
+                                    </p>
+                                </div>
+                                <!-- Footer -->
+                                <div id="raf-preview-footer" style="background-color:<?php echo esc_attr( $footer_bg ); ?>;padding:20px 30px;text-align:center;border-radius:0 0 8px 8px;">
+                                    <p id="raf-preview-footer-text" style="margin:0;font-size:12px;line-height:1.5;color:<?php echo esc_attr( $footer_clr ); ?>;">
+                                        <?php
+                                        echo esc_html( str_replace(
+                                            array( '{year}', '{company_name}' ),
+                                            array( date( 'Y' ), $company ),
+                                            $footer_txt
+                                        ) );
+                                        ?>
+                                    </p>
+                                    <?php
+                                    $preview_phone = get_option( 'raf_company_phone', '' );
+                                    $preview_email = get_option( 'raf_company_email', '' );
+                                    $preview_contact = array_filter( array( $preview_phone, $preview_email ) );
+                                    if ( ! empty( $preview_contact ) ) : ?>
+                                    <p id="raf-preview-contact" style="margin:8px 0 0;font-size:12px;line-height:1.5;color:<?php echo esc_attr( $footer_clr ); ?>;">
+                                        You can contact us at <?php echo esc_html( implode( ' or ', $preview_contact ) ); ?>
+                                    </p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <?php
+    }
+
+    /* ================================================================
      *  SAVE HANDLER
      * ============================================================= */
 
@@ -514,8 +732,12 @@ class RAF_Admin_Settings {
                 'raf_require_login'        => 'bool',
                 'raf_booking_prefix'       => 'text',
                 'raf_min_booking_advance'  => 'int',
+                'raf_min_advance_hours'    => 'int',
+                'raf_timezone'             => 'timezone',
                 'raf_time_slot_interval'   => 'int',
                 'raf_cancellation_policy'  => 'textarea',
+                'raf_terms_content'        => 'html',
+                'raf_security_deposit'     => 'float',
             ),
             'deposit' => array(
                 'raf_require_deposit'    => 'bool',
@@ -537,6 +759,16 @@ class RAF_Admin_Settings {
                 'raf_company_email'   => 'email',
                 'raf_company_logo'    => 'int',
             ),
+            'email_design' => array(
+                'raf_email_logo_id'           => 'int',
+                'raf_email_header_bg'         => 'color',
+                'raf_email_header_text'       => 'color',
+                'raf_email_accent_color'      => 'color',
+                'raf_email_body_bg'           => 'color',
+                'raf_email_footer_bg'         => 'color',
+                'raf_email_footer_text_color' => 'color',
+                'raf_email_footer_text'       => 'textarea',
+            ),
             'pages' => array(
                 'raf_confirmation_page' => 'int',
                 'raf_my_bookings_page'  => 'int',
@@ -553,6 +785,9 @@ class RAF_Admin_Settings {
                 case 'textarea':
                     $val = isset( $_POST[ $option_name ] ) ? sanitize_textarea_field( $_POST[ $option_name ] ) : '';
                     break;
+                case 'html':
+                    $val = isset( $_POST[ $option_name ] ) ? wp_kses_post( wp_unslash( $_POST[ $option_name ] ) ) : '';
+                    break;
                 case 'email':
                     $val = isset( $_POST[ $option_name ] ) ? sanitize_email( $_POST[ $option_name ] ) : '';
                     break;
@@ -562,8 +797,20 @@ class RAF_Admin_Settings {
                 case 'float':
                     $val = isset( $_POST[ $option_name ] ) ? floatval( $_POST[ $option_name ] ) : 0;
                     break;
+                case 'color':
+                    $val = isset( $_POST[ $option_name ] ) ? sanitize_hex_color( $_POST[ $option_name ] ) : '';
+                    if ( ! $val ) {
+                        $val = '#000000';
+                    }
+                    break;
                 case 'bool':
                     $val = isset( $_POST[ $option_name ] ) ? 1 : 0;
+                    break;
+                case 'timezone':
+                    $val = isset( $_POST[ $option_name ] ) ? sanitize_text_field( $_POST[ $option_name ] ) : 'UTC';
+                    if ( ! in_array( $val, DateTimeZone::listIdentifiers(), true ) ) {
+                        $val = 'UTC';
+                    }
                     break;
                 case 'array':
                     $val = isset( $_POST[ $option_name ] ) && is_array( $_POST[ $option_name ] )

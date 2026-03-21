@@ -80,7 +80,7 @@ class RAF_Admin_Locations {
 
         // Vehicle counts per location
         $vl_table = RAF_Helpers::table( 'vehicle_locations' );
-        $veh_counts_raw = $wpdb->get_results( "SELECT location_id, COUNT(*) as cnt, SUM(units) as total_units FROM $vl_table GROUP BY location_id" );
+        $veh_counts_raw = $wpdb->get_results( "SELECT location_id, COUNT(*) as cnt, SUM(units_at_location) as total_units FROM $vl_table GROUP BY location_id" );
         $veh_counts = array();
         foreach ( $veh_counts_raw as $vc ) {
             $veh_counts[ $vc->location_id ] = $vc;

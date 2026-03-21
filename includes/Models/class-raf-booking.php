@@ -218,12 +218,12 @@ class RAF_Booking_Model {
         global $wpdb;
         $table = RAF_Helpers::table( self::$table );
 
-        $where = "status NOT IN ('cancelled', 'refunded')
-                  AND pickup_date <= %s AND dropoff_date >= %s";
+        $where = "b.status NOT IN ('cancelled', 'refunded')
+                  AND b.pickup_date <= %s AND b.dropoff_date >= %s";
         $values = array( $end_date, $start_date );
 
         if ( $vehicle_id ) {
-            $where .= " AND vehicle_id = %d";
+            $where .= " AND b.vehicle_id = %d";
             $values[] = $vehicle_id;
         }
 

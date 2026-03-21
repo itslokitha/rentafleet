@@ -196,6 +196,7 @@ class RAF_Helpers {
             'cruise_control'   => __( 'Cruise Control', 'rentafleet' ),
             'center_stand'     => __( 'Centre Stand', 'rentafleet' ),
             'phone_mount'      => __( 'Phone Mount', 'rentafleet' ),
+            'fully_insured'    => __( 'Fully Insured', 'rentafleet' ),
         );
     }
 

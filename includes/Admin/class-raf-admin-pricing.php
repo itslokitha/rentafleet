@@ -394,22 +394,39 @@ class RAF_Admin_Pricing {
         <p>
             <a href="<?php echo esc_url( RAF_Admin::admin_url( 'raf-pricing', array( 'tab' => 'extras', 'action' => 'add_extra' ) ) ); ?>" class="button button-primary"><?php esc_html_e( 'Add New Extra', 'rentafleet' ); ?></a>
         </p>
+        <?php
+        // Pre-fetch units used per extra from active/confirmed/pending bookings
+        global $wpdb;
+        $used_rows = $wpdb->get_results(
+            "SELECT be.extra_id, SUM(be.quantity) as used_qty
+             FROM " . RAF_Helpers::table('booking_extras') . " be
+             INNER JOIN " . RAF_Helpers::table('bookings') . " b ON b.id = be.booking_id
+             WHERE b.status NOT IN ('cancelled','refunded')
+             GROUP BY be.extra_id"
+        );
+        $used_map = array();
+        foreach ( $used_rows as $r ) {
+            $used_map[ $r->extra_id ] = (int) $r->used_qty;
+        }
+        ?>
         <table class="wp-list-table widefat fixed striped">
             <thead><tr>
                 <th><?php esc_html_e( 'Name', 'rentafleet' ); ?></th>
                 <th><?php esc_html_e( 'Price', 'rentafleet' ); ?></th>
                 <th><?php esc_html_e( 'Type', 'rentafleet' ); ?></th>
-                <th><?php esc_html_e( 'Max Qty', 'rentafleet' ); ?></th>
+                <th><?php esc_html_e( 'Max Qty / Booking', 'rentafleet' ); ?></th>
+                <th><?php esc_html_e( 'Stock', 'rentafleet' ); ?></th>
                 <th><?php esc_html_e( 'Mandatory', 'rentafleet' ); ?></th>
-                <th><?php esc_html_e( 'Order', 'rentafleet' ); ?></th>
                 <th><?php esc_html_e( 'Status', 'rentafleet' ); ?></th>
             </tr></thead>
             <tbody>
             <?php if ( empty( $extras ) ) : ?>
                 <tr><td colspan="7"><?php esc_html_e( 'No extras. Create GPS, child seats, etc.', 'rentafleet' ); ?></td></tr>
             <?php else : foreach ( $extras as $ex ) :
-                $eu = RAF_Admin::admin_url( 'raf-pricing', array( 'tab' => 'extras', 'action' => 'edit_extra', 'edit_id' => $ex->id ) );
-                $du = wp_nonce_url( RAF_Admin::admin_url( 'raf-pricing', array( 'tab' => 'extras', 'raf_action' => 'delete_extra', 'del_id' => $ex->id ) ), 'raf_delete_extra_' . $ex->id );
+                $eu   = RAF_Admin::admin_url( 'raf-pricing', array( 'tab' => 'extras', 'action' => 'edit_extra', 'edit_id' => $ex->id ) );
+                $du   = wp_nonce_url( RAF_Admin::admin_url( 'raf-pricing', array( 'tab' => 'extras', 'raf_action' => 'delete_extra', 'del_id' => $ex->id ) ), 'raf_delete_extra_' . $ex->id );
+                $stock = (int) ( $ex->stock_quantity ?? 0 );
+                $used  = (int) ( $used_map[ $ex->id ] ?? 0 );
                 ?>
                 <tr>
                     <td><strong><a href="<?php echo esc_url( $eu ); ?>"><?php echo esc_html( $ex->name ); ?></a></strong>
@@ -417,8 +434,19 @@ class RAF_Admin_Pricing {
                     <td><?php echo RAF_Helpers::format_price( $ex->price ); ?></td>
                     <td><?php echo esc_html( $ex->price_type === 'per_rental' ? __( 'Per Rental', 'rentafleet' ) : __( 'Per Day', 'rentafleet' ) ); ?></td>
                     <td><?php echo esc_html( $ex->max_quantity ); ?></td>
+                    <td>
+                        <?php if ( $stock > 0 ) : ?>
+                            <span title="<?php echo esc_attr( $used . ' used in active bookings' ); ?>">
+                                <?php echo esc_html( $used . ' / ' . $stock ); ?>
+                            </span>
+                            <?php if ( $used >= $stock ) : ?>
+                                <span style="color:#c00;font-weight:600;"> ⚠ <?php esc_html_e( 'Out', 'rentafleet' ); ?></span>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <span style="color:#888;"><?php esc_html_e( 'Unlimited', 'rentafleet' ); ?></span>
+                        <?php endif; ?>
+                    </td>
                     <td><?php echo $ex->is_mandatory ? '✓' : '—'; ?></td>
-                    <td><?php echo esc_html( $ex->sort_order ); ?></td>
                     <td><?php echo RAF_Helpers::status_badge( $ex->status ); ?></td>
                 </tr>
             <?php endforeach; endif; ?>
@@ -433,7 +461,7 @@ class RAF_Admin_Pricing {
 
         $d = $is_edit ? $extra : (object) array(
             'id' => 0, 'name' => '', 'slug' => '', 'description' => '', 'price' => '',
-            'price_type' => 'per_day', 'max_quantity' => 1, 'image_id' => 0,
+            'price_type' => 'per_day', 'max_quantity' => 1, 'stock_quantity' => 0, 'image_id' => 0,
             'is_mandatory' => 0, 'vehicle_ids' => '', 'category_ids' => '', 'location_ids' => '',
             'sort_order' => 0, 'status' => 'active',
         );
@@ -473,7 +501,11 @@ class RAF_Admin_Pricing {
                             <option value="per_rental" <?php selected( $d->price_type, 'per_rental' ); ?>><?php esc_html_e( 'Per Rental (one-time)', 'rentafleet' ); ?></option>
                         </select></td></tr>
                     <tr><th><label><?php esc_html_e( 'Max Quantity', 'rentafleet' ); ?></label></th>
-                        <td><input type="number" name="max_quantity" value="<?php echo esc_attr( $d->max_quantity ); ?>" min="1" class="small-text"></td></tr>
+                        <td><input type="number" name="max_quantity" value="<?php echo esc_attr( $d->max_quantity ); ?>" min="1" class="small-text">
+                        <p class="description"><?php esc_html_e( 'Maximum a customer can select per booking.', 'rentafleet' ); ?></p></td></tr>
+                    <tr><th><label><?php esc_html_e( 'Stock Quantity', 'rentafleet' ); ?></label></th>
+                        <td><input type="number" name="stock_quantity" value="<?php echo esc_attr( $d->stock_quantity ?? 0 ); ?>" min="0" class="small-text">
+                        <p class="description"><?php esc_html_e( 'Total units your company owns. Set to 0 for unlimited.', 'rentafleet' ); ?></p></td></tr>
                     <tr><th><label><?php esc_html_e( 'Mandatory', 'rentafleet' ); ?></label></th>
                         <td><label><input type="checkbox" name="is_mandatory" value="1" <?php checked( $d->is_mandatory ); ?>> <?php esc_html_e( 'Auto-add to every booking', 'rentafleet' ); ?></label></td></tr>
                     <tr><th><label><?php esc_html_e( 'Restrict to Vehicles', 'rentafleet' ); ?></label></th>
@@ -781,6 +813,7 @@ class RAF_Admin_Pricing {
             'price'         => floatval( $_POST['price'] ),
             'price_type'    => sanitize_text_field( $_POST['price_type'] ),
             'max_quantity'  => max( 1, absint( $_POST['max_quantity'] ) ),
+            'stock_quantity'=> absint( $_POST['stock_quantity'] ?? 0 ),
             'is_mandatory'  => isset( $_POST['is_mandatory'] ) ? 1 : 0,
             'vehicle_ids'   => isset( $_POST['vehicle_ids'] ) ? array_map( 'absint', $_POST['vehicle_ids'] ) : array(),
             'category_ids'  => isset( $_POST['category_ids'] ) ? array_map( 'absint', $_POST['category_ids'] ) : array(),

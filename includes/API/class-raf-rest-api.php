@@ -427,9 +427,35 @@ class RAF_REST_API {
     }
 
     public function get_extras( $request ) {
+        global $wpdb;
+
         $items = RAF_Extra::get_all();
+
+        // Build a map of used quantities per extra from active bookings.
+        $used_rows = $wpdb->get_results(
+            "SELECT be.extra_id, SUM(be.quantity) AS used_count
+             FROM {$wpdb->prefix}raf_booking_extras be
+             INNER JOIN {$wpdb->prefix}raf_bookings b ON be.booking_id = b.id
+             WHERE b.status NOT IN ('cancelled','refunded')
+             GROUP BY be.extra_id",
+            ARRAY_A
+        );
+        $used_map = array();
+        foreach ( $used_rows as $row ) {
+            $used_map[ (int) $row['extra_id'] ] = (int) $row['used_count'];
+        }
+
         $data = array();
         foreach ( $items as $ex ) {
+            $stock = (int) $ex->stock_quantity;
+            // Skip extras that are fully depleted (stock_quantity > 0 means limited stock).
+            if ( $stock > 0 ) {
+                $used = isset( $used_map[ (int) $ex->id ] ) ? $used_map[ (int) $ex->id ] : 0;
+                if ( $used >= $stock ) {
+                    continue;
+                }
+            }
+
             $data[] = array(
                 'id'           => (int) $ex->id,
                 'name'         => $ex->name,

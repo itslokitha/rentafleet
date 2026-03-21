@@ -98,7 +98,7 @@ class RAF_Admin {
             __( 'Customers', 'rentafleet' ),
             'manage_options',
             'raf-customers',
-            array( $this, 'page_placeholder' )
+            array( 'RAF_Admin_Customers', 'render' )
         );
 
         // Submenu: Calendar
@@ -197,6 +197,9 @@ class RAF_Admin {
                 break;
             case 'raf-locations':
                 RAF_Admin_Locations::handle_action( $action );
+                break;
+            case 'raf-customers':
+                RAF_Admin_Customers::handle_action( $action );
                 break;
             case 'raf-settings':
                 RAF_Admin_Settings::handle_action( $action );

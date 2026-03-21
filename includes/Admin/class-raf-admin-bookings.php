@@ -652,15 +652,12 @@ class RAF_Admin_Bookings {
                             <?php if ( $customer->phone ) : ?>
                                 <br><a href="tel:<?php echo esc_attr( $customer->phone ); ?>"><?php echo esc_html( $customer->phone ); ?></a>
                             <?php endif; ?>
-                            <?php if ( $customer->city || $customer->country ) : ?>
-                                <br><span class="raf-muted"><?php echo esc_html( implode( ', ', array_filter( array( $customer->city, $customer->state, $customer->country ) ) ) ); ?></span>
+                            <?php if ( ! empty( $customer->citizenship ) ) : ?>
+                                <br><span class="raf-muted"><?php echo esc_html( $customer->citizenship ); ?></span>
                             <?php endif; ?>
-                            <?php if ( $customer->license_number ) : ?>
+                            <?php if ( ! empty( $customer->passport_number ) ) : ?>
                                 <hr style="margin:8px 0;">
-                                <small><?php esc_html_e( 'License:', 'rentafleet' ); ?> <?php echo esc_html( $customer->license_number ); ?></small>
-                                <?php if ( $customer->license_expiry ) : ?>
-                                    <br><small><?php esc_html_e( 'Expires:', 'rentafleet' ); ?> <?php echo esc_html( RAF_Helpers::format_date( $customer->license_expiry ) ); ?></small>
-                                <?php endif; ?>
+                                <small><?php esc_html_e( 'Passport:', 'rentafleet' ); ?> <?php echo esc_html( $customer->passport_number ); ?></small>
                             <?php endif; ?>
                             <?php if ( $customer->total_bookings ) : ?>
                                 <hr style="margin:8px 0;">

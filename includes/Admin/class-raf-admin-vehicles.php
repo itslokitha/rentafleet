@@ -293,13 +293,14 @@ class RAF_Admin_Vehicles {
                         <th scope="col" class="manage-column"><?php esc_html_e( 'Specs', 'rentafleet' ); ?></th>
                         <?php self::render_column_header( 'units', __( 'Units', 'rentafleet' ), true, $orderby, $order ); ?>
                         <th scope="col" class="manage-column"><?php esc_html_e( 'Locations', 'rentafleet' ); ?></th>
+                        <th scope="col" class="manage-column"><?php esc_html_e( 'Active Bookings', 'rentafleet' ); ?></th>
                         <?php self::render_column_header( 'status', __( 'Status', 'rentafleet' ), true, $orderby, $order ); ?>
                         <?php self::render_column_header( 'sort_order', __( 'Order', 'rentafleet' ), true, $orderby, $order ); ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if ( empty( $vehicles ) ) : ?>
-                        <tr><td colspan="10"><?php esc_html_e( 'No vehicles found.', 'rentafleet' ); ?></td></tr>
+                        <tr><td colspan="11"><?php esc_html_e( 'No vehicles found.', 'rentafleet' ); ?></td></tr>
                     <?php else : ?>
                         <?php foreach ( $vehicles as $v ) : ?>
                             <?php
@@ -346,6 +347,24 @@ class RAF_Admin_Vehicles {
                                         <span class="raf-muted"><?php esc_html_e( 'None', 'rentafleet' ); ?></span>
                                     <?php endif; ?>
                                 </td>
+                                <td>
+                                    <?php
+                                    $active_booking_count = $wpdb->get_var( $wpdb->prepare(
+                                        "SELECT COUNT(*) FROM " . RAF_Helpers::table( 'bookings' ) .
+                                        " WHERE vehicle_id = %d AND status IN ('pending', 'confirmed', 'active') AND dropoff_date >= %s",
+                                        $v->id,
+                                        current_time( 'Y-m-d' )
+                                    ) );
+                                    if ( $active_booking_count > 0 ) :
+                                        $bookings_url = RAF_Admin::admin_url( 'raf-bookings', array( 'vehicle_id' => $v->id ) );
+                                    ?>
+                                        <a href="<?php echo esc_url( $bookings_url ); ?>" class="raf-active-bookings-badge">
+                                            <?php echo esc_html( $active_booking_count ); ?>
+                                        </a>
+                                    <?php else : ?>
+                                        <span class="raf-muted">0</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td><?php echo RAF_Helpers::status_badge( $v->status ); ?></td>
                                 <td><?php echo esc_html( $v->sort_order ); ?></td>
                             </tr>
@@ -362,6 +381,7 @@ class RAF_Admin_Vehicles {
                         <th><?php esc_html_e( 'Specs', 'rentafleet' ); ?></th>
                         <th><?php esc_html_e( 'Units', 'rentafleet' ); ?></th>
                         <th><?php esc_html_e( 'Locations', 'rentafleet' ); ?></th>
+                        <th><?php esc_html_e( 'Active Bookings', 'rentafleet' ); ?></th>
                         <th><?php esc_html_e( 'Status', 'rentafleet' ); ?></th>
                         <th><?php esc_html_e( 'Order', 'rentafleet' ); ?></th>
                     </tr>

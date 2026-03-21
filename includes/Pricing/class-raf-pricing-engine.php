@@ -96,14 +96,27 @@ class RAF_Pricing_Engine {
         }
 
         // Location fees
-        $location_fees = 0;
+        $location_fees          = 0;
+        $pickup_location_fee    = 0;
+        $pickup_location_name   = '';
+        $dropoff_location_fee   = 0;
+        $dropoff_location_name  = '';
+
         if ( $args['pickup_location_id'] ) {
             $pickup_loc = RAF_Location::get( $args['pickup_location_id'] );
-            if ( $pickup_loc ) $location_fees += (float) $pickup_loc->pickup_fee;
+            if ( $pickup_loc ) {
+                $pickup_location_fee  = (float) $pickup_loc->pickup_fee;
+                $pickup_location_name = $pickup_loc->name;
+                $location_fees       += $pickup_location_fee;
+            }
         }
         if ( $args['dropoff_location_id'] ) {
             $dropoff_loc = RAF_Location::get( $args['dropoff_location_id'] );
-            if ( $dropoff_loc ) $location_fees += (float) $dropoff_loc->dropoff_fee;
+            if ( $dropoff_loc ) {
+                $dropoff_location_fee  = (float) $dropoff_loc->dropoff_fee;
+                $dropoff_location_name = $dropoff_loc->name;
+                $location_fees        += $dropoff_location_fee;
+            }
         }
 
         // One-way fee (different pickup/dropoff locations)
@@ -156,8 +169,12 @@ class RAF_Pricing_Engine {
             'extras_total'        => round( $extras_total, 2 ),
             'insurance'           => $insurance_breakdown,
             'insurance_total'     => round( $insurance_total, 2 ),
-            'location_fees'       => round( $location_fees, 2 ),
-            'one_way_fee'         => round( $one_way_fee, 2 ),
+            'location_fees'        => round( $location_fees, 2 ),
+            'pickup_location_name' => $pickup_location_name,
+            'pickup_location_fee'  => round( $pickup_location_fee, 2 ),
+            'dropoff_location_name'=> $dropoff_location_name,
+            'dropoff_location_fee' => round( $dropoff_location_fee, 2 ),
+            'one_way_fee'          => round( $one_way_fee, 2 ),
             'coupon'              => $coupon_data,
             'discount_amount'     => round( $discount_amount, 2 ),
             'subtotal'            => round( $subtotal, 2 ),

@@ -266,6 +266,110 @@
     } );
 
     /* ================================================================
+       EMAIL DESIGN — Logo Uploader
+       ============================================================= */
+
+    $( document ).on( 'click', '#raf-email-logo-upload', function( e ) {
+        e.preventDefault();
+        var frame = wp.media( { title: 'Select Email Logo', multiple: false, library: { type: 'image' } } );
+        frame.on( 'select', function() {
+            var attachment = frame.state().get( 'selection' ).first().toJSON();
+            var url = attachment.sizes && attachment.sizes.medium ? attachment.sizes.medium.url : attachment.url;
+            $( '#raf-email-logo-id' ).val( attachment.id );
+            $( '#raf-email-logo-preview' ).html( '<img src="' + url + '" style="max-width:180px;height:auto;">' );
+            $( '#raf-email-logo-remove' ).show();
+
+            // Update live preview: show logo, hide company text
+            $( '#raf-preview-logo' ).attr( 'src', url ).css( { 'max-width': '180px', 'height': 'auto', 'display': 'block', 'margin': '0 auto' } ).show();
+            if ( $( '#raf-preview-logo' ).prop( 'tagName' ) !== 'IMG' ) {
+                $( '#raf-preview-logo' ).replaceWith( '<img id="raf-preview-logo" src="' + url + '" style="max-width:180px;height:auto;display:block;margin:0 auto;">' );
+            }
+            $( '#raf-preview-company' ).hide();
+        } );
+        frame.open();
+    } );
+
+    $( document ).on( 'click', '#raf-email-logo-remove', function( e ) {
+        e.preventDefault();
+        $( '#raf-email-logo-id' ).val( 0 );
+        $( '#raf-email-logo-preview' ).empty();
+        $( this ).hide();
+
+        // Update live preview: hide logo, show company text
+        $( '#raf-preview-logo' ).hide();
+        $( '#raf-preview-company' ).show();
+    } );
+
+    /* ================================================================
+       EMAIL DESIGN — Live Preview Sync
+       ============================================================= */
+
+    function rafUpdateEmailPreview() {
+        var headerBg  = $( '#raf-email-header-bg' ).val();
+        var headerTxt = $( '#raf-email-header-text' ).val();
+        var accent    = $( '#raf-email-accent-color' ).val();
+        var bodyBg    = $( '#raf-email-body-bg' ).val();
+        var footerBg  = $( '#raf-email-footer-bg' ).val();
+        var footerClr = $( '#raf-email-footer-text-color' ).val();
+
+        // Update hex display codes
+        $( '#raf-email-header-bg-hex' ).text( headerBg );
+        $( '#raf-email-header-text-hex' ).text( headerTxt );
+        $( '#raf-email-accent-color-hex' ).text( accent );
+        $( '#raf-email-body-bg-hex' ).text( bodyBg );
+        $( '#raf-email-footer-bg-hex' ).text( footerBg );
+        $( '#raf-email-footer-text-color-hex' ).text( footerClr );
+
+        // Update preview panel
+        $( '#raf-preview-header' ).css( 'background-color', headerBg );
+        $( '#raf-preview-company' ).css( 'color', headerTxt );
+        $( '#raf-preview-btn' ).css( 'background-color', accent );
+        $( '#raf-preview-body' ).css( 'background-color', bodyBg );
+        $( '#raf-preview-footer' ).css( 'background-color', footerBg );
+        $( '#raf-preview-footer-text' ).css( 'color', footerClr );
+    }
+
+    // Bind color input changes
+    $( document ).on( 'input change', '#raf-email-header-bg, #raf-email-header-text, #raf-email-accent-color, #raf-email-body-bg, #raf-email-footer-bg, #raf-email-footer-text-color', rafUpdateEmailPreview );
+
+    // Footer text live preview
+    $( document ).on( 'input', '#raf-email-footer-text-input', function() {
+        var text = $( this ).val();
+        var year = new Date().getFullYear();
+        var company = $( '#raf-preview-company' ).text().trim();
+        text = text.replace( /\{year\}/g, year ).replace( /\{company_name\}/g, company );
+        $( '#raf-preview-footer-text' ).text( text );
+    } );
+
+    /* ================================================================
+       EMAIL DESIGN — Send Test Email
+       ============================================================= */
+
+    $( document ).on( 'click', '#raf-send-test-email', function( e ) {
+        e.preventDefault();
+        var $btn    = $( this );
+        var $status = $( '#raf-test-email-status' );
+
+        $btn.prop( 'disabled', true ).text( 'Sending...' );
+        $status.text( '' ).css( 'color', '' );
+
+        $.post( rafAdmin.ajaxUrl, {
+            action: 'raf_send_test_email',
+            nonce:  rafAdmin.nonce
+        }, function( response ) {
+            $btn.prop( 'disabled', false ).text( 'Send Test Email' );
+            if ( response.success ) {
+                $status.text( response.data.message ).css( 'color', '#46b450' );
+            } else {
+                $status.text( response.data.message ).css( 'color', '#dc3232' );
+            }
+        } ).fail( function() {
+            $btn.prop( 'disabled', false ).text( 'Send Test Email' );
+            $status.text( 'Request failed.' ).css( 'color', '#dc3232' );
+        } );
+    } );
+
+    /* ================================================================
        OPENING HOURS TOGGLE
        ============================================================= */
 

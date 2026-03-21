@@ -195,6 +195,7 @@ class RAF_Activator {
             price decimal(10,2) NOT NULL,
             price_type varchar(20) DEFAULT 'per_day',
             max_quantity int DEFAULT 1,
+            stock_quantity int DEFAULT 0,
             image_id bigint(20) unsigned,
             is_mandatory tinyint(1) DEFAULT 0,
             vehicle_ids text,
@@ -490,11 +491,23 @@ class RAF_Activator {
             'raf_deposit_type'         => 'percentage',
             'raf_deposit_value'        => 20,
             'raf_cancellation_policy'  => '',
+            'raf_security_deposit'     => 100,
+            'raf_terms_content'        => '<p>I, the undersigned, confirm that the information provided above is true and correct. I agree to the following conditions while renting and operating the vehicle provided by the company.</p><p><strong>Valid License</strong> – I confirm that I hold a valid driving license that legally allows me to operate the motorcycle/scooter.</p><p><strong>Full Responsibility</strong> – I accept full responsibility for the vehicle from the moment it is handed over until it is returned to the company.</p><p><strong>Damage, Loss, or Theft</strong> – I am fully responsible for any damage, loss, theft, or mechanical issues caused to the vehicle during the rental period and agree to pay for any associated repairs or replacement costs.</p><p><strong>Traffic Violations &amp; Fines</strong> – I understand that I am responsible for all traffic violations, parking fines, tolls, or penalties incurred during the rental period.</p><p><strong>Authorized Rider Only</strong> – I agree that the vehicle will only be operated by me and will not be given, lent, or sub-rented to another person.</p><p><strong>Safe Operation</strong> – I confirm that I will operate the vehicle safely and responsibly and will not ride under the influence of alcohol, drugs, or any illegal substances.</p><p><strong>Accidents &amp; Breakdowns</strong> – In the event of an accident, breakdown, or mechanical failure, I agree to immediately notify the rental company and cooperate fully with any insurance, police, or repair procedures.</p><p><strong>Company Liability</strong> – The company is not responsible for any injury, death, loss of personal belongings, or damages resulting from the use of the rented vehicle.</p><p><strong>Late Returns</strong> – I understand that late returns may incur additional charges as specified by the rental company.</p><p><strong>Security Deposit</strong> – The security deposit may be used to cover damages or late fees.</p><p><strong>Return Condition</strong> – The vehicle must be returned in the same condition as received, excluding normal wear and tear.</p><p><strong>Illegal Use &amp; Misuse</strong> – Misuse, reckless riding, illegal activities, or violation of this agreement may result in termination of the rental and forfeiture of my deposit.</p>',
             'raf_google_maps_api_key'  => '',
             'raf_email_from_name'      => get_bloginfo( 'name' ),
             'raf_email_from_address'   => get_bloginfo( 'admin_email' ),
             'raf_admin_email_notifications' => 1,
             'raf_customer_email_notifications' => 1,
+
+            // Email Design defaults
+            'raf_email_logo_id'           => 0,
+            'raf_email_header_bg'         => '#1a1a2e',
+            'raf_email_header_text'       => '#ffffff',
+            'raf_email_accent_color'      => '#E85C24',
+            'raf_email_body_bg'           => '#ffffff',
+            'raf_email_footer_bg'         => '#f5f5f5',
+            'raf_email_footer_text_color' => '#999999',
+            'raf_email_footer_text'       => '© {year} {company_name}. All rights reserved.',
         );
 
         foreach ( $defaults as $key => $value ) {

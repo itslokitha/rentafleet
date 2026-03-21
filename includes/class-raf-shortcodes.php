@@ -52,7 +52,10 @@ class RAF_Shortcodes {
                         <select id="raf-pickup-location" name="pickup_location_id" required>
                             <option value=""><?php esc_html_e( 'Select location...', 'rentafleet' ); ?></option>
                             <?php foreach ( $locations as $loc ) : ?>
-                                <option value="<?php echo esc_attr( $loc->id ); ?>"><?php echo esc_html( $loc->name ); ?></option>
+                                <option value="<?php echo esc_attr( $loc->id ); ?>"
+                                    data-pickup-fee="<?php echo esc_attr( (float) $loc->pickup_fee ); ?>"
+                                    data-dropoff-fee="<?php echo esc_attr( (float) $loc->dropoff_fee ); ?>"
+                                ><?php echo esc_html( $loc->name ); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -111,7 +114,10 @@ class RAF_Shortcodes {
                             <?php
                             $dropoff_locations = RAF_Location::get_all( array( 'type' => 'dropoff' ) );
                             foreach ( $dropoff_locations as $loc ) : ?>
-                                <option value="<?php echo esc_attr( $loc->id ); ?>"><?php echo esc_html( $loc->name ); ?></option>
+                                <option value="<?php echo esc_attr( $loc->id ); ?>"
+                                    data-pickup-fee="<?php echo esc_attr( (float) $loc->pickup_fee ); ?>"
+                                    data-dropoff-fee="<?php echo esc_attr( (float) $loc->dropoff_fee ); ?>"
+                                ><?php echo esc_html( $loc->name ); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -139,6 +145,144 @@ class RAF_Shortcodes {
                 <div class="raf-spinner"></div>
                 <p><?php esc_html_e( 'Searching available vehicles...', 'rentafleet' ); ?></p>
             </div>
+
+            <?php /* Booking Modal — hidden inline to prevent FOUC; opened via JS on "Book Now" click */ ?>
+            <div id="raf-booking-modal" class="raf-modal-overlay" style="display:none;">
+                <div class="raf-modal-dialog">
+                    <button type="button" class="raf-modal-close" aria-label="<?php esc_attr_e( 'Close', 'rentafleet' ); ?>">&times;</button>
+
+                    <div class="raf-modal-form-body">
+                        <div class="raf-modal-header">
+                            <h3><?php esc_html_e( 'Complete Your Booking', 'rentafleet' ); ?></h3>
+                        </div>
+
+                        <?php /* Vehicle summary — visible in both steps */ ?>
+                        <div class="raf-modal-vehicle-summary">
+                            <img class="raf-modal-vehicle-img" src="" alt="" style="display:none;">
+                            <div class="raf-modal-vehicle-details">
+                                <strong class="raf-modal-vehicle-name"></strong>
+                                <span class="raf-modal-vehicle-price"></span>
+                                <span class="raf-modal-vehicle-dates"></span>
+                                <span class="raf-modal-vehicle-location"></span>
+                            </div>
+                        </div>
+
+                        <?php /* Step indicator */ ?>
+                        <div class="raf-modal-steps">
+                            <div class="raf-modal-step raf-modal-step--active" data-step="1">
+                                <span class="raf-modal-step-num">1</span>
+                                <span class="raf-modal-step-label"><?php esc_html_e( 'Add-ons', 'rentafleet' ); ?></span>
+                            </div>
+                            <div class="raf-modal-step-divider"></div>
+                            <div class="raf-modal-step" data-step="2">
+                                <span class="raf-modal-step-num">2</span>
+                                <span class="raf-modal-step-label"><?php esc_html_e( 'Your Details', 'rentafleet' ); ?></span>
+                            </div>
+                            <div class="raf-modal-step-divider"></div>
+                            <div class="raf-modal-step" data-step="3">
+                                <span class="raf-modal-step-num">3</span>
+                                <span class="raf-modal-step-label"><?php esc_html_e( 'Terms', 'rentafleet' ); ?></span>
+                            </div>
+                        </div>
+
+                        <?php /* Step 1: Add-ons */ ?>
+                        <div class="raf-modal-step-content" data-step="1">
+                            <div class="raf-addons-loading" style="display:none;">
+                                <span class="raf-price-spinner"></span>
+                                <?php esc_html_e( 'Loading add-ons...', 'rentafleet' ); ?>
+                            </div>
+                            <div class="raf-addons-list"></div>
+                            <div class="raf-addons-none" style="display:none;">
+                                <p><?php esc_html_e( 'No add-ons available for this rental.', 'rentafleet' ); ?></p>
+                            </div>
+
+                            <div class="raf-modal-step-actions">
+                                <button type="button" class="raf-btn raf-btn-primary raf-modal-continue-btn" style="width:100%;">
+                                    <?php esc_html_e( 'Continue', 'rentafleet' ); ?> <span>&#8594;</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <?php /* Step 2: Your Details */ ?>
+                        <div class="raf-modal-step-content" data-step="2" style="display:none;">
+                            <?php /* Full price summary shown in step 2 */ ?>
+                            <div class="raf-modal-price-summary" style="display:none;">
+                                <div class="raf-modal-price-summary-header">
+                                    <span class="raf-modal-price-summary-icon">&#128179;</span>
+                                    <span><?php esc_html_e( 'Price Summary', 'rentafleet' ); ?></span>
+                                    <span class="raf-modal-price-summary-dates"></span>
+                                </div>
+                                <div class="raf-modal-price-loading">
+                                    <span class="raf-price-spinner"></span>
+                                    <?php esc_html_e( 'Calculating price...', 'rentafleet' ); ?>
+                                </div>
+                                <div class="raf-modal-price-breakdown"></div>
+                            </div>
+
+                            <div class="raf-modal-error raf-notice raf-notice-error" style="display:none;"></div>
+
+                            <form class="raf-booking-modal-form">
+                                <div class="raf-field">
+                                    <label for="raf-modal-full-name"><?php esc_html_e( 'Full Name', 'rentafleet' ); ?> <span class="raf-required">*</span></label>
+                                    <input type="text" id="raf-modal-full-name" name="full_name" required placeholder="<?php esc_attr_e( 'e.g. John Smith', 'rentafleet' ); ?>">
+                                </div>
+                                <div class="raf-field">
+                                    <label for="raf-modal-passport"><?php esc_html_e( 'Passport Number', 'rentafleet' ); ?> <span class="raf-required">*</span></label>
+                                    <input type="text" id="raf-modal-passport" name="passport_number" required placeholder="<?php esc_attr_e( 'e.g. AB1234567', 'rentafleet' ); ?>">
+                                </div>
+                                <div class="raf-field">
+                                    <label for="raf-modal-phone"><?php esc_html_e( 'Contact Number', 'rentafleet' ); ?> <span class="raf-required">*</span></label>
+                                    <input type="tel" id="raf-modal-phone" name="phone" required placeholder="<?php esc_attr_e( '+1 234 567 890', 'rentafleet' ); ?>">
+                                </div>
+                                <div class="raf-field">
+                                    <label for="raf-modal-email"><?php esc_html_e( 'Email', 'rentafleet' ); ?> <span class="raf-required">*</span></label>
+                                    <input type="email" id="raf-modal-email" name="email" required placeholder="<?php esc_attr_e( 'you@example.com', 'rentafleet' ); ?>">
+                                </div>
+                                <button type="button" class="raf-btn raf-btn-primary raf-modal-continue-step3-btn" style="width:100%;">
+                                    <?php esc_html_e( 'Continue', 'rentafleet' ); ?> <span>&#8594;</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <?php /* Step 3: Terms & Conditions */ ?>
+                        <div class="raf-modal-step-content" data-step="3" style="display:none;">
+                            <h4 class="raf-terms-heading"><?php esc_html_e( 'Terms & Conditions', 'rentafleet' ); ?></h4>
+                            <div class="raf-terms-box"></div>
+
+                            <div class="raf-terms-agree">
+                                <label class="raf-terms-agree-label">
+                                    <input type="checkbox" id="raf-agree-terms" name="agree_terms" value="1">
+                                    <?php esc_html_e( 'I agree to the Terms & Conditions', 'rentafleet' ); ?>
+                                </label>
+                            </div>
+
+                            <div class="raf-terms-date-row">
+                                <label for="raf-agree-date"><?php esc_html_e( 'Date', 'rentafleet' ); ?></label>
+                                <input type="date" id="raf-agree-date" name="agreed_date" value="<?php echo esc_attr( date( 'Y-m-d' ) ); ?>">
+                            </div>
+
+                            <div class="raf-modal-error raf-modal-terms-error raf-notice raf-notice-error" style="display:none;"></div>
+
+                            <button type="button" class="raf-btn raf-btn-primary raf-modal-confirm-btn" style="width:100%;">
+                                <?php esc_html_e( 'Confirm Booking', 'rentafleet' ); ?>
+                            </button>
+                        </div>
+                    </div>
+
+                    <?php /* Success state */ ?>
+                    <div class="raf-modal-success" style="display:none;">
+                        <div class="raf-modal-success-icon">&#10003;</div>
+                        <h3><?php esc_html_e( 'Booking Confirmed!', 'rentafleet' ); ?></h3>
+                        <p><?php esc_html_e( 'Your booking has been created successfully.', 'rentafleet' ); ?></p>
+                        <p class="raf-modal-booking-ref">
+                            <?php esc_html_e( 'Booking Reference:', 'rentafleet' ); ?>
+                            <strong class="raf-modal-booking-number"></strong>
+                        </p>
+                        <p class="raf-modal-success-note"><?php esc_html_e( 'A confirmation email will be sent to the address you provided. Please save your booking reference number.', 'rentafleet' ); ?></p>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <?php
         return ob_get_clean();
@@ -189,7 +333,27 @@ class RAF_Shortcodes {
                         $image_url  = $vehicle->featured_image_id ? wp_get_attachment_image_url( $vehicle->featured_image_id, 'medium_large' ) : '';
                         $bike_types = RAF_Helpers::get_bike_types();
                     ?>
-                    <div class="raf-vehicle-card" data-category="<?php echo esc_attr( $vehicle->category_id ); ?>" data-vehicle-id="<?php echo esc_attr( $vehicle->id ); ?>">
+                    <?php
+                        $vehicle_data = array(
+                            'id'          => (int) $vehicle->id,
+                            'name'        => $vehicle->name,
+                            'description' => $vehicle->description ?? '',
+                            'short_desc'  => $vehicle->short_description ?? '',
+                            'image'       => $image_url,
+                            'type'        => $vehicle->bike_type ?? '',
+                            'type_label'  => ( $vehicle->bike_type && isset( $bike_types[ $vehicle->bike_type ] ) ) ? $bike_types[ $vehicle->bike_type ] : '',
+                            'engine_cc'   => (int) ( $vehicle->engine_cc ?? 0 ),
+                            'year'        => (int) ( $vehicle->year ?? 0 ),
+                            'make'        => $vehicle->make ?? '',
+                            'model'       => $vehicle->model ?? '',
+                            'color'       => $vehicle->color ?? '',
+                            'daily_rate'  => (float) $daily_rate,
+                            'features'    => $features,
+                            'deposit'     => (float) ( $vehicle->deposit_amount ?? 0 ),
+                            'min_age'     => (int) ( $vehicle->min_driver_age ?? 21 ),
+                        );
+                    ?>
+                    <div class="raf-vehicle-card raf-vehicle-card--clickable" data-category="<?php echo esc_attr( $vehicle->category_id ); ?>" data-vehicle-id="<?php echo esc_attr( $vehicle->id ); ?>" data-vehicle="<?php echo esc_attr( wp_json_encode( $vehicle_data ) ); ?>">
                         <div class="raf-vehicle-image">
                             <?php if ( $image_url ) : ?>
                                 <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $vehicle->name ); ?>" loading="lazy">
@@ -219,7 +383,7 @@ class RAF_Shortcodes {
                             <?php if ( ! empty( $features ) ) : ?>
                             <div class="raf-vehicle-features">
                                 <?php
-                                $all_features = RAF_Helpers::get_vehicle_features();
+                                $all_features = RAF_Helpers::get_bike_features();
                                 $shown = 0;
                                 foreach ( $features as $f ) :
                                     if ( $shown >= 4 ) break;
@@ -234,21 +398,46 @@ class RAF_Shortcodes {
                             </div>
                             <?php endif; ?>
                         </div>
+                        <?php if ( $daily_rate > 0 ) : ?>
                         <div class="raf-vehicle-price-action">
-                            <?php if ( $daily_rate > 0 ) : ?>
                                 <div class="raf-vehicle-price">
                                     <span class="raf-price-amount"><?php echo esc_html( RAF_Helpers::format_price( $daily_rate ) ); ?></span>
                                     <span class="raf-price-period">/<?php esc_html_e( 'day', 'rentafleet' ); ?></span>
                                 </div>
-                            <?php endif; ?>
-                            <a href="<?php echo esc_url( add_query_arg( 'vehicle_id', $vehicle->id, get_permalink( get_option( 'raf_booking_page' ) ) ) ); ?>" class="raf-btn raf-btn-primary raf-book-btn">
-                                <?php esc_html_e( 'Book Now', 'rentafleet' ); ?>
-                            </a>
                         </div>
+                        <?php endif; ?>
                     </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
+
+            <?php /* Vehicle Detail Modal — populated via JS on card click */ ?>
+            <?php
+                $rent_page_id  = get_option( 'raf_search_page' );
+                $rent_page_url = $rent_page_id ? get_permalink( $rent_page_id ) : '#';
+            ?>
+            <div id="raf-vehicle-detail-modal" class="raf-vd-overlay" style="display:none;" role="dialog" aria-modal="true">
+                <div class="raf-vd-modal">
+                    <button class="raf-vd-close" aria-label="<?php esc_attr_e( 'Close', 'rentafleet' ); ?>">&times;</button>
+                    <div class="raf-vd-content">
+                        <div class="raf-vd-image-col">
+                            <img class="raf-vd-image" src="" alt="">
+                        </div>
+                        <div class="raf-vd-info-col">
+                            <h2 class="raf-vd-name"></h2>
+                            <div class="raf-vd-badges"></div>
+                            <p class="raf-vd-description"></p>
+                            <div class="raf-vd-specs"></div>
+                            <div class="raf-vd-features"></div>
+                            <div class="raf-vd-price-row">
+                                <span class="raf-vd-price"></span>
+                                <a class="raf-btn raf-btn-primary raf-vd-rent-btn" href="<?php echo esc_url( $rent_page_url ); ?>"><?php esc_html_e( 'Rent This Bike', 'rentafleet' ); ?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <?php
         return ob_get_clean();
@@ -256,561 +445,37 @@ class RAF_Shortcodes {
 
     /* ─────────────────────────────────────────────
      *  [raf_booking] — Booking Form (multi-step)
+     *
+     *  Disabled: the booking flow now uses the inline modal
+     *  within the [raf_search] shortcode. This standalone page
+     *  shortcode is kept for backwards compatibility but returns
+     *  nothing. The page itself is NOT deleted so the admin can
+     *  re-enable it if needed.
      * ───────────────────────────────────────────── */
     public function booking_shortcode( $atts ) {
-        $atts = shortcode_atts( array(), $atts, 'raf_booking' );
-
-        $locations   = RAF_Location::get_all();
-        $time_slots  = RAF_Helpers::get_time_slots();
-        $extras      = RAF_Extra::get_all();
-        $insurances  = RAF_Insurance::get_all();
-
-        ob_start();
-        ?>
-        <div class="raf-booking-wrap">
-            <!-- Progress Steps -->
-            <div class="raf-booking-steps">
-                <div class="raf-step active" data-step="1">
-                    <span class="raf-step-number">1</span>
-                    <span class="raf-step-label"><?php esc_html_e( 'Dates', 'rentafleet' ); ?></span>
-                </div>
-                <div class="raf-step-line"></div>
-                <div class="raf-step" data-step="2">
-                    <span class="raf-step-number">2</span>
-                    <span class="raf-step-label"><?php esc_html_e( 'Choose Bike', 'rentafleet' ); ?></span>
-                </div>
-                <div class="raf-step-line"></div>
-                <div class="raf-step" data-step="3">
-                    <span class="raf-step-number">3</span>
-                    <span class="raf-step-label"><?php esc_html_e( 'Add-ons', 'rentafleet' ); ?></span>
-                </div>
-                <div class="raf-step-line"></div>
-                <div class="raf-step" data-step="4">
-                    <span class="raf-step-number">4</span>
-                    <span class="raf-step-label"><?php esc_html_e( 'Your Details', 'rentafleet' ); ?></span>
-                </div>
-                <div class="raf-step-line"></div>
-                <div class="raf-step" data-step="5">
-                    <span class="raf-step-number">5</span>
-                    <span class="raf-step-label"><?php esc_html_e( 'Confirm', 'rentafleet' ); ?></span>
-                </div>
-            </div>
-
-            <form id="raf-booking-form" class="raf-booking-form">
-                <input type="hidden" name="vehicle_id" value="">
-
-                <!-- Step 1: Dates & Locations -->
-                <div class="raf-booking-step-content" data-step="1">
-                    <h3><?php esc_html_e( 'When do you need a bike?', 'rentafleet' ); ?></h3>
-
-                    <div class="raf-form-row">
-                        <div class="raf-form-group raf-col-3">
-                            <label for="raf-b-pickup-date"><?php esc_html_e( 'Pick-up Date', 'rentafleet' ); ?> *</label>
-                            <input type="date" id="raf-b-pickup-date" name="pickup_date" required min="<?php echo esc_attr( date( 'Y-m-d' ) ); ?>">
-                        </div>
-                        <div class="raf-form-group raf-col-3">
-                            <label for="raf-b-pickup-time"><?php esc_html_e( 'Pick-up Time', 'rentafleet' ); ?></label>
-                            <select id="raf-b-pickup-time" name="pickup_time">
-                                <?php foreach ( $time_slots as $val => $label ) : ?>
-                                    <option value="<?php echo esc_attr( $val ); ?>" <?php selected( $val, '10:00' ); ?>><?php echo esc_html( $label ); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="raf-form-group raf-col-3">
-                            <label for="raf-b-dropoff-date"><?php esc_html_e( 'Return Date', 'rentafleet' ); ?> *</label>
-                            <input type="date" id="raf-b-dropoff-date" name="dropoff_date" required min="<?php echo esc_attr( date( 'Y-m-d' ) ); ?>">
-                        </div>
-                        <div class="raf-form-group raf-col-3">
-                            <label for="raf-b-dropoff-time"><?php esc_html_e( 'Return Time', 'rentafleet' ); ?></label>
-                            <select id="raf-b-dropoff-time" name="dropoff_time">
-                                <?php foreach ( $time_slots as $val => $label ) : ?>
-                                    <option value="<?php echo esc_attr( $val ); ?>" <?php selected( $val, '10:00' ); ?>><?php echo esc_html( $label ); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="raf-form-row">
-                        <div class="raf-form-group raf-col-6">
-                            <label for="raf-b-pickup-location"><?php esc_html_e( 'Pick-up Location', 'rentafleet' ); ?> *</label>
-                            <select id="raf-b-pickup-location" name="pickup_location_id" required>
-                                <option value=""><?php esc_html_e( 'Select location...', 'rentafleet' ); ?></option>
-                                <?php foreach ( $locations as $loc ) :
-                                    if ( ! $loc->is_pickup ) continue;
-                                ?>
-                                    <option value="<?php echo esc_attr( $loc->id ); ?>"><?php echo esc_html( $loc->name ); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="raf-form-group raf-col-6">
-                            <label for="raf-b-dropoff-location"><?php esc_html_e( 'Return Location', 'rentafleet' ); ?> *</label>
-                            <select id="raf-b-dropoff-location" name="dropoff_location_id" required>
-                                <option value=""><?php esc_html_e( 'Select location...', 'rentafleet' ); ?></option>
-                                <?php foreach ( $locations as $loc ) :
-                                    if ( ! $loc->is_dropoff ) continue;
-                                ?>
-                                    <option value="<?php echo esc_attr( $loc->id ); ?>"><?php echo esc_html( $loc->name ); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 2: Choose Bike (loaded via JS after searching) -->
-                <div class="raf-booking-step-content" data-step="2" style="display:none;">
-                    <h3><?php esc_html_e( 'Choose Your Bike', 'rentafleet' ); ?></h3>
-                    <div class="raf-available-bikes-grid"></div>
-                    <div class="raf-no-bikes" style="display:none;">
-                        <p><?php esc_html_e( 'No bikes available for the selected dates and location. Please go back and try different dates.', 'rentafleet' ); ?></p>
-                    </div>
-                    <div class="raf-loading" style="display:none;">
-                        <div class="raf-spinner"></div>
-                        <p><?php esc_html_e( 'Searching available bikes...', 'rentafleet' ); ?></p>
-                    </div>
-                </div>
-
-                <!-- Step 3: Extras & Insurance -->
-                <div class="raf-booking-step-content" data-step="3" style="display:none;">
-                    <h3><?php esc_html_e( 'Optional Add-ons & Insurance', 'rentafleet' ); ?></h3>
-
-                    <?php if ( ! empty( $extras ) ) : ?>
-                    <div class="raf-extras-section">
-                        <h4><?php esc_html_e( 'Extra Services', 'rentafleet' ); ?></h4>
-                        <div class="raf-extras-grid">
-                            <?php foreach ( $extras as $extra ) : ?>
-                            <div class="raf-extra-item" data-extra-id="<?php echo esc_attr( $extra->id ); ?>">
-                                <label class="raf-extra-label">
-                                    <input type="checkbox" name="extras[<?php echo esc_attr( $extra->id ); ?>][id]" value="<?php echo esc_attr( $extra->id ); ?>" class="raf-extra-checkbox">
-                                    <div class="raf-extra-info">
-                                        <span class="raf-extra-name"><?php echo esc_html( $extra->name ); ?></span>
-                                        <?php if ( $extra->description ) : ?>
-                                            <span class="raf-extra-desc"><?php echo esc_html( $extra->description ); ?></span>
-                                        <?php endif; ?>
-                                        <span class="raf-extra-price">
-                                            <?php echo esc_html( RAF_Helpers::format_price( $extra->price ) ); ?>
-                                            /<?php echo $extra->price_type === 'per_day' ? esc_html__( 'day', 'rentafleet' ) : esc_html__( 'rental', 'rentafleet' ); ?>
-                                        </span>
-                                    </div>
-                                </label>
-                                <?php if ( $extra->max_quantity > 1 ) : ?>
-                                    <div class="raf-extra-qty" style="display:none;">
-                                        <label><?php esc_html_e( 'Qty:', 'rentafleet' ); ?>
-                                            <select name="extras[<?php echo esc_attr( $extra->id ); ?>][quantity]">
-                                                <?php for ( $q = 1; $q <= $extra->max_quantity; $q++ ) : ?>
-                                                    <option value="<?php echo $q; ?>"><?php echo $q; ?></option>
-                                                <?php endfor; ?>
-                                            </select>
-                                        </label>
-                                    </div>
-                                <?php else : ?>
-                                    <input type="hidden" name="extras[<?php echo esc_attr( $extra->id ); ?>][quantity]" value="1">
-                                <?php endif; ?>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php if ( ! empty( $insurances ) ) : ?>
-                    <div class="raf-insurance-section">
-                        <h4><?php esc_html_e( 'Insurance Options', 'rentafleet' ); ?></h4>
-                        <div class="raf-insurance-grid">
-                            <?php foreach ( $insurances as $ins ) : ?>
-                            <div class="raf-insurance-item <?php echo $ins->is_mandatory ? 'raf-mandatory' : ''; ?>">
-                                <label class="raf-insurance-label">
-                                    <input type="checkbox" name="insurance[]" value="<?php echo esc_attr( $ins->id ); ?>"
-                                        class="raf-insurance-checkbox"
-                                        <?php echo $ins->is_mandatory ? 'checked disabled' : ''; ?>>
-                                    <div class="raf-insurance-info">
-                                        <span class="raf-insurance-name">
-                                            <?php echo esc_html( $ins->name ); ?>
-                                            <?php if ( $ins->is_mandatory ) : ?>
-                                                <span class="raf-badge-mandatory"><?php esc_html_e( 'Required', 'rentafleet' ); ?></span>
-                                            <?php endif; ?>
-                                        </span>
-                                        <?php if ( $ins->description ) : ?>
-                                            <span class="raf-insurance-desc"><?php echo esc_html( $ins->description ); ?></span>
-                                        <?php endif; ?>
-                                        <span class="raf-insurance-price">
-                                            <?php echo esc_html( RAF_Helpers::format_price( $ins->price_per_day ) ); ?>/<?php esc_html_e( 'day', 'rentafleet' ); ?>
-                                            <?php if ( $ins->coverage_amount > 0 ) : ?>
-                                                <span class="raf-coverage"><?php printf( esc_html__( 'Coverage: %s', 'rentafleet' ), esc_html( RAF_Helpers::format_price( $ins->coverage_amount ) ) ); ?></span>
-                                            <?php endif; ?>
-                                        </span>
-                                    </div>
-                                </label>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Step 4: Customer Details -->
-                <div class="raf-booking-step-content" data-step="4" style="display:none;">
-                    <h3><?php esc_html_e( 'Your Details', 'rentafleet' ); ?></h3>
-
-                    <div class="raf-form-row">
-                        <div class="raf-form-group raf-col-6">
-                            <label for="raf-b-first-name"><?php esc_html_e( 'First Name', 'rentafleet' ); ?> *</label>
-                            <input type="text" id="raf-b-first-name" name="first_name" required>
-                        </div>
-                        <div class="raf-form-group raf-col-6">
-                            <label for="raf-b-last-name"><?php esc_html_e( 'Last Name', 'rentafleet' ); ?> *</label>
-                            <input type="text" id="raf-b-last-name" name="last_name" required>
-                        </div>
-                    </div>
-
-                    <div class="raf-form-row">
-                        <div class="raf-form-group raf-col-6">
-                            <label for="raf-b-email"><?php esc_html_e( 'Email', 'rentafleet' ); ?> *</label>
-                            <input type="email" id="raf-b-email" name="email" required>
-                        </div>
-                        <div class="raf-form-group raf-col-6">
-                            <label for="raf-b-phone"><?php esc_html_e( 'Phone Number', 'rentafleet' ); ?> *</label>
-                            <input type="tel" id="raf-b-phone" name="phone" required>
-                        </div>
-                    </div>
-
-                    <div class="raf-form-row">
-                        <div class="raf-form-group raf-col-6">
-                            <label for="raf-b-passport"><?php esc_html_e( 'Passport Number', 'rentafleet' ); ?> *</label>
-                            <input type="text" id="raf-b-passport" name="passport_number" required>
-                        </div>
-                        <div class="raf-form-group raf-col-6">
-                            <label for="raf-b-citizenship"><?php esc_html_e( 'Citizenship', 'rentafleet' ); ?> *</label>
-                            <input type="text" id="raf-b-citizenship" name="citizenship" required>
-                        </div>
-                    </div>
-
-                    <div class="raf-form-row">
-                        <div class="raf-form-group raf-col-12">
-                            <label for="raf-b-notes"><?php esc_html_e( 'Special Requests / Notes', 'rentafleet' ); ?></label>
-                            <textarea id="raf-b-notes" name="notes" rows="3"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 5: Review, Deposit & Confirm -->
-                <div class="raf-booking-step-content" data-step="5" style="display:none;">
-                    <h3><?php esc_html_e( 'Review & Confirm Booking', 'rentafleet' ); ?></h3>
-
-                    <div class="raf-review-sections">
-                        <div class="raf-review-section">
-                            <h4><?php esc_html_e( 'Rental Details', 'rentafleet' ); ?></h4>
-                            <div class="raf-review-details" id="raf-review-rental"></div>
-                        </div>
-
-                        <div class="raf-review-section">
-                            <h4><?php esc_html_e( 'Customer Details', 'rentafleet' ); ?></h4>
-                            <div class="raf-review-details" id="raf-review-customer"></div>
-                        </div>
-
-                        <div class="raf-review-section">
-                            <h4><?php esc_html_e( 'Price Breakdown', 'rentafleet' ); ?></h4>
-                            <div class="raf-price-breakdown" id="raf-review-price"></div>
-                        </div>
-
-                        <div class="raf-deposit-section">
-                            <div class="raf-notice raf-notice-info">
-                                <strong><?php esc_html_e( 'Non-Refundable Deposit Required', 'rentafleet' ); ?></strong>
-                                <p><?php esc_html_e( 'A non-refundable deposit is required to confirm your booking. The deposit amount will be shown in the price breakdown above. Payment will be collected offline at the time of pick-up.', 'rentafleet' ); ?></p>
-                            </div>
-                        </div>
-
-                        <div class="raf-coupon-section">
-                            <label for="raf-b-coupon"><?php esc_html_e( 'Coupon Code', 'rentafleet' ); ?></label>
-                            <div class="raf-coupon-input">
-                                <input type="text" id="raf-b-coupon" name="coupon_code" placeholder="<?php esc_attr_e( 'Enter coupon code', 'rentafleet' ); ?>">
-                                <button type="button" class="raf-btn raf-btn-outline raf-apply-coupon"><?php esc_html_e( 'Apply', 'rentafleet' ); ?></button>
-                            </div>
-                            <div class="raf-coupon-message" style="display:none;"></div>
-                        </div>
-
-                        <div class="raf-terms-section">
-                            <label>
-                                <input type="checkbox" name="terms" required>
-                                <?php printf(
-                                    esc_html__( 'I agree to the %s and %s', 'rentafleet' ),
-                                    '<a href="#" target="_blank">' . esc_html__( 'Terms & Conditions', 'rentafleet' ) . '</a>',
-                                    '<a href="#" target="_blank">' . esc_html__( 'Rental Agreement', 'rentafleet' ) . '</a>'
-                                ); ?>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Navigation -->
-                <div class="raf-booking-nav">
-                    <button type="button" class="raf-btn raf-btn-outline raf-prev-step" style="display:none;"><?php esc_html_e( 'Previous', 'rentafleet' ); ?></button>
-                    <button type="button" class="raf-btn raf-btn-primary raf-next-step"><?php esc_html_e( 'Next Step', 'rentafleet' ); ?></button>
-                    <button type="submit" class="raf-btn raf-btn-primary raf-confirm-booking" style="display:none;"><?php esc_html_e( 'Confirm Booking', 'rentafleet' ); ?></button>
-                </div>
-            </form>
-
-            <div class="raf-booking-sidebar">
-                <div class="raf-price-summary" id="raf-price-summary">
-                    <h4><?php esc_html_e( 'Price Summary', 'rentafleet' ); ?></h4>
-                    <div class="raf-summary-content">
-                        <p class="raf-summary-placeholder"><?php esc_html_e( 'Select a vehicle and dates to see pricing.', 'rentafleet' ); ?></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="raf-loading" style="display:none;">
-                <div class="raf-spinner"></div>
-                <p><?php esc_html_e( 'Processing your booking...', 'rentafleet' ); ?></p>
-            </div>
-        </div>
-        <?php
-        return ob_get_clean();
+        return '';
     }
 
     /* ─────────────────────────────────────────────
      *  [raf_confirmation] — Booking Confirmation
+     *
+     *  Disabled: booking confirmation is now shown in the inline
+     *  modal within [raf_search]. The page is kept in the database
+     *  for admin reference but renders nothing on the frontend.
      * ───────────────────────────────────────────── */
     public function confirmation_shortcode( $atts ) {
-        $booking_number = isset( $_GET['booking'] ) ? sanitize_text_field( $_GET['booking'] ) : '';
-
-        if ( ! $booking_number ) {
-            return '<div class="raf-notice raf-notice-warning"><p>' . esc_html__( 'No booking reference found.', 'rentafleet' ) . '</p></div>';
-        }
-
-        $booking = RAF_Booking_Model::get_by_number( $booking_number );
-        if ( ! $booking ) {
-            return '<div class="raf-notice raf-notice-error"><p>' . esc_html__( 'Booking not found. Please check your booking reference.', 'rentafleet' ) . '</p></div>';
-        }
-
-        $customer = RAF_Customer::get( $booking->customer_id );
-        $vehicle  = RAF_Vehicle::get( $booking->vehicle_id );
-        $pickup   = RAF_Location::get( $booking->pickup_location_id );
-        $dropoff  = RAF_Location::get( $booking->dropoff_location_id );
-        $extras   = RAF_Booking_Model::get_extras( $booking->id );
-        $insurance = RAF_Booking_Model::get_insurance( $booking->id );
-
-        ob_start();
-        ?>
-        <div class="raf-confirmation-wrap">
-            <div class="raf-confirmation-header">
-                <div class="raf-confirmation-icon">&#10003;</div>
-                <h2><?php esc_html_e( 'Booking Confirmed!', 'rentafleet' ); ?></h2>
-                <p class="raf-booking-ref">
-                    <?php esc_html_e( 'Booking Reference:', 'rentafleet' ); ?>
-                    <strong><?php echo esc_html( $booking->booking_number ); ?></strong>
-                </p>
-                <p class="raf-confirmation-status">
-                    <?php esc_html_e( 'Status:', 'rentafleet' ); ?>
-                    <?php echo wp_kses_post( RAF_Helpers::status_badge( $booking->status ) ); ?>
-                </p>
-            </div>
-
-            <div class="raf-confirmation-details">
-                <div class="raf-conf-section">
-                    <h3><?php esc_html_e( 'Bike', 'rentafleet' ); ?></h3>
-                    <?php if ( $vehicle ) : ?>
-                        <div class="raf-conf-vehicle">
-                            <?php if ( $vehicle->featured_image_id ) : ?>
-                                <img src="<?php echo esc_url( wp_get_attachment_image_url( $vehicle->featured_image_id, 'medium' ) ); ?>" alt="">
-                            <?php endif; ?>
-                            <div>
-                                <strong><?php echo esc_html( $vehicle->name ); ?></strong>
-                                <p><?php echo esc_html( $vehicle->make . ' ' . $vehicle->model . ' ' . $vehicle->year ); ?></p>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                </div>
-
-                <div class="raf-conf-section">
-                    <h3><?php esc_html_e( 'Rental Period', 'rentafleet' ); ?></h3>
-                    <table class="raf-conf-table">
-                        <tr>
-                            <td><?php esc_html_e( 'Pick-up:', 'rentafleet' ); ?></td>
-                            <td>
-                                <strong><?php echo esc_html( RAF_Helpers::format_datetime( $booking->pickup_date ) ); ?></strong>
-                                <?php if ( $pickup ) : ?><br><?php echo esc_html( $pickup->name ); ?><?php endif; ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><?php esc_html_e( 'Return:', 'rentafleet' ); ?></td>
-                            <td>
-                                <strong><?php echo esc_html( RAF_Helpers::format_datetime( $booking->dropoff_date ) ); ?></strong>
-                                <?php if ( $dropoff ) : ?><br><?php echo esc_html( $dropoff->name ); ?><?php endif; ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><?php esc_html_e( 'Duration:', 'rentafleet' ); ?></td>
-                            <td><?php printf( esc_html__( '%d day(s)', 'rentafleet' ), $booking->rental_days ); ?></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <?php if ( $customer ) : ?>
-                <div class="raf-conf-section">
-                    <h3><?php esc_html_e( 'Customer', 'rentafleet' ); ?></h3>
-                    <p>
-                        <strong><?php echo esc_html( RAF_Customer::get_full_name( $customer ) ); ?></strong><br>
-                        <?php echo esc_html( $customer->email ); ?><br>
-                        <?php echo esc_html( $customer->phone ); ?>
-                    </p>
-                </div>
-                <?php endif; ?>
-
-                <div class="raf-conf-section">
-                    <h3><?php esc_html_e( 'Price Breakdown', 'rentafleet' ); ?></h3>
-                    <table class="raf-conf-table raf-price-table">
-                        <tr>
-                            <td><?php esc_html_e( 'Base Rental:', 'rentafleet' ); ?></td>
-                            <td><?php echo esc_html( RAF_Helpers::format_price( $booking->base_price ) ); ?></td>
-                        </tr>
-                        <?php if ( ! empty( $extras ) ) : foreach ( $extras as $ex ) : ?>
-                        <tr>
-                            <td><?php echo esc_html( $ex->name ); ?> (x<?php echo esc_html( $ex->quantity ); ?>):</td>
-                            <td><?php echo esc_html( RAF_Helpers::format_price( $ex->total ) ); ?></td>
-                        </tr>
-                        <?php endforeach; endif; ?>
-                        <?php if ( ! empty( $insurance ) ) : foreach ( $insurance as $ins ) : ?>
-                        <tr>
-                            <td><?php echo esc_html( $ins->name ); ?>:</td>
-                            <td><?php echo esc_html( RAF_Helpers::format_price( $ins->total ) ); ?></td>
-                        </tr>
-                        <?php endforeach; endif; ?>
-                        <?php if ( $booking->location_fees > 0 ) : ?>
-                        <tr>
-                            <td><?php esc_html_e( 'Location Fees:', 'rentafleet' ); ?></td>
-                            <td><?php echo esc_html( RAF_Helpers::format_price( $booking->location_fees ) ); ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <?php if ( $booking->discount_amount > 0 ) : ?>
-                        <tr class="raf-discount-row">
-                            <td><?php esc_html_e( 'Discount:', 'rentafleet' ); ?> <?php if ( $booking->coupon_code ) echo '(' . esc_html( $booking->coupon_code ) . ')'; ?></td>
-                            <td>-<?php echo esc_html( RAF_Helpers::format_price( $booking->discount_amount ) ); ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <?php if ( $booking->tax_amount > 0 ) : ?>
-                        <tr>
-                            <td><?php esc_html_e( 'Tax:', 'rentafleet' ); ?></td>
-                            <td><?php echo esc_html( RAF_Helpers::format_price( $booking->tax_amount ) ); ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <tr class="raf-total-row">
-                            <td><strong><?php esc_html_e( 'Total:', 'rentafleet' ); ?></strong></td>
-                            <td><strong><?php echo esc_html( RAF_Helpers::format_price( $booking->total_price ) ); ?></strong></td>
-                        </tr>
-                        <?php if ( $booking->deposit_amount > 0 ) : ?>
-                        <tr>
-                            <td><?php esc_html_e( 'Deposit Required:', 'rentafleet' ); ?></td>
-                            <td><?php echo esc_html( RAF_Helpers::format_price( $booking->deposit_amount ) ); ?></td>
-                        </tr>
-                        <?php endif; ?>
-                    </table>
-                </div>
-            </div>
-
-            <div class="raf-confirmation-actions">
-                <p><?php esc_html_e( 'A confirmation email has been sent to your email address.', 'rentafleet' ); ?></p>
-                <a href="<?php echo esc_url( get_permalink( get_option( 'raf_my_bookings_page' ) ) ); ?>" class="raf-btn raf-btn-primary"><?php esc_html_e( 'View My Bookings', 'rentafleet' ); ?></a>
-                <a href="<?php echo esc_url( home_url() ); ?>" class="raf-btn raf-btn-outline"><?php esc_html_e( 'Back to Home', 'rentafleet' ); ?></a>
-            </div>
-        </div>
-        <?php
-        return ob_get_clean();
+        return '';
     }
 
     /* ─────────────────────────────────────────────
      *  [raf_my_bookings] — Customer Booking History
+     *
+     *  Disabled: this standalone page is not part of the current
+     *  frontend flow. The page is kept in the database for admin
+     *  reference but renders nothing on the frontend.
      * ───────────────────────────────────────────── */
     public function my_bookings_shortcode( $atts ) {
-        // Look up by email or booking number
-        $lookup_email   = isset( $_GET['email'] ) ? sanitize_email( $_GET['email'] ) : '';
-        $lookup_booking = isset( $_GET['booking'] ) ? sanitize_text_field( $_GET['booking'] ) : '';
-
-        if ( ! $lookup_email && ! $lookup_booking ) {
-            ob_start();
-            ?>
-            <div class="raf-my-bookings-wrap">
-                <h2><?php esc_html_e( 'Find Your Bookings', 'rentafleet' ); ?></h2>
-                <form method="get" class="raf-lookup-form">
-                    <div class="raf-form-row">
-                        <div class="raf-form-group raf-col-6">
-                            <label for="raf-lookup-email"><?php esc_html_e( 'Email Address', 'rentafleet' ); ?></label>
-                            <input type="email" id="raf-lookup-email" name="email" required placeholder="<?php esc_attr_e( 'Enter your email address', 'rentafleet' ); ?>">
-                        </div>
-                        <div class="raf-form-group raf-col-6" style="display:flex;align-items:flex-end;">
-                            <button type="submit" class="raf-btn raf-btn-primary"><?php esc_html_e( 'Look Up Bookings', 'rentafleet' ); ?></button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <?php
-            return ob_get_clean();
-        }
-
-        $customer = $lookup_email ? RAF_Customer::get_by_email( $lookup_email ) : null;
-        if ( ! $customer ) {
-            return '<div class="raf-notice raf-notice-info"><p>' . esc_html__( 'No bookings found for this email address.', 'rentafleet' ) . '</p></div>';
-        }
-
-        $bookings = RAF_Booking_Model::get_by_customer( $customer->id, 50 );
-
-        ob_start();
-        ?>
-        <div class="raf-my-bookings-wrap">
-            <h2><?php esc_html_e( 'My Bookings', 'rentafleet' ); ?></h2>
-
-            <?php if ( empty( $bookings ) ) : ?>
-                <div class="raf-notice raf-notice-info">
-                    <p><?php esc_html_e( 'You have no bookings yet.', 'rentafleet' ); ?></p>
-                    <a href="<?php echo esc_url( get_permalink( get_option( 'raf_search_page' ) ) ); ?>" class="raf-btn raf-btn-primary"><?php esc_html_e( 'Search Bikes', 'rentafleet' ); ?></a>
-                </div>
-            <?php else : ?>
-                <div class="raf-bookings-list">
-                    <?php foreach ( $bookings as $booking ) :
-                        $vehicle = RAF_Vehicle::get( $booking->vehicle_id );
-                        $pickup  = RAF_Location::get( $booking->pickup_location_id );
-                    ?>
-                    <div class="raf-booking-card">
-                        <div class="raf-booking-card-header">
-                            <span class="raf-booking-number">#<?php echo esc_html( $booking->booking_number ); ?></span>
-                            <?php echo wp_kses_post( RAF_Helpers::status_badge( $booking->status ) ); ?>
-                        </div>
-                        <div class="raf-booking-card-body">
-                            <div class="raf-booking-vehicle">
-                                <?php if ( $vehicle ) : ?>
-                                    <?php if ( $vehicle->featured_image_id ) : ?>
-                                        <img src="<?php echo esc_url( wp_get_attachment_image_url( $vehicle->featured_image_id, 'thumbnail' ) ); ?>" alt="">
-                                    <?php endif; ?>
-                                    <strong><?php echo esc_html( $vehicle->name ); ?></strong>
-                                <?php endif; ?>
-                            </div>
-                            <div class="raf-booking-dates">
-                                <div>
-                                    <span class="raf-label"><?php esc_html_e( 'Pick-up:', 'rentafleet' ); ?></span>
-                                    <span><?php echo esc_html( RAF_Helpers::format_datetime( $booking->pickup_date ) ); ?></span>
-                                    <?php if ( $pickup ) : ?><span class="raf-sub"><?php echo esc_html( $pickup->name ); ?></span><?php endif; ?>
-                                </div>
-                                <div>
-                                    <span class="raf-label"><?php esc_html_e( 'Return:', 'rentafleet' ); ?></span>
-                                    <span><?php echo esc_html( RAF_Helpers::format_datetime( $booking->dropoff_date ) ); ?></span>
-                                </div>
-                            </div>
-                            <div class="raf-booking-total">
-                                <span class="raf-label"><?php esc_html_e( 'Total:', 'rentafleet' ); ?></span>
-                                <span class="raf-amount"><?php echo esc_html( RAF_Helpers::format_price( $booking->total_price ) ); ?></span>
-                            </div>
-                        </div>
-                        <div class="raf-booking-card-footer">
-                            <a href="<?php echo esc_url( add_query_arg( 'booking', $booking->booking_number, get_permalink( get_option( 'raf_confirmation_page' ) ) ) ); ?>" class="raf-btn raf-btn-sm raf-btn-outline"><?php esc_html_e( 'View Details', 'rentafleet' ); ?></a>
-                            <?php if ( in_array( $booking->status, array( 'pending', 'confirmed' ), true ) ) : ?>
-                                <button type="button" class="raf-btn raf-btn-sm raf-btn-danger raf-cancel-booking" data-booking="<?php echo esc_attr( $booking->id ); ?>"><?php esc_html_e( 'Cancel', 'rentafleet' ); ?></button>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-        <?php
-        return ob_get_clean();
+        return '';
     }
 
     /* ─────────────────────────────────────────────

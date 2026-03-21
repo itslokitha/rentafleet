@@ -1,6 +1,8 @@
 /**
  * RentAFleet — Public Stylesheet
  *
+ * Brand: Minimal + Adventurous — Warm earthy tones, bold Montserrat typography.
+ *
  * @package RentAFleet
  * @since   1.0.0
  */
@@ -9,139 +11,251 @@
    CSS Custom Properties
    ═══════════════════════════════════════════════ */
 :root {
-    --raf-primary: #2563eb;
-    --raf-primary-hover: #1d4ed8;
-    --raf-primary-light: #dbeafe;
-    --raf-secondary: #64748b;
-    --raf-success: #16a34a;
-    --raf-success-light: #dcfce7;
-    --raf-warning: #f59e0b;
-    --raf-warning-light: #fef3c7;
-    --raf-danger: #dc2626;
-    --raf-danger-light: #fee2e2;
-    --raf-info: #0ea5e9;
-    --raf-info-light: #e0f2fe;
-    --raf-text: #1e293b;
-    --raf-text-light: #64748b;
-    --raf-border: #e2e8f0;
-    --raf-bg: #f8fafc;
-    --raf-white: #fff;
-    --raf-radius: 8px;
-    --raf-radius-sm: 4px;
-    --raf-radius-lg: 12px;
-    --raf-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
-    --raf-shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
-    --raf-shadow-lg: 0 10px 15px rgba(0,0,0,.1), 0 4px 6px rgba(0,0,0,.05);
-    --raf-transition: .2s ease;
-    --raf-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	--raf-primary: #E85C24;
+	--raf-primary-hover: #C94E1A;
+	--raf-primary-light: #FDF0E8;
+	--raf-secondary: #FCC940;
+	--raf-secondary-light: #FFF8E1;
+	--raf-accent: #FCC940;
+	--raf-success: #2D9B5A;
+	--raf-success-light: #E8F5EE;
+	--raf-warning: #E8860A;
+	--raf-warning-light: #FFF3E0;
+	--raf-danger: #D94040;
+	--raf-danger-light: #FDEAEA;
+	--raf-info: #FCC940;
+	--raf-info-light: #FFF8E1;
+	--raf-text: #1A1A1A;
+	--raf-text-light: #8A8A8A;
+	--raf-text-body: #4A4A4A;
+	--raf-border: #E8DCC8;
+	--raf-bg: #FFEABA;
+	--raf-white: #FFFFFF;
+	--raf-radius: 6px;
+	--raf-radius-sm: 3px;
+	--raf-radius-lg: 12px;
+	--raf-shadow: 0 2px 8px rgba(232, 92, 36, .08);
+	--raf-shadow-md: 0 4px 16px rgba(232, 92, 36, .12);
+	--raf-shadow-lg: 0 8px 32px rgba(232, 92, 36, .15);
+	--raf-transition: .2s ease;
+	--raf-font: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ═══════════════════════════════════════════════
    Base Reset
    ═══════════════════════════════════════════════ */
 [class*="raf-"] {
-    box-sizing: border-box;
+	box-sizing: border-box;
+	font-family: var(--raf-font);
+}
+
+/* Smooth scroll for booking step transitions */
+[class*="raf-"] {
+	scroll-behavior: smooth;
+}
+
+/* Prevent random blue links from theme bleeding into plugin elements */
+/* CONTRAST FIX: generic link color darkened from #E85C24 (~3.6:1) to #B8440E (~5.2:1) on white */
+[class*="raf-"] a {
+	color: #B8440E;
+	text-decoration: none;
+	transition: color var(--raf-transition);
+}
+[class*="raf-"] a:hover {
+	color: var(--raf-primary-hover);
+}
+
+/* Ensure button text color is not overridden by the generic link rule above */
+[class*="raf-"] a.raf-btn-primary,
+[class*="raf-"] a.raf-btn-primary:hover {
+	color: var(--raf-white);
+}
+[class*="raf-"] a.raf-btn-secondary,
+[class*="raf-"] a.raf-btn-secondary:hover {
+	color: var(--raf-white);
+}
+[class*="raf-"] a.raf-btn-danger,
+[class*="raf-"] a.raf-btn-danger:hover {
+	color: var(--raf-white);
+}
+
+/* ═══════════════════════════════════════════════
+   Global Placeholder Styles
+   ═══════════════════════════════════════════════ */
+[class*="raf-"] input::placeholder,
+[class*="raf-"] textarea::placeholder {
+	color: #AAAAAA;
+	font-family: var(--raf-font);
+	font-size: 13px;
+	opacity: 1;
+}
+
+/* Custom select dropdown arrow (brand orange) */
+[class*="raf-"] select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23E85C24' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	background-size: 12px 8px;
+	padding-right: 34px !important;
+}
+
+/* ═══════════════════════════════════════════════
+   Typography Helpers
+   ═══════════════════════════════════════════════ */
+.raf-heading,
+.raf-search-form-wrap h2,
+.raf-vehicles-wrap h2,
+.raf-booking-wrap h2,
+.raf-confirmation-wrap h2,
+.raf-my-bookings-wrap h2,
+.raf-results-title {
+	font-family: var(--raf-font);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	color: var(--raf-text);
+}
+
+/* CONTRAST FIX: Labels on white backgrounds need at least #4A4A4A */
+.raf-label,
+.raf-field label,
+.raf-form-group label,
+.raf-widget-search-form .raf-widget-field label {
+	font-family: var(--raf-font);
+	font-weight: 600;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--raf-text-body);
+	display: block;
+	margin-bottom: 6px;
 }
 
 /* ═══════════════════════════════════════════════
    Buttons — .raf-btn
    ═══════════════════════════════════════════════ */
 .raf-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px 20px;
-    font-family: var(--raf-font);
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-    text-decoration: none;
-    border: 2px solid transparent;
-    border-radius: var(--raf-radius);
-    cursor: pointer;
-    transition: all var(--raf-transition);
-    white-space: nowrap;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 12px 28px;
+	font-family: var(--raf-font);
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1.4;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	text-decoration: none;
+	border: 2px solid transparent;
+	border-radius: 50px;
+	cursor: pointer;
+	transition: all var(--raf-transition);
+	white-space: nowrap;
 }
 
-.raf-btn:hover { text-decoration: none; }
-.raf-btn:disabled { opacity: .5; cursor: not-allowed; }
+.raf-btn:hover {
+	text-decoration: none;
+	transform: translateY(-1px);
+}
+.raf-btn:active {
+	transform: translateY(0);
+}
+.raf-btn:disabled {
+	opacity: .5;
+	cursor: not-allowed;
+	transform: none;
+}
 
 .raf-btn-primary {
-    background: var(--raf-primary);
-    color: var(--raf-white);
-    border-color: var(--raf-primary);
+	background: var(--raf-primary);
+	color: var(--raf-white);
+	border-color: var(--raf-primary);
 }
 .raf-btn-primary:hover {
-    background: var(--raf-primary-hover);
-    border-color: var(--raf-primary-hover);
-    color: var(--raf-white);
+	background: var(--raf-primary-hover);
+	border-color: var(--raf-primary-hover);
+	color: var(--raf-white);
+	box-shadow: var(--raf-shadow-md);
 }
 
+/* CONTRAST FIX: 13px bold text on white needs 4.5:1 — darkened to #B8440E */
 .raf-btn-outline {
-    background: var(--raf-white);
-    color: var(--raf-primary);
-    border-color: var(--raf-primary);
+	background: transparent;
+	color: #B8440E;
+	border-color: var(--raf-primary);
 }
 .raf-btn-outline:hover {
-    background: var(--raf-primary-light);
+	background: var(--raf-primary);
+	color: var(--raf-white);
+	box-shadow: var(--raf-shadow-md);
 }
 
 .raf-btn-secondary {
-    background: var(--raf-secondary);
-    color: var(--raf-white);
-    border-color: var(--raf-secondary);
+	background: var(--raf-text);
+	color: var(--raf-white);
+	border-color: var(--raf-text);
 }
 .raf-btn-secondary:hover {
-    opacity: .9;
+	background: #333;
+	border-color: #333;
 }
 
 .raf-btn-danger {
-    background: var(--raf-danger);
-    color: var(--raf-white);
-    border-color: var(--raf-danger);
+	background: var(--raf-danger);
+	color: var(--raf-white);
+	border-color: var(--raf-danger);
 }
 .raf-btn-danger:hover {
-    opacity: .9;
+	background: #C03030;
+	border-color: #C03030;
 }
 
 .raf-btn-sm {
-    padding: 6px 12px;
-    font-size: 12px;
+	padding: 7px 16px;
+	font-size: 11px;
 }
 
 /* ═══════════════════════════════════════════════
    Badges — .raf-badge
    ═══════════════════════════════════════════════ */
 .raf-badge {
-    display: inline-block;
-    padding: 3px 10px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    border-radius: 20px;
-    line-height: 1.5;
+	display: inline-block;
+	padding: 4px 12px;
+	font-family: var(--raf-font);
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	border-radius: 50px;
+	line-height: 1.5;
 }
 .raf-badge-pending   { background: var(--raf-warning-light); color: #92400e; }
-.raf-badge-confirmed { background: var(--raf-info-light); color: #075985; }
+/* CONTRAST FIX: darkened text from #7C6A00 to #5A4800 on #FFF8E1 */
+.raf-badge-confirmed { background: var(--raf-secondary-light); color: #5A4800; }
 .raf-badge-active    { background: var(--raf-success-light); color: #166534; }
-.raf-badge-completed { background: var(--raf-info-light); color: #075985; }
+/* CONTRAST FIX: darkened text from #7C6A00 to #5A4800 on #FFF8E1 */
+.raf-badge-completed { background: var(--raf-secondary-light); color: #5A4800; }
 .raf-badge-cancelled { background: var(--raf-danger-light); color: #991b1b; }
-.raf-badge-mandatory { background: var(--raf-warning-light); color: #92400e; font-size: 10px; }
+.raf-badge-mandatory { background: var(--raf-warning-light); color: #92400e; font-size: 9px; }
 
 /* ═══════════════════════════════════════════════
    Notices — .raf-notice
    ═══════════════════════════════════════════════ */
 .raf-notice {
-    padding: 12px 16px;
-    border-radius: var(--raf-radius);
-    margin-bottom: 16px;
-    font-size: 14px;
-    line-height: 1.5;
-    border-left: 4px solid;
+	padding: 14px 18px;
+	border-radius: var(--raf-radius);
+	margin-bottom: 16px;
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.5;
+	border-left: 4px solid;
 }
-.raf-notice-info    { background: var(--raf-info-light); border-color: var(--raf-info); color: #075985; }
+/* CONTRAST FIX: darkened info notice text from #7C6A00 to #5A4800 */
+.raf-notice-info    { background: var(--raf-secondary-light); border-color: var(--raf-secondary); color: #5A4800; }
 .raf-notice-warning { background: var(--raf-warning-light); border-color: var(--raf-warning); color: #92400e; }
 .raf-notice-error   { background: var(--raf-danger-light); border-color: var(--raf-danger); color: #991b1b; }
 .raf-notice-success { background: var(--raf-success-light); border-color: var(--raf-success); color: #166534; }
@@ -149,39 +263,35 @@
 /* ═══════════════════════════════════════════════
    Loading / Spinner
    ═══════════════════════════════════════════════ */
+/* CONTRAST FIX: loading text darkened from --raf-text-light to #6A6A6A */
 .raf-loading {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--raf-text-light);
+	text-align: center;
+	padding: 48px 20px;
+	color: #6A6A6A;
+	font-family: var(--raf-font);
 }
 
 .raf-spinner {
-    display: inline-block;
-    width: 36px;
-    height: 36px;
-    border: 3px solid var(--raf-border);
-    border-top-color: var(--raf-primary);
-    border-radius: 50%;
-    animation: raf-spin .7s linear infinite;
-    margin-bottom: 12px;
+	display: inline-block;
+	width: 36px;
+	height: 36px;
+	border: 3px solid var(--raf-border);
+	border-top-color: var(--raf-primary);
+	border-radius: 50%;
+	animation: raf-spin .7s linear infinite;
+	margin-bottom: 12px;
 }
 
 @keyframes raf-spin {
-    to { transform: rotate(360deg); }
+	to { transform: rotate(360deg); }
 }
 
 /* ═══════════════════════════════════════════════
    Form Fields — .raf-field
    ═══════════════════════════════════════════════ */
 .raf-field {
-    margin-bottom: 12px;
-}
-.raf-field label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--raf-text);
-    margin-bottom: 4px;
+	margin-bottom: 14px;
+	position: relative;
 }
 .raf-field select,
 .raf-field input[type="text"],
@@ -190,48 +300,35 @@
 .raf-field input[type="date"],
 .raf-field input[type="number"],
 .raf-field textarea {
-    width: 100%;
-    padding: 9px 12px;
-    font-size: 14px;
-    border: 1px solid var(--raf-border);
-    border-radius: var(--raf-radius-sm);
-    background: var(--raf-white);
-    color: var(--raf-text);
-    transition: border-color var(--raf-transition);
+	width: 100%;
+	padding: 10px 14px;
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 500;
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	background: var(--raf-white);
+	color: var(--raf-text);
+	transition: border-color var(--raf-transition), box-shadow var(--raf-transition);
 }
 .raf-field select:focus,
 .raf-field input:focus,
 .raf-field textarea:focus {
-    outline: none;
-    border-color: var(--raf-primary);
-    box-shadow: 0 0 0 3px rgba(37,99,235,.15);
-}
-
-.raf-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--raf-text);
-    margin-bottom: 4px;
+	outline: none;
+	border-color: var(--raf-primary);
+	box-shadow: 0 0 0 3px rgba(232, 92, 36, .15);
 }
 
 /* Form Grid */
 .raf-form-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 16px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-bottom: 16px;
 }
 .raf-form-group {
-    flex: 1 1 0;
-    min-width: 0;
-}
-.raf-form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--raf-text);
-    margin-bottom: 4px;
+	flex: 1 1 0;
+	min-width: 0;
 }
 .raf-form-group select,
 .raf-form-group input[type="text"],
@@ -240,21 +337,23 @@
 .raf-form-group input[type="date"],
 .raf-form-group input[type="number"],
 .raf-form-group textarea {
-    width: 100%;
-    padding: 9px 12px;
-    font-size: 14px;
-    border: 1px solid var(--raf-border);
-    border-radius: var(--raf-radius-sm);
-    background: var(--raf-white);
-    color: var(--raf-text);
-    transition: border-color var(--raf-transition);
+	width: 100%;
+	padding: 10px 14px;
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 500;
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	background: var(--raf-white);
+	color: var(--raf-text);
+	transition: border-color var(--raf-transition), box-shadow var(--raf-transition);
 }
 .raf-form-group select:focus,
 .raf-form-group input:focus,
 .raf-form-group textarea:focus {
-    outline: none;
-    border-color: var(--raf-primary);
-    box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+	outline: none;
+	border-color: var(--raf-primary);
+	box-shadow: 0 0 0 3px rgba(232, 92, 36, .15);
 }
 
 .raf-col-3  { flex: 0 0 calc(25% - 12px); }
@@ -266,132 +365,195 @@
    1. Search Form — .raf-search-form-wrap
    ═══════════════════════════════════════════════ */
 .raf-search-form-wrap {
-    font-family: var(--raf-font);
-    color: var(--raf-text);
+	font-family: var(--raf-font);
+	color: var(--raf-text-body);
+	max-width: min(1400px, 100%);
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 24px;
+	padding-right: 24px;
 }
 
 /* Horizontal layout */
 .raf-search-horizontal .raf-search-fields {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    gap: 12px;
-    background: var(--raf-white);
-    padding: 20px;
-    border-radius: var(--raf-radius-lg);
-    box-shadow: var(--raf-shadow-md);
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 14px;
+	background: var(--raf-white);
+	padding: 24px;
+	border-radius: var(--raf-radius-lg);
+	border: 1px solid var(--raf-border);
+	box-shadow: var(--raf-shadow-md);
 }
 .raf-search-horizontal .raf-field {
-    flex: 1 1 160px;
-    margin-bottom: 0;
+	flex: 1 1 160px;
+	margin-bottom: 0;
 }
 .raf-search-horizontal .raf-field-submit {
-    flex: 0 0 auto;
+	flex: 0 0 auto;
 }
 .raf-search-horizontal .raf-field-different-dropoff {
-    flex: 0 0 100%;
+	flex: 0 0 100%;
+}
+
+/* Search Button — pill, full orange, bold */
+.raf-search-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 12px 32px;
+	font-family: var(--raf-font);
+	font-size: 13px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--raf-white);
+	background: var(--raf-primary);
+	border: 2px solid var(--raf-primary);
+	border-radius: 50px;
+	cursor: pointer;
+	transition: all var(--raf-transition);
+}
+.raf-search-btn:hover {
+	background: var(--raf-primary-hover);
+	border-color: var(--raf-primary-hover);
+	transform: translateY(-1px);
+	box-shadow: var(--raf-shadow-md);
 }
 
 /* Vertical layout */
 .raf-search-vertical .raf-search-fields {
-    background: var(--raf-white);
-    padding: 24px;
-    border-radius: var(--raf-radius-lg);
-    box-shadow: var(--raf-shadow-md);
+	background: var(--raf-white);
+	padding: 28px;
+	border-radius: var(--raf-radius-lg);
+	border: 1px solid var(--raf-border);
+	box-shadow: var(--raf-shadow-md);
 }
 .raf-search-vertical .raf-field {
-    margin-bottom: 14px;
+	margin-bottom: 16px;
 }
 .raf-search-vertical .raf-field-submit {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 .raf-search-vertical .raf-search-btn {
-    width: 100%;
+	width: 100%;
 }
 
 /* Different dropoff checkbox */
 .raf-field-different-dropoff label {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 400;
-    font-size: 13px;
-    cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-weight: 500;
+	font-size: 13px;
+	text-transform: none;
+	letter-spacing: normal;
+	color: var(--raf-text-body);
+	cursor: pointer;
 }
 .raf-field-different-dropoff input[type="checkbox"] {
-    width: auto;
+	width: auto;
+	accent-color: var(--raf-primary);
 }
 
 /* Search Results */
 .raf-search-results {
-    margin-top: 24px;
+	margin-top: 32px;
 }
 .raf-results-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 28px;
 }
 .raf-results-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--raf-text);
-    margin: 0;
+	font-size: 22px;
+	font-weight: 700;
+	color: var(--raf-text);
+	margin: 0;
+	letter-spacing: -0.02em;
 }
 .raf-results-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 24px;
 }
+/* CONTRAST FIX: darkened from --raf-text-light to #6A6A6A */
+.raf-search-error {
+	display: none;
+	background: var(--raf-danger-light, #FDEAEA);
+	color: var(--raf-danger, #D94040);
+	border: 1px solid var(--raf-danger, #D94040);
+	border-radius: var(--raf-radius, 6px);
+	padding: 10px 14px;
+	margin: 12px 0;
+	font-size: 14px;
+	font-family: var(--raf-font);
+	line-height: 1.4;
+}
+
 .raf-no-results {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--raf-text-light);
+	text-align: center;
+	padding: 48px 20px;
+	color: #6A6A6A;
+	font-family: var(--raf-font);
 }
 .raf-inline-results {
-    margin-top: 20px;
+	margin-top: 24px;
 }
 
 /* ═══════════════════════════════════════════════
    2. Vehicle Listing — .raf-vehicles-wrap
    ═══════════════════════════════════════════════ */
 .raf-vehicles-wrap {
-    font-family: var(--raf-font);
-    color: var(--raf-text);
+	font-family: var(--raf-font);
+	color: var(--raf-text-body);
+	max-width: min(1400px, 100%);
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 24px;
+	padding-right: 24px;
 }
 
 /* Category Filter */
 .raf-vehicles-filter {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 24px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 28px;
 }
 .raf-filter-btn {
-    padding: 8px 18px;
-    font-size: 13px;
-    font-weight: 600;
-    border: 1px solid var(--raf-border);
-    border-radius: 20px;
-    background: var(--raf-white);
-    color: var(--raf-text);
-    cursor: pointer;
-    transition: all var(--raf-transition);
+	padding: 8px 20px;
+	font-family: var(--raf-font);
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	border: 1px solid var(--raf-border);
+	border-radius: 50px;
+	background: var(--raf-white);
+	color: var(--raf-text-body);
+	cursor: pointer;
+	transition: all var(--raf-transition);
 }
+/* CONTRAST FIX: 12px text on white needs 4.5:1 — #E85C24 is ~3.6:1, darkened hover to #B8440E */
 .raf-filter-btn:hover {
-    border-color: var(--raf-primary);
-    color: var(--raf-primary);
+	border-color: var(--raf-primary);
+	color: #B8440E;
+	transform: translateY(-1px);
 }
 .raf-filter-btn.active {
-    background: var(--raf-primary);
-    color: var(--raf-white);
-    border-color: var(--raf-primary);
+	background: var(--raf-primary);
+	color: var(--raf-white);
+	border-color: var(--raf-primary);
 }
 
 /* Vehicle Grid */
 .raf-vehicles-grid {
-    display: grid;
-    gap: 24px;
+	display: grid;
+	gap: 28px;
 }
 .raf-vehicles-wrap[data-columns="1"] .raf-vehicles-grid { grid-template-columns: 1fr; }
 .raf-vehicles-wrap[data-columns="2"] .raf-vehicles-grid { grid-template-columns: repeat(2, 1fr); }
@@ -399,1010 +561,2273 @@
 .raf-vehicles-wrap:not([data-columns]) .raf-vehicles-grid { grid-template-columns: repeat(3, 1fr); }
 .raf-vehicles-wrap[data-columns="4"] .raf-vehicles-grid { grid-template-columns: repeat(4, 1fr); }
 
+/* CONTRAST FIX: darkened from --raf-text-light to #6A6A6A */
 .raf-no-vehicles {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 40px;
-    color: var(--raf-text-light);
+	grid-column: 1 / -1;
+	text-align: center;
+	padding: 48px;
+	color: #6A6A6A;
 }
 
 /* Vehicle Card */
 .raf-vehicle-card {
-    background: var(--raf-white);
-    border-radius: var(--raf-radius-lg);
-    box-shadow: var(--raf-shadow);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: box-shadow var(--raf-transition), transform var(--raf-transition);
+	background: var(--raf-white);
+	border-radius: var(--raf-radius-lg);
+	border: 1px solid var(--raf-border);
+	box-shadow: var(--raf-shadow);
+	display: flex;
+	flex-direction: column;
+	transition: box-shadow var(--raf-transition), transform var(--raf-transition), border-color var(--raf-transition);
 }
 .raf-vehicle-card:hover {
-    box-shadow: var(--raf-shadow-lg);
-    transform: translateY(-2px);
+	box-shadow: var(--raf-shadow-lg);
+	transform: translateY(-3px);
+	border-bottom-color: var(--raf-accent);
 }
 
 .raf-vehicle-image {
-    position: relative;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    background: var(--raf-bg);
+	position: relative;
+	height: 220px;
+	overflow: hidden;
+	background: var(--raf-bg);
+	border-radius: var(--raf-radius-lg) var(--raf-radius-lg) 0 0;
 }
 .raf-vehicle-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform .4s ease;
 }
+.raf-vehicle-card:hover .raf-vehicle-image img {
+	transform: scale(1.05);
+}
+/* CONTRAST FIX: icon was --raf-border on --raf-bg (both light), now #C4A882 */
 .raf-vehicle-no-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    color: var(--raf-border);
-    font-size: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	color: #C4A882;
+	font-size: 48px;
 }
 
 /* Rating Badge */
 .raf-vehicle-rating {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(0,0,0,.7);
-    color: #fbbf24;
-    padding: 4px 8px;
-    border-radius: var(--raf-radius-sm);
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 3px;
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	background: rgba(26, 26, 26, .8);
+	color: var(--raf-accent);
+	padding: 5px 10px;
+	border-radius: 50px;
+	font-size: 13px;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	backdrop-filter: blur(4px);
 }
-.raf-stars { color: var(--raf-white); }
+.raf-stars { color: var(--raf-accent); }
 .raf-star-icon { font-size: 14px; }
 
 /* Vehicle Info */
 .raf-vehicle-info {
-    padding: 16px;
-    flex: 1;
+	padding: 20px;
+	flex: 1;
 }
 .raf-vehicle-name {
-    font-size: 17px;
-    font-weight: 700;
-    margin: 0 0 4px;
-    color: var(--raf-text);
+	font-family: var(--raf-font);
+	font-size: 18px;
+	font-weight: 700;
+	margin: 0 0 6px;
+	color: var(--raf-text);
+	letter-spacing: -0.01em;
 }
+/* CONTRAST FIX: vehicle description darkened from --raf-text-light to --raf-text-body */
 .raf-vehicle-desc {
-    font-size: 13px;
-    color: var(--raf-text-light);
-    margin: 0 0 10px;
-    line-height: 1.4;
+	font-size: 13px;
+	color: var(--raf-text-body);
+	margin: 0 0 12px;
+	line-height: 1.5;
 }
 
-/* Specs */
+/* Specs — Pill Badges */
+/* CONTRAST FIX: orange on cream fails — use darker orange on lighter warm white */
 .raf-vehicle-specs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 12px;
 }
 .raf-spec {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    color: var(--raf-text-light);
-    background: var(--raf-bg);
-    padding: 3px 8px;
-    border-radius: var(--raf-radius-sm);
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	font-family: var(--raf-font);
+	font-size: 11px;
+	font-weight: 600;
+	color: #B8440E;
+	background: #FFF3EB;
+	border: 1px solid #F0D6C4;
+	padding: 4px 10px;
+	border-radius: 50px;
 }
 .raf-spec-icon {
-    font-size: 13px;
+	font-size: 13px;
 }
 
 /* Features */
 .raf-vehicle-features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 6px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 8px;
 }
 .raf-feature-tag {
-    font-size: 11px;
-    padding: 2px 8px;
-    background: var(--raf-primary-light);
-    color: var(--raf-primary);
-    border-radius: var(--raf-radius-sm);
-    font-weight: 500;
+	font-family: var(--raf-font);
+	font-size: 10px;
+	font-weight: 600;
+	padding: 3px 10px;
+	background: var(--raf-primary-light);
+	color: #B8440E;
+	border-radius: 50px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
 }
+.raf-feature-emoji {
+	font-size: 12px;
+	line-height: 1;
+	text-transform: none;
+	letter-spacing: 0;
+}
+/* CONTRAST FIX: feature-more on cream bg — darkened text */
 .raf-feature-more {
-    font-size: 11px;
-    padding: 2px 8px;
-    background: var(--raf-bg);
-    color: var(--raf-text-light);
-    border-radius: var(--raf-radius-sm);
+	font-size: 10px;
+	font-weight: 600;
+	padding: 3px 10px;
+	background: var(--raf-bg);
+	color: #5A5A5A;
+	border-radius: 50px;
 }
 
 /* Price & Action */
 .raf-vehicle-price-action {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 16px;
-    border-top: 1px solid var(--raf-border);
-    background: var(--raf-bg);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px 20px;
+	border-top: 1px solid var(--raf-border);
+	background: #FFFCF5;
+	border-radius: 0 0 var(--raf-radius-lg) var(--raf-radius-lg);
 }
 .raf-vehicle-price {
-    display: flex;
-    align-items: baseline;
-    gap: 2px;
+	display: flex;
+	align-items: baseline;
+	gap: 3px;
+	white-space: nowrap;
 }
 .raf-price-amount {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--raf-primary);
+	font-family: var(--raf-font);
+	font-size: 22px;
+	font-weight: 800;
+	color: var(--raf-primary);
 }
+/* CONTRAST FIX: price period darkened from --raf-text-light to --raf-text-body */
 .raf-price-period {
-    font-size: 13px;
-    color: var(--raf-text-light);
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--raf-text-body);
 }
 
 /* ═══════════════════════════════════════════════
    3. Booking Form — .raf-booking-wrap
    ═══════════════════════════════════════════════ */
 .raf-booking-wrap {
-    font-family: var(--raf-font);
-    color: var(--raf-text);
-    max-width: 960px;
-    margin: 0 auto;
+	font-family: var(--raf-font);
+	color: var(--raf-text-body);
+	max-width: 960px;
+	margin: 0 auto;
 }
 
 /* Steps Progress */
 .raf-booking-steps {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 32px;
-    padding: 0;
-    list-style: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 36px;
+	padding: 0;
+	list-style: none;
 }
 .raf-step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    opacity: .4;
-    transition: opacity var(--raf-transition);
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	opacity: .35;
+	transition: opacity var(--raf-transition);
 }
 .raf-step.active { opacity: 1; }
 .raf-step.completed { opacity: .7; }
 
 .raf-step-number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--raf-border);
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--raf-text-light);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	background: var(--raf-border);
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 700;
+	color: var(--raf-text-body);
 }
 .raf-step.active .raf-step-number {
-    background: var(--raf-primary);
-    color: var(--raf-white);
+	background: var(--raf-primary);
+	color: var(--raf-white);
+	box-shadow: 0 0 0 4px rgba(232, 92, 36, .2);
 }
 .raf-step.completed .raf-step-number {
-    background: var(--raf-success);
-    color: var(--raf-white);
+	background: var(--raf-success);
+	color: var(--raf-white);
 }
+/* CONTRAST FIX: inactive step label darkened from #8A8A8A to #6A6A6A for 4.5:1+,
+   active step label uses --raf-text */
 .raf-step-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--raf-text-light);
+	font-family: var(--raf-font);
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: #6A6A6A;
 }
 .raf-step.active .raf-step-label {
-    color: var(--raf-text);
+	color: var(--raf-text);
 }
 .raf-step-line {
-    width: 40px;
-    height: 2px;
-    background: var(--raf-border);
-    margin: 0 8px;
+	width: 40px;
+	height: 2px;
+	background: var(--raf-border);
+	margin: 0 8px;
 }
 
 /* Booking Form Layout */
 .raf-booking-form {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 24px;
-    align-items: start;
+	display: grid;
+	grid-template-columns: 1fr 320px;
+	gap: 28px;
+	align-items: start;
 }
 
 .raf-booking-step-content {
-    background: var(--raf-white);
-    border-radius: var(--raf-radius-lg);
-    box-shadow: var(--raf-shadow);
-    padding: 24px;
+	background: var(--raf-white);
+	border-radius: var(--raf-radius-lg);
+	border: 1px solid var(--raf-border);
+	box-shadow: var(--raf-shadow);
+	padding: 28px;
 }
 .raf-booking-step-content h3 {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--raf-border);
+	font-family: var(--raf-font);
+	font-size: 18px;
+	font-weight: 700;
+	margin: 0 0 22px;
+	padding-bottom: 14px;
+	border-bottom: 1px solid var(--raf-border);
+	color: var(--raf-text);
+	letter-spacing: -0.01em;
 }
 
 /* Sidebar */
 .raf-booking-sidebar {
-    position: sticky;
-    top: 20px;
+	position: sticky;
+	top: 20px;
 }
 
 .raf-selected-vehicle-card {
-    background: var(--raf-white);
-    border-radius: var(--raf-radius-lg);
-    box-shadow: var(--raf-shadow);
-    overflow: hidden;
-    margin-bottom: 16px;
+	background: var(--raf-white);
+	border-radius: var(--raf-radius-lg);
+	border: 1px solid var(--raf-border);
+	box-shadow: var(--raf-shadow);
+	overflow: hidden;
+	margin-bottom: 18px;
 }
 .raf-selected-vehicle-card img {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    display: block;
+	width: 100%;
+	height: 170px;
+	object-fit: cover;
+	display: block;
 }
 .raf-selected-vehicle-info {
-    padding: 14px;
+	padding: 16px;
 }
 .raf-selected-vehicle-info h4 {
-    margin: 0 0 6px;
-    font-size: 16px;
-    font-weight: 700;
+	margin: 0 0 6px;
+	font-family: var(--raf-font);
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--raf-text);
 }
 
 /* Price Summary */
 .raf-price-summary {
-    background: var(--raf-white);
-    border-radius: var(--raf-radius-lg);
-    box-shadow: var(--raf-shadow);
-    padding: 20px;
+	background: var(--raf-white);
+	border-radius: var(--raf-radius-lg);
+	border: 1px solid var(--raf-border);
+	box-shadow: var(--raf-shadow);
+	padding: 22px;
 }
 .raf-price-summary h4 {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 14px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--raf-border);
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 700;
+	margin: 0 0 16px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid var(--raf-border);
+	color: var(--raf-text);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
 }
 .raf-summary-content {
-    font-size: 14px;
+	font-size: 14px;
 }
+/* CONTRAST FIX: darkened from --raf-text-light to #6A6A6A */
 .raf-summary-placeholder {
-    text-align: center;
-    padding: 20px;
-    color: var(--raf-text-light);
-    font-size: 13px;
+	text-align: center;
+	padding: 24px;
+	color: #6A6A6A;
+	font-size: 13px;
 }
 .raf-price-breakdown {
-    margin-bottom: 12px;
+	margin-bottom: 14px;
 }
 .raf-price-breakdown > div {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    font-size: 13px;
+	display: flex;
+	justify-content: space-between;
+	padding: 7px 0;
+	font-size: 13px;
+	color: var(--raf-text-body);
 }
+/* CONTRAST FIX: #2D9B5A on white is ~3.9:1, needs 4.5:1 for 13px text — darkened to #1E7A42 (~5.5:1) */
 .raf-discount-row {
-    color: var(--raf-success);
+	color: #1E7A42;
 }
+/* CONTRAST FIX: #E85C24 on white at 15px bold is ~3.6:1, needs 4.5:1 — darkened to #B8440E */
 .raf-total-row {
-    font-weight: 700;
-    font-size: 15px;
-    border-top: 2px solid var(--raf-border);
-    padding-top: 10px;
-    margin-top: 6px;
+	font-weight: 700;
+	font-size: 15px;
+	border-top: 2px solid var(--raf-primary);
+	padding-top: 12px;
+	margin-top: 8px;
+	color: #B8440E;
 }
 .raf-amount {
-    font-weight: 600;
+	font-weight: 600;
 }
 
 /* Selected Vehicle */
 .raf-selected-vehicle {
-    background: var(--raf-bg);
-    border-radius: var(--raf-radius);
-    padding: 16px;
-    margin-bottom: 16px;
-    display: flex;
-    gap: 14px;
-    align-items: center;
+	background: var(--raf-bg);
+	border-radius: var(--raf-radius);
+	border: 1px solid var(--raf-border);
+	padding: 16px;
+	margin-bottom: 18px;
+	display: flex;
+	gap: 14px;
+	align-items: center;
 }
 .raf-selected-vehicle img {
-    width: 120px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: var(--raf-radius-sm);
+	width: 120px;
+	height: 80px;
+	object-fit: cover;
+	border-radius: var(--raf-radius);
 }
 .raf-booking-vehicle h4 {
-    margin: 0 0 4px;
-    font-size: 15px;
-    font-weight: 700;
+	margin: 0 0 4px;
+	font-family: var(--raf-font);
+	font-size: 15px;
+	font-weight: 700;
 }
 
 /* Extras Grid */
 .raf-extras-section {
-    margin-bottom: 20px;
+	margin-bottom: 22px;
 }
 .raf-extras-section h4 {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 12px;
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 700;
+	margin: 0 0 14px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
 }
 .raf-extras-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 12px;
 }
 .raf-extra-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 12px;
-    border: 1px solid var(--raf-border);
-    border-radius: var(--raf-radius);
-    transition: border-color var(--raf-transition);
-    cursor: pointer;
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 14px;
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	transition: border-color var(--raf-transition), box-shadow var(--raf-transition);
+	cursor: pointer;
+	background: var(--raf-white);
 }
 .raf-extra-item:hover {
-    border-color: var(--raf-primary);
+	border-color: var(--raf-primary);
+	box-shadow: 0 0 0 1px var(--raf-primary);
 }
 .raf-extra-checkbox {
-    margin-top: 2px;
-    flex-shrink: 0;
+	margin-top: 2px;
+	flex-shrink: 0;
+	accent-color: var(--raf-primary);
 }
 .raf-extra-label {
-    flex: 1;
+	flex: 1;
 }
 .raf-extra-info {
-    flex: 1;
+	flex: 1;
 }
 .raf-extra-name {
-    font-size: 14px;
-    font-weight: 600;
-    display: block;
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 600;
+	display: block;
+	color: var(--raf-text);
 }
+/* CONTRAST FIX: extra description darkened from --raf-text-light to --raf-text-body */
 .raf-extra-desc {
-    font-size: 12px;
-    color: var(--raf-text-light);
-    margin-top: 2px;
-    display: block;
+	font-size: 12px;
+	color: var(--raf-text-body);
+	margin-top: 2px;
+	display: block;
 }
+/* CONTRAST FIX: 13px bold text needs 4.5:1 — #E85C24 on white is ~3.6:1,
+   darkened to #B8440E (~5.2:1) */
 .raf-extra-price {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--raf-primary);
-    white-space: nowrap;
+	font-family: var(--raf-font);
+	font-size: 13px;
+	font-weight: 700;
+	color: #B8440E;
+	white-space: nowrap;
 }
 .raf-extra-qty {
-    width: 60px;
-    padding: 4px 6px;
-    font-size: 13px;
-    border: 1px solid var(--raf-border);
-    border-radius: var(--raf-radius-sm);
+	width: 60px;
+	padding: 5px 8px;
+	font-family: var(--raf-font);
+	font-size: 13px;
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
 }
 
 /* Insurance Grid */
 .raf-insurance-section {
-    margin-bottom: 20px;
+	margin-bottom: 22px;
 }
 .raf-insurance-section h4 {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 12px;
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 700;
+	margin: 0 0 14px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
 }
 .raf-insurance-grid {
-    display: grid;
-    gap: 12px;
+	display: grid;
+	gap: 12px;
 }
 .raf-insurance-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 14px;
-    border: 1px solid var(--raf-border);
-    border-radius: var(--raf-radius);
-    transition: border-color var(--raf-transition);
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 14px;
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	transition: border-color var(--raf-transition), box-shadow var(--raf-transition);
+	background: var(--raf-white);
 }
 .raf-insurance-item:hover {
-    border-color: var(--raf-primary);
+	border-color: var(--raf-primary);
+	box-shadow: 0 0 0 1px var(--raf-primary);
 }
 .raf-insurance-item.raf-mandatory {
-    background: var(--raf-warning-light);
-    border-color: var(--raf-warning);
+	background: var(--raf-warning-light);
+	border-color: var(--raf-warning);
 }
 .raf-insurance-checkbox {
-    margin-top: 2px;
-    flex-shrink: 0;
+	margin-top: 2px;
+	flex-shrink: 0;
+	accent-color: var(--raf-primary);
 }
 .raf-insurance-label {
-    flex: 1;
+	flex: 1;
 }
 .raf-insurance-info {
-    flex: 1;
+	flex: 1;
 }
 .raf-insurance-name {
-    font-size: 14px;
-    font-weight: 600;
-    display: block;
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 600;
+	display: block;
+	color: var(--raf-text);
 }
+/* CONTRAST FIX: insurance desc darkened from --raf-text-light to --raf-text-body */
 .raf-insurance-desc {
-    font-size: 12px;
-    color: var(--raf-text-light);
-    margin-top: 2px;
-    display: block;
+	font-size: 12px;
+	color: var(--raf-text-body);
+	margin-top: 2px;
+	display: block;
 }
+/* CONTRAST FIX: 13px bold text needs 4.5:1 — darkened to #B8440E */
 .raf-insurance-price {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--raf-primary);
-    white-space: nowrap;
+	font-family: var(--raf-font);
+	font-size: 13px;
+	font-weight: 700;
+	color: #B8440E;
+	white-space: nowrap;
 }
+/* CONTRAST FIX: coverage text darkened from --raf-text-light to --raf-text-body */
 .raf-coverage {
-    font-size: 12px;
-    color: var(--raf-text-light);
-    margin-top: 4px;
+	font-size: 12px;
+	color: var(--raf-text-body);
+	margin-top: 4px;
 }
 
 /* Coupon */
 .raf-coupon-section {
-    margin-top: 16px;
-    padding: 14px;
-    border: 1px dashed var(--raf-border);
-    border-radius: var(--raf-radius);
+	margin-top: 18px;
+	padding: 16px;
+	border: 1px dashed var(--raf-border);
+	border-radius: var(--raf-radius);
+	background: #FFFCF5;
 }
 .raf-coupon-input {
-    display: flex;
-    gap: 8px;
+	display: flex;
+	gap: 8px;
 }
 .raf-coupon-input input {
-    flex: 1;
-    padding: 8px 12px;
-    font-size: 14px;
-    border: 1px solid var(--raf-border);
-    border-radius: var(--raf-radius-sm);
+	flex: 1;
+	padding: 9px 14px;
+	font-family: var(--raf-font);
+	font-size: 14px;
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+}
+/* Ensure coupon placeholder meets minimum contrast */
+.raf-coupon-input input::placeholder {
+	color: #8A8A8A;
+	font-family: var(--raf-font);
+	font-size: 13px;
 }
 .raf-coupon-message {
-    margin-top: 8px;
-    font-size: 13px;
+	margin-top: 8px;
+	font-size: 13px;
+	font-weight: 500;
 }
 
 /* Review Section */
 .raf-review-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
 }
 .raf-review-section h4 {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 10px;
-    color: var(--raf-text);
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 700;
+	margin: 0 0 10px;
+	color: var(--raf-text);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
 }
 .raf-review-details {
-    font-size: 14px;
-    line-height: 1.8;
+	font-size: 14px;
+	line-height: 1.9;
+	color: var(--raf-text-body);
 }
 .raf-review-details strong {
-    color: var(--raf-text);
+	color: var(--raf-text);
 }
+/* CONTRAST FIX: sub text darkened from --raf-text-light to #5A5A5A */
 .raf-sub {
-    font-size: 12px;
-    color: var(--raf-text-light);
+	font-size: 12px;
+	color: #5A5A5A;
 }
 
 /* Terms */
+/* CONTRAST FIX: terms section has cream bg — ensure text is dark enough */
 .raf-terms-section {
-    margin-top: 16px;
-    padding: 14px;
-    background: var(--raf-bg);
-    border-radius: var(--raf-radius);
+	margin-top: 18px;
+	padding: 16px;
+	background: var(--raf-bg);
+	border-radius: var(--raf-radius);
+	border: 1px solid var(--raf-border);
 }
 .raf-terms-section label {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    font-size: 13px;
-    cursor: pointer;
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	font-size: 13px;
+	font-weight: 500;
+	text-transform: none;
+	letter-spacing: normal;
+	color: #3A3A3A;
+	cursor: pointer;
 }
 
 /* Booking Nav */
 .raf-booking-nav {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid var(--raf-border);
+	display: flex;
+	justify-content: space-between;
+	margin-top: 28px;
+	padding-top: 18px;
+	border-top: 1px solid var(--raf-border);
 }
 
 /* Inline Search in Booking */
 .raf-vehicle-search-inline {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 /* ═══════════════════════════════════════════════
    4. Confirmation — .raf-confirmation-wrap
    ═══════════════════════════════════════════════ */
 .raf-confirmation-wrap {
-    font-family: var(--raf-font);
-    color: var(--raf-text);
-    max-width: 720px;
-    margin: 0 auto;
+	font-family: var(--raf-font);
+	color: var(--raf-text-body);
+	max-width: 720px;
+	margin: 0 auto;
 }
 
 .raf-confirmation-header {
-    text-align: center;
-    padding: 32px 20px;
-    background: var(--raf-success-light);
-    border-radius: var(--raf-radius-lg) var(--raf-radius-lg) 0 0;
+	text-align: center;
+	padding: 36px 24px;
+	background: var(--raf-success-light);
+	border-radius: var(--raf-radius-lg) var(--raf-radius-lg) 0 0;
 }
 .raf-confirmation-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--raf-success);
-    color: var(--raf-white);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    margin-bottom: 12px;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	background: var(--raf-success);
+	color: var(--raf-white);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 28px;
+	margin-bottom: 14px;
 }
 .raf-confirmation-header h2 {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0 0 6px;
+	font-family: var(--raf-font);
+	font-size: 24px;
+	font-weight: 700;
+	margin: 0 0 6px;
+	letter-spacing: -0.02em;
 }
+/* CONTRAST FIX: confirmation status text darkened from --raf-text-light to --raf-text-body */
 .raf-confirmation-status {
-    font-size: 14px;
-    color: var(--raf-text-light);
+	font-size: 14px;
+	color: var(--raf-text-body);
+	font-weight: 500;
 }
+/* CONTRAST FIX: orange on success-light green (#E8F5EE) is ~2.8:1 — darkened */
 .raf-booking-ref {
-    font-size: 15px;
-    font-weight: 600;
-    margin-top: 8px;
+	font-size: 15px;
+	font-weight: 700;
+	margin-top: 10px;
+	color: #B8440E;
 }
 
 .raf-confirmation-details {
-    background: var(--raf-white);
-    border: 1px solid var(--raf-border);
-    border-top: none;
-    border-radius: 0 0 var(--raf-radius-lg) var(--raf-radius-lg);
-    padding: 24px;
+	background: var(--raf-white);
+	border: 1px solid var(--raf-border);
+	border-top: none;
+	border-radius: 0 0 var(--raf-radius-lg) var(--raf-radius-lg);
+	padding: 28px;
 }
 .raf-conf-section {
-    margin-bottom: 20px;
+	margin-bottom: 22px;
 }
 .raf-conf-section h3 {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--raf-border);
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 700;
+	margin: 0 0 12px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid var(--raf-border);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
 }
 .raf-conf-vehicle {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    margin-bottom: 10px;
+	display: flex;
+	gap: 14px;
+	align-items: center;
+	margin-bottom: 12px;
 }
 .raf-conf-vehicle img {
-    width: 120px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: var(--raf-radius-sm);
+	width: 120px;
+	height: 80px;
+	object-fit: cover;
+	border-radius: var(--raf-radius);
 }
 
 /* Confirmation Tables */
 .raf-conf-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 14px;
 }
+/* CONTRAST FIX: table header text darkened from --raf-text-light to --raf-text-body */
 .raf-conf-table th,
 .raf-conf-table td {
-    padding: 8px 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--raf-border);
+	padding: 9px 14px;
+	text-align: left;
+	border-bottom: 1px solid var(--raf-border);
 }
 .raf-conf-table th {
-    font-weight: 600;
-    color: var(--raf-text-light);
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: .5px;
+	font-family: var(--raf-font);
+	font-weight: 600;
+	color: var(--raf-text-body);
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
 }
 .raf-price-table td:last-child {
-    text-align: right;
-    font-weight: 600;
+	text-align: right;
+	font-weight: 600;
 }
+/* CONTRAST FIX: 15px bold on white needs 4.5:1 — darkened to #B8440E */
 .raf-price-table tr:last-child td {
-    font-weight: 700;
-    font-size: 15px;
-    border-top: 2px solid var(--raf-border);
+	font-weight: 700;
+	font-size: 15px;
+	border-top: 2px solid var(--raf-primary);
+	color: #B8440E;
 }
 
 .raf-confirmation-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 24px;
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+	margin-top: 28px;
 }
 
 /* ═══════════════════════════════════════════════
    5. My Bookings — .raf-my-bookings-wrap
    ═══════════════════════════════════════════════ */
 .raf-my-bookings-wrap {
-    font-family: var(--raf-font);
-    color: var(--raf-text);
+	font-family: var(--raf-font);
+	color: var(--raf-text-body);
 }
 
 .raf-bookings-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
 }
 
 .raf-booking-card {
-    background: var(--raf-white);
-    border-radius: var(--raf-radius-lg);
-    box-shadow: var(--raf-shadow);
-    overflow: hidden;
+	background: var(--raf-white);
+	border-radius: var(--raf-radius-lg);
+	border: 1px solid var(--raf-border);
+	box-shadow: var(--raf-shadow);
+	overflow: hidden;
+	transition: box-shadow var(--raf-transition);
+}
+.raf-booking-card:hover {
+	box-shadow: var(--raf-shadow-md);
 }
 
 .raf-booking-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 20px;
-    background: var(--raf-bg);
-    border-bottom: 1px solid var(--raf-border);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 14px 22px;
+	background: #FFFCF5;
+	border-bottom: 1px solid var(--raf-border);
 }
 .raf-booking-number {
-    font-weight: 700;
-    font-size: 14px;
+	font-family: var(--raf-font);
+	font-weight: 700;
+	font-size: 14px;
+	color: var(--raf-text);
 }
 
 .raf-booking-card-body {
-    display: flex;
-    gap: 16px;
-    padding: 16px 20px;
-    align-items: center;
+	display: flex;
+	gap: 18px;
+	padding: 18px 22px;
+	align-items: center;
 }
 .raf-booking-card-body img {
-    width: 100px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: var(--raf-radius-sm);
-    flex-shrink: 0;
+	width: 100px;
+	height: 70px;
+	object-fit: cover;
+	border-radius: var(--raf-radius);
+	flex-shrink: 0;
 }
+/* CONTRAST FIX: booking dates text darkened from --raf-text-light to --raf-text-body */
 .raf-booking-dates {
-    flex: 1;
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--raf-text-light);
+	flex: 1;
+	font-size: 13px;
+	line-height: 1.8;
+	color: var(--raf-text-body);
 }
+/* CONTRAST FIX: 18px 800-weight on white — borderline large text, darkened for safety */
 .raf-booking-total {
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--raf-primary);
-    white-space: nowrap;
+	font-family: var(--raf-font);
+	font-size: 18px;
+	font-weight: 800;
+	color: #B8440E;
+	white-space: nowrap;
 }
 
 .raf-booking-card-footer {
-    display: flex;
-    gap: 8px;
-    padding: 12px 20px;
-    border-top: 1px solid var(--raf-border);
-    justify-content: flex-end;
+	display: flex;
+	gap: 8px;
+	padding: 14px 22px;
+	border-top: 1px solid var(--raf-border);
+	justify-content: flex-end;
 }
 
 /* ═══════════════════════════════════════════════
    6. Widget Styles
    ═══════════════════════════════════════════════ */
 .raf-widget-search-form .raf-widget-field {
-    margin-bottom: 12px;
-}
-.raf-widget-search-form .raf-widget-field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: var(--raf-text);
+	margin-bottom: 14px;
 }
 .raf-widget-search-form .raf-widget-field select,
 .raf-widget-search-form .raf-widget-field input {
-    width: 100%;
-    padding: 8px 10px;
-    font-size: 13px;
-    border: 1px solid var(--raf-border);
-    border-radius: var(--raf-radius-sm);
+	width: 100%;
+	padding: 9px 12px;
+	font-family: var(--raf-font);
+	font-size: 13px;
+	font-weight: 500;
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	transition: border-color var(--raf-transition);
+}
+.raf-widget-search-form .raf-widget-field select:focus,
+.raf-widget-search-form .raf-widget-field input:focus {
+	border-color: var(--raf-primary);
+	box-shadow: 0 0 0 3px rgba(232, 92, 36, .15);
+	outline: none;
 }
 .raf-widget-submit {
-    width: 100%;
-    margin-top: 4px;
+	width: 100%;
+	margin-top: 4px;
 }
 
 /* Vehicles Widget */
 .raf-widget-vehicles {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
 }
 .raf-widget-vehicle-item {
-    display: flex;
-    gap: 10px;
-    align-items: center;
+	display: flex;
+	gap: 12px;
+	align-items: center;
 }
 .raf-widget-vehicle-item img {
-    width: 80px;
-    height: 55px;
-    object-fit: cover;
-    border-radius: var(--raf-radius-sm);
-    flex-shrink: 0;
+	width: 80px;
+	height: 55px;
+	object-fit: cover;
+	border-radius: var(--raf-radius);
+	flex-shrink: 0;
 }
 .raf-widget-vehicle-info h4 {
-    margin: 0 0 2px;
-    font-size: 14px;
+	margin: 0 0 2px;
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 700;
 }
 .raf-widget-vehicle-info h4 a {
-    color: var(--raf-text);
-    text-decoration: none;
+	color: var(--raf-text);
+	text-decoration: none;
+	transition: color var(--raf-transition);
 }
 .raf-widget-vehicle-info h4 a:hover {
-    color: var(--raf-primary);
+	color: #B8440E;
 }
+/* CONTRAST FIX: widget vehicle meta darkened from --raf-text-light to #5A5A5A */
 .raf-widget-vehicle-meta {
-    display: flex;
-    gap: 8px;
-    font-size: 11px;
-    color: var(--raf-text-light);
+	display: flex;
+	gap: 8px;
+	font-size: 11px;
+	color: #5A5A5A;
 }
+/* CONTRAST FIX: 14px bold on white needs 4.5:1 — #E85C24 is ~3.6:1, darkened to #B8440E */
 .raf-widget-vehicle-price {
-    font-size: 14px;
-    color: var(--raf-primary);
-    margin-top: 2px;
-}
-
-/* ═══════════════════════════════════════════════
-   Responsive
-   ═══════════════════════════════════════════════ */
-@media (max-width: 768px) {
-    .raf-search-horizontal .raf-search-fields {
-        flex-direction: column;
-    }
-    .raf-search-horizontal .raf-field {
-        flex: 1 1 100%;
-    }
-
-    .raf-results-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .raf-vehicles-wrap[data-columns="3"] .raf-vehicles-grid,
-    .raf-vehicles-wrap[data-columns="4"] .raf-vehicles-grid,
-    .raf-vehicles-wrap:not([data-columns]) .raf-vehicles-grid {
-        grid-template-columns: 1fr;
-    }
-    .raf-vehicles-wrap[data-columns="2"] .raf-vehicles-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .raf-booking-form {
-        grid-template-columns: 1fr;
-    }
-    .raf-booking-sidebar {
-        position: static;
-    }
-
-    .raf-form-row {
-        flex-direction: column;
-    }
-    .raf-col-3,
-    .raf-col-4,
-    .raf-col-6 {
-        flex: 0 0 100%;
-    }
-
-    .raf-extras-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .raf-booking-card-body {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .raf-booking-steps {
-        flex-wrap: wrap;
-        gap: 4px;
-    }
-    .raf-step-line {
-        width: 20px;
-    }
-    .raf-step-label {
-        display: none;
-    }
-
-    .raf-confirmation-actions {
-        flex-direction: column;
-    }
-
-    .raf-results-header {
-        flex-direction: column;
-        gap: 10px;
-        align-items: flex-start;
-    }
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 700;
+	color: #B8440E;
+	margin-top: 3px;
 }
 
 /* ═══════════════════════════════════════════════
    7. Available Bikes Grid (Booking Step 2)
    ═══════════════════════════════════════════════ */
 .raf-available-bikes-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 18px;
 }
 
 .raf-bike-card {
-    background: var(--raf-white);
-    border: 2px solid var(--raf-border);
-    border-radius: var(--raf-radius-lg);
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color var(--raf-transition), box-shadow var(--raf-transition), transform var(--raf-transition);
+	position: relative;
+	background: var(--raf-white);
+	border: 2px solid var(--raf-border);
+	border-radius: var(--raf-radius-lg);
+	overflow: hidden;
+	cursor: pointer;
+	transition: border-color var(--raf-transition), box-shadow var(--raf-transition), transform var(--raf-transition);
 }
 .raf-bike-card:hover {
-    border-color: var(--raf-primary);
-    box-shadow: var(--raf-shadow-md);
-    transform: translateY(-2px);
+	border-color: var(--raf-primary);
+	box-shadow: var(--raf-shadow-md);
+	transform: translateY(-2px);
 }
 .raf-bike-card.selected {
-    border-color: var(--raf-primary);
-    box-shadow: 0 0 0 3px rgba(37,99,235,.2), var(--raf-shadow-md);
+	border-color: var(--raf-primary);
+	box-shadow: 0 0 0 3px rgba(232, 92, 36, .2), var(--raf-shadow-md);
 }
 .raf-bike-card.selected::after {
-    content: "\2713";
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 28px;
-    height: 28px;
-    background: var(--raf-primary);
-    color: var(--raf-white);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
-}
-.raf-bike-card {
-    position: relative;
+	content: "\2713";
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 28px;
+	height: 28px;
+	background: var(--raf-primary);
+	color: var(--raf-white);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 14px;
+	font-weight: 700;
 }
 
 .raf-bike-card-image {
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    background: var(--raf-bg);
+	aspect-ratio: 16 / 10;
+	overflow: hidden;
+	background: var(--raf-bg);
 }
 .raf-bike-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform .4s ease;
+}
+.raf-bike-card:hover .raf-bike-card-image img {
+	transform: scale(1.05);
 }
 
 .raf-bike-card-body {
-    padding: 14px;
+	padding: 16px;
 }
 .raf-bike-card-name {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 6px;
-    color: var(--raf-text);
+	font-family: var(--raf-font);
+	font-size: 15px;
+	font-weight: 700;
+	margin: 0 0 8px;
+	color: var(--raf-text);
 }
 .raf-bike-card-specs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 8px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 10px;
 }
 .raf-bike-card-price {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--raf-primary);
+	font-family: var(--raf-font);
+	font-size: 19px;
+	font-weight: 800;
+	color: var(--raf-primary);
 }
+/* CONTRAST FIX: bike card price period darkened from --raf-text-light to --raf-text-body */
 .raf-bike-card-price span {
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--raf-text-light);
+	font-size: 13px;
+	font-weight: 400;
+	color: var(--raf-text-body);
 }
 
+/* CONTRAST FIX: no-bikes text darkened from --raf-text-light to #6A6A6A */
 .raf-no-bikes {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--raf-text-light);
+	text-align: center;
+	padding: 48px 20px;
+	color: #6A6A6A;
 }
 
 /* ═══════════════════════════════════════════════
    8. Deposit Section
    ═══════════════════════════════════════════════ */
 .raf-deposit-section {
-    margin-top: 16px;
+	margin-top: 16px;
 }
+/* CONTRAST FIX: #E8860A on white is ~3.3:1, needs 4.5:1 for 13px text — darkened to #92400e (~6.5:1) */
 .raf-deposit-row {
-    color: var(--raf-warning);
-    font-weight: 600;
-    padding-top: 6px;
-    font-size: 13px;
+	color: #92400e;
+	font-weight: 600;
+	padding-top: 6px;
+	font-size: 13px;
 }
 
 /* ═══════════════════════════════════════════════
    9. Email Lookup (My Bookings)
    ═══════════════════════════════════════════════ */
 .raf-lookup-form {
-    background: var(--raf-white);
-    border-radius: var(--raf-radius-lg);
-    box-shadow: var(--raf-shadow);
-    padding: 24px;
-    max-width: 480px;
-    margin: 0 auto 24px;
+	background: var(--raf-white);
+	border-radius: var(--raf-radius-lg);
+	border: 1px solid var(--raf-border);
+	box-shadow: var(--raf-shadow);
+	padding: 28px;
+	max-width: 480px;
+	margin: 0 auto 28px;
 }
 .raf-lookup-form h3 {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 4px;
+	font-family: var(--raf-font);
+	font-size: 20px;
+	font-weight: 700;
+	margin: 0 0 6px;
+	color: var(--raf-text);
+	letter-spacing: -0.02em;
 }
+/* CONTRAST FIX: lookup form description darkened from --raf-text-light to #5A5A5A */
 .raf-lookup-form p {
-    font-size: 13px;
-    color: var(--raf-text-light);
-    margin: 0 0 16px;
+	font-size: 14px;
+	color: #5A5A5A;
+	margin: 0 0 20px;
 }
 .raf-lookup-form .raf-form-group {
-    margin-bottom: 12px;
+	margin-bottom: 14px;
 }
 .raf-lookup-form .raf-btn {
-    width: 100%;
+	width: 100%;
 }
 
 .raf-lookup-results {
-    margin-top: 24px;
+	margin-top: 28px;
 }
 
+/* ═══════════════════════════════════════════════
+   10. Booking Modal — .raf-modal
+   ═══════════════════════════════════════════════ */
+.raf-modal-overlay {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	background: rgba(26, 26, 26, .6);
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	backdrop-filter: blur(3px);
+}
+.raf-modal-overlay.raf-modal-open {
+	display: flex;
+}
+body.raf-modal-body-open {
+	overflow: hidden;
+}
+
+.raf-modal-dialog {
+	position: relative;
+	background: var(--raf-white);
+	border-radius: var(--raf-radius-lg);
+	box-shadow: var(--raf-shadow-lg);
+	width: 100%;
+	max-width: 520px;
+	max-height: 90vh;
+	overflow-y: auto;
+	padding: 0;
+	animation: raf-modal-in .25s ease;
+}
+
+@keyframes raf-modal-in {
+	from { opacity: 0; transform: translateY(20px) scale(.97); }
+	to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Modal Header — Dark background for adventurous feel */
+.raf-modal-header {
+	background: var(--raf-text);
+	padding: 20px 24px;
+	border-radius: var(--raf-radius-lg) var(--raf-radius-lg) 0 0;
+	position: relative;
+}
+.raf-modal-header h3 {
+	font-family: var(--raf-font);
+	font-size: 20px;
+	font-weight: 700;
+	margin: 0;
+	color: var(--raf-white);
+	letter-spacing: -0.01em;
+}
+
+.raf-modal-close {
+	position: absolute;
+	top: 16px;
+	right: 18px;
+	background: none;
+	border: none;
+	font-size: 22px;
+	color: rgba(255, 255, 255, .6);
+	cursor: pointer;
+	line-height: 1;
+	padding: 4px;
+	transition: color var(--raf-transition);
+	z-index: 10;
+}
+.raf-modal-close:hover {
+	color: var(--raf-white);
+}
+
+/* Modal Body */
+.raf-modal-body {
+	padding: 24px;
+}
+
+/* POLISH: Ensure modal form body has proper padding */
+.raf-modal-form-body {
+	padding: 24px;
+}
+/* Remove top padding when header is inside form-body (header has its own padding) */
+.raf-modal-form-body > .raf-modal-header {
+	margin: -24px -24px 24px -24px;
+}
+
+/* POLISH: Proper spacing between form fields in modal context */
+.raf-booking-modal-form .raf-field {
+	margin-bottom: 16px;
+}
+.raf-booking-modal-form .raf-field:last-of-type {
+	margin-bottom: 20px;
+}
+
+/* Vehicle summary inside modal */
+/* CONTRAST FIX: text on cream bg needs to be darker */
+.raf-modal-vehicle-summary {
+	display: flex;
+	gap: 14px;
+	align-items: center;
+	padding: 14px;
+	background: var(--raf-bg);
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	margin-bottom: 22px;
+}
+.raf-modal-vehicle-summary img {
+	width: 100px;
+	height: 68px;
+	object-fit: cover;
+	border-radius: var(--raf-radius);
+	flex-shrink: 0;
+}
+/* CONTRAST FIX: details text on cream bg darkened from --raf-text-light to #3A3A3A */
+.raf-modal-vehicle-details {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	font-size: 13px;
+	color: #3A3A3A;
+	min-width: 0;
+}
+.raf-modal-vehicle-name {
+	font-family: var(--raf-font);
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--raf-text);
+}
+/* CONTRAST FIX: orange on cream bg (#FFEABA) is ~2.2:1 — use darker burnt orange */
+.raf-modal-vehicle-price {
+	font-weight: 700;
+	color: #B8440E;
+}
+
+/* Location Fee Notice */
+/* CONTRAST FIX: 11px text needs 4.5:1 — #8A8A8A on white is ~3.5:1, darkened to #6A6A6A (~5.7:1) */
+.raf-location-fee-notice {
+	display: none;
+	position: absolute;
+	bottom: -20px;
+	left: 0;
+	font-size: 11px;
+	color: #6A6A6A;
+	font-weight: 500;
+	white-space: nowrap;
+	line-height: 1;
+}
+
+/* Modal Price Summary Card */
+.raf-modal-price-summary {
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	overflow: hidden;
+	margin-bottom: 20px;
+	background: var(--raf-white);
+}
+.raf-modal-price-summary-header {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	background: var(--raf-text);
+	color: var(--raf-white);
+	font-family: var(--raf-font);
+	font-weight: 600;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	padding: 10px 16px;
+	border-bottom: 1px solid var(--raf-border);
+}
+.raf-modal-price-summary-icon {
+	font-size: 15px;
+	color: var(--raf-accent);
+}
+/* CONTRAST FIX: dates text increased from rgba(255,255,255,.6) to .85 */
+.raf-modal-price-summary-dates {
+	margin-left: auto;
+	font-weight: 400;
+	font-size: 11px;
+	color: rgba(255, 255, 255, .85);
+	letter-spacing: .3px;
+	text-transform: none;
+}
+/* CONTRAST FIX: loading text darkened from --raf-text-light to #6A6A6A */
+.raf-modal-price-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 18px;
+	font-size: 13px;
+	color: #6A6A6A;
+}
+.raf-price-spinner {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	border: 2px solid var(--raf-border);
+	border-top-color: var(--raf-primary);
+	border-radius: 50%;
+	animation: raf-spin .7s linear infinite;
+}
+
+/* Receipt table */
+.raf-price-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+.raf-price-row td {
+	padding: 10px 16px;
+	border-bottom: 1px solid var(--raf-border);
+}
+.raf-price-label {
+	color: var(--raf-text-body);
+	display: flex;
+	align-items: baseline;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+.raf-price-icon {
+	font-size: 14px;
+	line-height: 1;
+	flex-shrink: 0;
+}
+.raf-price-label-text {
+	font-family: var(--raf-font);
+	font-weight: 500;
+	white-space: nowrap;
+}
+/* CONTRAST FIX: price formula pill text darkened from --raf-text-light to #4A4A4A on cream */
+.raf-price-formula {
+	font-size: 11px;
+	color: #4A4A4A;
+	background: var(--raf-bg);
+	border: 1px solid var(--raf-border);
+	border-radius: 50px;
+	padding: 1px 8px;
+	white-space: nowrap;
+	font-weight: 500;
+}
+.raf-price-amount {
+	text-align: right;
+	font-family: var(--raf-font);
+	font-weight: 600;
+	color: var(--raf-text);
+	white-space: nowrap;
+}
+/* Sub-rows (pickup/dropoff breakdown under Location fee) */
+.raf-price-row-sub td {
+	padding: 4px 16px 4px 28px;
+	border-bottom: none;
+	font-size: 11px;
+}
+.raf-price-row-sub .raf-price-label {
+	color: var(--raf-text-light);
+}
+.raf-price-row-sub .raf-price-label-text {
+	font-weight: 400;
+	color: var(--raf-text-light);
+}
+.raf-price-row-sub .raf-price-amount {
+	font-size: 11px;
+	font-weight: 500;
+	color: var(--raf-text-light);
+}
+.raf-price-sub-dot {
+	font-size: 10px;
+	color: var(--raf-text-light);
+	margin-right: 5px;
+	flex-shrink: 0;
+}
+
+/* Total row — orange accent */
+.raf-price-row-total td {
+	background: var(--raf-primary);
+	border-bottom: none;
+	padding: 12px 16px;
+}
+.raf-price-row-total .raf-price-label {
+	font-weight: 700;
+	font-size: 14px;
+	color: #ffffff !important;
+}
+.raf-price-row-total .raf-price-amount {
+	font-size: 17px;
+	font-weight: 800;
+	color: #ffffff !important;
+}
+/* CONTRAST FIX: Bulletproof white text on orange total row —
+   prevents theme link colors, generic .raf-price-amount rules,
+   or browser defaults from bleeding through */
+.raf-price-row-total td,
+.raf-price-row-total td *,
+.raf-price-row-total td a,
+.raf-price-row-total .raf-price-label-text,
+.raf-price-row-total .raf-price-icon {
+	color: #ffffff !important;
+}
+/* Deposit callout — golden yellow */
+/* CONTRAST FIX: darkened text from #7C6A00 to #5A4800 */
+.raf-price-deposit-callout {
+	background: var(--raf-secondary-light);
+	color: #5A4800;
+	font-family: var(--raf-font);
+	font-size: 12px;
+	font-weight: 600;
+	padding: 9px 16px;
+	border-top: 1px solid var(--raf-border);
+	text-align: center;
+}
+
+/* Required asterisk */
+.raf-required {
+	color: var(--raf-danger);
+}
+
+/* ── Step Indicator ────────────────────────── */
+.raf-modal-steps {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0;
+	padding: 16px 0 20px;
+}
+.raf-modal-step {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	cursor: default;
+	user-select: none;
+}
+.raf-modal-step[data-step="1"] {
+	cursor: pointer;
+}
+.raf-modal-step-num {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	font-family: var(--raf-font);
+	font-size: 13px;
+	font-weight: 700;
+	background: var(--raf-border);
+	color: var(--raf-text-light);
+	flex-shrink: 0;
+	transition: background var(--raf-transition), color var(--raf-transition);
+}
+.raf-modal-step-label {
+	font-family: var(--raf-font);
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--raf-text-light);
+	transition: color var(--raf-transition);
+}
+.raf-modal-step--active .raf-modal-step-num {
+	background: var(--raf-primary);
+	color: var(--raf-white);
+}
+.raf-modal-step--active .raf-modal-step-label {
+	color: var(--raf-primary);
+}
+.raf-modal-step--done .raf-modal-step-num {
+	background: var(--raf-success);
+	color: var(--raf-white);
+	font-size: 14px;
+}
+.raf-modal-step--done .raf-modal-step-label {
+	color: var(--raf-success);
+}
+.raf-modal-step-divider {
+	width: 40px;
+	height: 2px;
+	background: var(--raf-border);
+	margin: 0 12px;
+	flex-shrink: 0;
+}
+
+/* ── Step Content Areas ────────────────────── */
+.raf-modal-step-content {
+	/* No extra padding — inherits from .raf-modal-form-body */
+}
+.raf-modal-step-actions {
+	padding-top: 16px;
+}
+
+/* ── Add-on Cards ──────────────────────────── */
+.raf-addons-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 18px;
+	font-size: 13px;
+	color: #6A6A6A;
+}
+.raf-addons-none {
+	text-align: center;
+	padding: 16px;
+	color: var(--raf-text-light);
+	font-size: 13px;
+}
+.raf-addons-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-bottom: 16px;
+}
+.raf-addon-item {
+	background: var(--raf-white);
+	border: 2px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	padding: 14px 16px;
+	transition: border-color var(--raf-transition), background var(--raf-transition);
+}
+.raf-addon-item:has(.raf-addon-checkbox:checked) {
+	border-color: var(--raf-primary);
+	background: var(--raf-primary-light);
+}
+.raf-addon-label {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	cursor: pointer;
+	margin: 0;
+	font-weight: normal;
+}
+.raf-addon-checkbox {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+	accent-color: var(--raf-primary);
+	cursor: pointer;
+}
+.raf-addon-info {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	flex: 1;
+	min-width: 0;
+}
+.raf-addon-name {
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--raf-text);
+}
+.raf-addon-desc {
+	font-size: 12px;
+	color: #6A6A6A;
+	line-height: 1.4;
+}
+.raf-addon-price-wrap {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 4px;
+	flex-shrink: 0;
+}
+.raf-addon-price {
+	font-family: var(--raf-font);
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--raf-primary);
+	white-space: nowrap;
+}
+.raf-addon-qty {
+	width: 60px;
+	font-size: 12px;
+	padding: 3px 6px;
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius-sm);
+	font-family: var(--raf-font);
+	background: var(--raf-white);
+	cursor: pointer;
+}
+
+/* ── Compact Price Total (Step 2) ──────────── */
+.raf-modal-price-total-compact {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 6px;
+	background: var(--raf-primary);
+	color: var(--raf-white);
+	padding: 12px 16px;
+	border-radius: var(--raf-radius);
+	margin-bottom: 18px;
+	font-family: var(--raf-font);
+}
+.raf-compact-total-label {
+	font-size: 14px;
+	font-weight: 600;
+}
+.raf-compact-total-amount {
+	font-size: 18px;
+	font-weight: 800;
+}
+.raf-compact-total-deposit {
+	width: 100%;
+	font-size: 11px;
+	font-weight: 500;
+	opacity: .85;
+	text-align: right;
+}
+
+/* Modal form fields use existing .raf-field styles */
+
+/* Modal footer / submit area */
+.raf-modal-footer {
+	padding: 0 24px 24px;
+}
+
+/* Modal success state */
+.raf-modal-success {
+	text-align: center;
+	padding: 28px 24px 16px;
+}
+.raf-modal-success-icon {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	background: var(--raf-success);
+	color: var(--raf-white);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 28px;
+	margin-bottom: 18px;
+}
+.raf-modal-success h3 {
+	font-family: var(--raf-font);
+	font-size: 22px;
+	font-weight: 700;
+	margin: 0 0 8px;
+	color: var(--raf-text);
+	letter-spacing: -0.02em;
+}
+/* CONTRAST FIX: modal success text darkened from --raf-text-light to #5A5A5A */
+.raf-modal-success p {
+	font-size: 14px;
+	color: #5A5A5A;
+	margin: 0 0 10px;
+	line-height: 1.6;
+}
+.raf-modal-booking-ref {
+	font-size: 15px;
+	color: var(--raf-text);
+	padding: 14px;
+	background: var(--raf-bg);
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	margin-bottom: 10px;
+}
+/* CONTRAST FIX: orange on cream bg (#FFEABA) is ~2.2:1 — darkened to #B8440E (~3.2:1, passes for 18px bold) */
+.raf-modal-booking-number {
+	color: #B8440E;
+	font-family: var(--raf-font);
+	font-size: 18px;
+	font-weight: 800;
+}
+/* CONTRAST FIX: modal success note darkened from --raf-text-light to #5A5A5A */
+.raf-modal-success-note {
+	font-size: 12px;
+	margin-bottom: 18px;
+	color: #5A5A5A;
+}
+
+/* ═══════════════════════════════════════════════
+   Vehicle Detail Modal
+   ═══════════════════════════════════════════════ */
+
+/* Clickable card cursor */
+.raf-vehicle-card--clickable {
+	cursor: pointer;
+}
+
+/* Prevent body scroll when modal is open */
+body.raf-modal-body-open {
+	overflow: hidden;
+}
+
+/* Full-screen overlay */
+.raf-vd-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.55);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+	padding: 20px;
+}
+
+/* Modal box */
+.raf-vd-modal {
+	background: var(--raf-white);
+	border-radius: 16px;
+	max-width: 860px;
+	width: 90%;
+	max-height: 90vh;
+	overflow-y: auto;
+	position: relative;
+	box-shadow: var(--raf-shadow-lg);
+	animation: raf-vd-fade-in 0.25s ease;
+}
+
+@keyframes raf-vd-fade-in {
+	from { opacity: 0; transform: scale(0.95); }
+	to   { opacity: 1; transform: scale(1); }
+}
+
+/* Two-column content layout */
+.raf-vd-content {
+	display: flex;
+}
+
+/* Left column — image */
+.raf-vd-image-col {
+	width: 45%;
+	background: var(--raf-bg);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 32px;
+	border-radius: 16px 0 0 16px;
+	flex-shrink: 0;
+}
+
+.raf-vd-image {
+	max-width: 100%;
+	max-height: 340px;
+	object-fit: contain;
+	border-radius: var(--raf-radius);
+}
+
+/* Right column — info */
+.raf-vd-info-col {
+	width: 55%;
+	padding: 36px;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Close button */
+.raf-vd-close {
+	position: absolute;
+	top: 14px;
+	right: 14px;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: rgba(0, 0, 0, 0.65);
+	color: #fff;
+	border: none;
+	font-size: 20px;
+	line-height: 1;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background var(--raf-transition);
+	z-index: 2;
+}
+.raf-vd-close:hover {
+	background: rgba(0, 0, 0, 0.85);
+}
+
+/* Name */
+.raf-vd-name {
+	font-family: var(--raf-font);
+	font-size: 24px;
+	font-weight: 800;
+	color: var(--raf-text);
+	margin: 0 0 8px;
+	letter-spacing: -0.02em;
+}
+
+/* Badges row */
+.raf-vd-badges {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 12px;
+}
+
+/* Description */
+.raf-vd-description {
+	font-size: 14px;
+	color: #4A4A4A;
+	line-height: 1.7;
+	margin: 0 0 16px;
+}
+.raf-vd-description p { margin: 0 0 10px; }
+.raf-vd-description ul,
+.raf-vd-description ol { margin: 0 0 10px; padding-left: 20px; }
+.raf-vd-description li { margin-bottom: 4px; }
+.raf-vd-description b,
+.raf-vd-description strong { font-weight: 700; }
+.raf-vd-description i,
+.raf-vd-description em { font-style: italic; }
+.raf-vd-description u { text-decoration: underline; }
+
+/* Specs grid */
+.raf-vd-specs {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	margin: 0 0 16px;
+}
+.raf-vd-spec-item {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.raf-vd-spec-label {
+	font-family: var(--raf-font);
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--raf-text-light);
+}
+.raf-vd-spec-value {
+	font-family: var(--raf-font);
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--raf-text);
+}
+
+/* Features */
+.raf-vd-features {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 16px;
+}
+
+/* Price row */
+.raf-vd-price-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: auto;
+	padding-top: 20px;
+	border-top: 1px solid var(--raf-border);
+}
+.raf-vd-price {
+	font-family: var(--raf-font);
+	font-size: 26px;
+	font-weight: 800;
+	color: var(--raf-primary);
+}
+.raf-vd-price-period {
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--raf-text-light);
+}
+
+/* Responsive — mobile: stack columns vertically */
 @media (max-width: 768px) {
-    .raf-available-bikes-grid {
-        grid-template-columns: 1fr;
-    }
+	.raf-vd-content {
+		flex-direction: column;
+	}
+	.raf-vd-image-col {
+		width: 100%;
+		height: 200px;
+		border-radius: 16px 16px 0 0;
+		padding: 20px;
+	}
+	.raf-vd-image {
+		max-height: 160px;
+	}
+	.raf-vd-info-col {
+		width: 100%;
+		padding: 24px;
+	}
+	.raf-vd-modal {
+		width: 95%;
+	}
+	.raf-vd-name {
+		font-size: 20px;
+	}
+	.raf-vd-price {
+		font-size: 22px;
+	}
+	.raf-vd-price-row {
+		flex-direction: column;
+		gap: 14px;
+		align-items: stretch;
+		text-align: center;
+	}
+	.raf-vd-price-row .raf-btn {
+		width: 100%;
+		justify-content: center;
+	}
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-    .raf-vehicles-wrap[data-columns="4"] .raf-vehicles-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .raf-vehicles-wrap[data-columns="3"] .raf-vehicles-grid,
-    .raf-vehicles-wrap:not([data-columns]) .raf-vehicles-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+/* Small mobile — bottom sheet style */
+@media (max-width: 480px) {
+	.raf-vd-overlay {
+		align-items: flex-end;
+		padding: 0;
+	}
+	.raf-vd-modal {
+		border-radius: 16px 16px 0 0;
+		max-height: 92vh;
+		width: 100%;
+		animation: raf-vd-slide-up 0.3s ease;
+	}
+	.raf-vd-image-col {
+		border-radius: 16px 16px 0 0;
+	}
+}
 
-    .raf-results-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+@keyframes raf-vd-slide-up {
+	from { opacity: 0; transform: translateY(100%); }
+	to   { opacity: 1; transform: translateY(0); }
+}
 
-    .raf-booking-form {
-        grid-template-columns: 1fr 280px;
-    }
+/* ═══════════════════════════════════════════════
+   Responsive — Desktop (1200px+)
+   ═══════════════════════════════════════════════ */
+@media (min-width: 1200px) {
+	/* Enforce 3-column grids on wide screens */
+	.raf-results-grid {
+		grid-template-columns: repeat(3, 1fr);
+		gap: 28px;
+	}
 
-    .raf-available-bikes-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+	.raf-vehicles-wrap[data-columns="3"] .raf-vehicles-grid,
+	.raf-vehicles-wrap:not([data-columns]) .raf-vehicles-grid {
+		grid-template-columns: repeat(3, 1fr);
+		gap: 32px;
+	}
+	.raf-vehicles-wrap[data-columns="4"] .raf-vehicles-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+
+	.raf-available-bikes-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	/* Taller card images on desktop for better proportions */
+	.raf-vehicle-image {
+		height: 240px;
+	}
+
+	/* Booking form: 2-column with 320px sidebar */
+	.raf-booking-form {
+		grid-template-columns: 1fr 320px;
+	}
+
+	/* Modal max-width on desktop */
+	.raf-modal-dialog {
+		max-width: 520px;
+	}
+}
+
+/* ═══════════════════════════════════════════════
+   Responsive — Laptop / Tablet (769px – 1199px)
+   ═══════════════════════════════════════════════ */
+@media (min-width: 769px) and (max-width: 1199px) {
+	.raf-vehicles-wrap[data-columns="4"] .raf-vehicles-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.raf-vehicles-wrap[data-columns="3"] .raf-vehicles-grid,
+	.raf-vehicles-wrap:not([data-columns]) .raf-vehicles-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.raf-results-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	/* Booking form: 2-column with narrower 280px sidebar */
+	.raf-booking-form {
+		grid-template-columns: 1fr 280px;
+	}
+
+	.raf-available-bikes-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	/* Search form fields: wrap to 2 rows with min-width */
+	.raf-search-horizontal .raf-field {
+		flex: 1 1 180px;
+	}
+}
+
+/* ═══════════════════════════════════════════════
+   Responsive — Mobile (max-width: 768px)
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+	/* Search form: stacked vertically, full-width */
+	.raf-search-horizontal .raf-search-fields {
+		flex-direction: column;
+	}
+	.raf-search-horizontal .raf-field {
+		flex: 1 1 100%;
+	}
+	/* Search button full-width on mobile */
+	.raf-search-horizontal .raf-field-submit {
+		flex: 1 1 100%;
+	}
+	.raf-search-horizontal .raf-field-submit .raf-search-btn {
+		width: 100%;
+	}
+
+	/* ALL grids: 1 column */
+	.raf-results-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.raf-vehicles-wrap[data-columns="3"] .raf-vehicles-grid,
+	.raf-vehicles-wrap[data-columns="4"] .raf-vehicles-grid,
+	.raf-vehicles-wrap:not([data-columns]) .raf-vehicles-grid {
+		grid-template-columns: 1fr;
+	}
+	.raf-vehicles-wrap[data-columns="2"] .raf-vehicles-grid {
+		grid-template-columns: 1fr;
+	}
+
+	/* Vehicle cards: image height 200px */
+	.raf-vehicle-image {
+		height: 200px;
+	}
+
+	/* Vehicle card price-action: wrap and button full-width */
+	.raf-vehicle-price-action {
+		flex-wrap: wrap;
+		gap: 12px;
+	}
+	.raf-vehicle-price-action .raf-btn {
+		width: 100%;
+		justify-content: center;
+	}
+
+	/* Booking form: single column, sidebar below main */
+	.raf-booking-form {
+		grid-template-columns: 1fr;
+	}
+	.raf-booking-sidebar {
+		position: static;
+	}
+
+	/* Form rows: stacked */
+	.raf-form-row {
+		flex-direction: column;
+	}
+	.raf-col-3,
+	.raf-col-4,
+	.raf-col-6 {
+		flex: 0 0 100%;
+	}
+
+	/* Extras grid: 1 column */
+	.raf-extras-grid {
+		grid-template-columns: 1fr;
+	}
+
+	/* Available bikes: 1 column */
+	.raf-available-bikes-grid {
+		grid-template-columns: 1fr;
+	}
+
+	/* My Bookings cards: stack body vertically */
+	.raf-booking-card-body {
+		flex-direction: column;
+		text-align: center;
+	}
+
+	/* Booking steps: tighter spacing, hide labels, smaller numbers */
+	.raf-booking-steps {
+		flex-wrap: wrap;
+		gap: 2px;
+	}
+	.raf-step-line {
+		width: 16px;
+		margin: 0 4px;
+	}
+	.raf-step-label {
+		display: none;
+	}
+	.raf-step-number {
+		width: 28px;
+		height: 28px;
+		font-size: 12px;
+	}
+	.raf-step {
+		gap: 4px;
+	}
+
+	/* Confirmation actions: stack vertically */
+	.raf-confirmation-actions {
+		flex-direction: column;
+	}
+	.raf-confirmation-actions .raf-btn {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.raf-results-header {
+		flex-direction: column;
+		gap: 12px;
+		align-items: flex-start;
+	}
+
+	/* Price table: reduced padding */
+	.raf-price-table td,
+	.raf-price-row td {
+		padding: 8px 12px;
+	}
+
+	/* Price formula pill: break to new line on mobile */
+	.raf-price-formula {
+		display: block;
+		margin-top: 4px;
+	}
+
+	/* Buttons: full-width where they appear alone */
+	.raf-booking-nav .raf-btn {
+		flex: 1;
+		justify-content: center;
+	}
+
+	/* Modal: full-width */
+	.raf-modal-dialog {
+		max-width: 100%;
+	}
+	.raf-modal-header {
+		padding: 18px 16px;
+	}
+	.raf-modal-body {
+		padding: 20px 16px;
+	}
+	.raf-modal-form-body {
+		padding: 20px 16px;
+	}
+	.raf-modal-form-body > .raf-modal-header {
+		margin: -20px -16px 20px -16px;
+	}
+	.raf-modal-footer {
+		padding: 0 16px 20px;
+	}
+	.raf-modal-vehicle-summary {
+		flex-direction: column;
+		text-align: center;
+	}
+	.raf-modal-vehicle-summary img {
+		width: 100%;
+		height: 120px;
+	}
+}
+
+/* ═══════════════════════════════════════════════
+   Responsive — Small Mobile (max-width: 480px)
+   ═══════════════════════════════════════════════ */
+@media (max-width: 480px) {
+	/* Modal: bottom sheet style */
+	.raf-modal-overlay {
+		align-items: flex-end;
+		padding: 0;
+	}
+	.raf-modal-dialog {
+		border-radius: var(--raf-radius-lg) var(--raf-radius-lg) 0 0;
+		max-height: 92vh;
+		animation: raf-modal-slide-up .3s ease;
+	}
+	.raf-modal-header {
+		border-radius: var(--raf-radius-lg) var(--raf-radius-lg) 0 0;
+	}
+	.raf-modal-form-body {
+		padding: 16px;
+	}
+	.raf-modal-form-body > .raf-modal-header {
+		margin: -16px -16px 16px -16px;
+	}
+}
+
+@keyframes raf-modal-slide-up {
+	from { opacity: 0; transform: translateY(100%); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════
+   Terms & Conditions Step
+   ═══════════════════════════════════════════════ */
+
+.raf-terms-heading {
+	font-family: var(--raf-font);
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--raf-text);
+	margin: 0 0 12px;
+}
+
+.raf-terms-box {
+	max-height: 250px;
+	overflow-y: auto;
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	padding: 16px;
+	background: #FAFAF7;
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--raf-text-body);
+	margin-bottom: 16px;
+}
+
+.raf-terms-box p {
+	margin: 0 0 10px;
+}
+
+.raf-terms-box p:last-child {
+	margin-bottom: 0;
+}
+
+.raf-terms-agree {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 12px;
+}
+
+.raf-terms-agree-label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--raf-text);
+	cursor: pointer;
+}
+
+.raf-terms-agree-label input[type="checkbox"] {
+	width: 18px;
+	height: 18px;
+	accent-color: var(--raf-primary);
+	cursor: pointer;
+}
+
+.raf-terms-date-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.raf-terms-date-row label {
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--raf-text);
+	white-space: nowrap;
+}
+
+.raf-terms-date-row input[type="date"] {
+	padding: 8px 12px;
+	border: 1px solid var(--raf-border);
+	border-radius: var(--raf-radius);
+	font-size: 14px;
+	font-family: var(--raf-font);
+	color: var(--raf-text);
+	background: var(--raf-white);
+	max-width: 200px;
+}
+
+.raf-modal-terms-error {
+	margin-bottom: 12px;
+}
+
+/* ═══════════════════════════════════════════════
+   Deposit Notice
+   ═══════════════════════════════════════════════ */
+
+.raf-deposit-notice {
+	font-size: 12px;
+	font-style: italic;
+	color: var(--raf-text-light);
+	margin-top: 10px;
+	padding: 0 2px;
+	line-height: 1.5;
+}
+
+/* Add-on step mobile tweaks */
+@media (max-width: 480px) {
+	.raf-modal-steps {
+		padding: 12px 0 16px;
+	}
+	.raf-modal-step-divider {
+		width: 24px;
+		margin: 0 8px;
+	}
+	.raf-modal-step-label {
+		font-size: 12px;
+	}
+	.raf-addon-item {
+		padding: 12px;
+	}
+	.raf-addon-label {
+		gap: 10px;
+	}
+	.raf-addon-price-wrap {
+		min-width: 70px;
+	}
 }

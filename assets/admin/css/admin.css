@@ -158,6 +158,24 @@
     color: #666;
 }
 
+.raf-active-bookings-badge {
+    display: inline-block;
+    min-width: 22px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background: var(--raf-info);
+}
+
+.raf-active-bookings-badge:hover {
+    background: var(--raf-primary-hover);
+    color: #fff;
+}
+
 /* ================================================================
    STATUS BADGES
    ============================================================= */
@@ -396,9 +414,13 @@
    ============================================================= */
 
 .raf-locations-table {
-    margin: 12px 16px 16px !important;
-    width: calc(100% - 32px) !important;
-    max-width: 600px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Vehicle form inline locations table needs internal spacing */
+.raf-panel > .raf-locations-table {
+    margin: 12px 0 16px !important;
 }
 
 .raf-locations-table th {
@@ -850,4 +872,44 @@
 
 .raf-hours-table tr {
     transition: opacity 0.15s;
+}
+
+/* ================================================================
+   EMAIL DESIGN — Preview Panel
+   ============================================================= */
+
+.raf-email-preview {
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.raf-email-preview img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Color input styling */
+input[type="color"] {
+    width: 48px;
+    height: 32px;
+    padding: 2px;
+    border: 1px solid var(--raf-border);
+    border-radius: var(--raf-radius);
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+input[type="color"] + code {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 12px;
+    color: #666;
+    vertical-align: middle;
+}
+
+/* Test email button status */
+#raf-test-email-status {
+    display: inline-block;
+    vertical-align: middle;
 }
