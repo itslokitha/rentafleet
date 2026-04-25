@@ -181,22 +181,19 @@ class RAF_Helpers {
      */
     public static function get_bike_features() {
         return array(
-            'abs'              => __( 'ABS', 'rentafleet' ),
-            'traction_control' => __( 'Traction Control', 'rentafleet' ),
-            'riding_modes'     => __( 'Riding Modes', 'rentafleet' ),
-            'quick_shifter'    => __( 'Quick Shifter', 'rentafleet' ),
-            'heated_grips'     => __( 'Heated Grips', 'rentafleet' ),
-            'windscreen'       => __( 'Windscreen', 'rentafleet' ),
-            'panniers'         => __( 'Panniers / Side Cases', 'rentafleet' ),
-            'top_box'          => __( 'Top Box', 'rentafleet' ),
-            'gps'              => __( 'GPS Navigation', 'rentafleet' ),
-            'usb_charger'      => __( 'USB Charger', 'rentafleet' ),
-            'led_lights'       => __( 'LED Lights', 'rentafleet' ),
-            'keyless_ignition' => __( 'Keyless Ignition', 'rentafleet' ),
-            'cruise_control'   => __( 'Cruise Control', 'rentafleet' ),
-            'center_stand'     => __( 'Centre Stand', 'rentafleet' ),
-            'phone_mount'      => __( 'Phone Mount', 'rentafleet' ),
-            'fully_insured'    => __( 'Fully Insured', 'rentafleet' ),
+            'e_bike_assist'       => __( 'E-Bike Assist', 'rentafleet' ),
+            'step_through_frame'  => __( 'Step-Through Frame', 'rentafleet' ),
+            'disc_brakes'         => __( 'Disc Brakes', 'rentafleet' ),
+            'rear_cargo_rack'     => __( 'Rear Cargo Rack', 'rentafleet' ),
+            'under_seat_storage'  => __( 'Under-Seat Storage', 'rentafleet' ),
+            'passenger_ready'     => __( 'Passenger Ready', 'rentafleet' ),
+            'windscreen'          => __( 'Windscreen / Visor', 'rentafleet' ),
+            'usb_charger'         => __( 'USB Charger', 'rentafleet' ),
+            'centre_stand'        => __( 'Centre Stand & Side Stand', 'rentafleet' ),
+            'phone_mount'         => __( 'Phone Mount', 'rentafleet' ),
+            'led_lights'          => __( 'Front & Rear LED Lights', 'rentafleet' ),
+            'front_basket'        => __( 'Front Basket', 'rentafleet' ),
+            'fully_insured'       => __( 'Fully Insured', 'rentafleet' ),
         );
     }
 

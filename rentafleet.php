@@ -3,7 +3,7 @@
  * Plugin Name: RentAFleet
  * Plugin URI: https://rentafleet.com
  * Description: Professional car rental management system for WordPress. Manage vehicles, locations, bookings, pricing, customers, calendar, and more.
- * Version: 1.0.0
+ * Version: 1.2.0
  * Author: RentAFleet
  * Author URI: https://rentafleet.com
  * Text Domain: rentafleet
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'RAF_VERSION', '1.0.2' );
+define( 'RAF_VERSION', '1.2.0' );
 define( 'RAF_PLUGIN_FILE', __FILE__ );
 define( 'RAF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'RAF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -227,22 +227,19 @@ final class RentAFleet {
             'termsContent'    => wp_kses_post( get_option( 'raf_terms_content', '' ) ),
             'bikeFeatures'    => RAF_Helpers::get_bike_features(),
             'featureEmojis'   => array(
-                'abs'              => '🛡',
-                'traction_control' => '⚙',
-                'riding_modes'     => '🎛',
-                'quick_shifter'    => '⚡',
-                'heated_grips'     => '🔥',
-                'windscreen'       => '💨',
-                'panniers'         => '🧳',
-                'top_box'          => '📦',
-                'gps'              => '🗺',
-                'usb_charger'      => '🔌',
-                'led_lights'       => '💡',
-                'keyless_ignition' => '🔑',
-                'cruise_control'   => '🚀',
-                'center_stand'     => '🔩',
-                'phone_mount'      => '📱',
-                'fully_insured'    => '✅',
+                'e_bike_assist'      => '⚡',
+                'step_through_frame' => '🚲',
+                'disc_brakes'        => '🛑',
+                'rear_cargo_rack'    => '📦',
+                'under_seat_storage' => '🗄',
+                'passenger_ready'    => '👤',
+                'windscreen'         => '💨',
+                'usb_charger'        => '🔌',
+                'centre_stand'       => '🔩',
+                'phone_mount'        => '📱',
+                'led_lights'         => '💡',
+                'front_basket'       => '🧺',
+                'fully_insured'      => '✅',
             ),
             'i18n'            => array(
                 'select_dates'    => __( 'Please select pickup and return dates.', 'rentafleet' ),

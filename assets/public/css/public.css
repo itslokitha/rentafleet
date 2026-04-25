@@ -595,12 +595,12 @@
 .raf-vehicle-image img {
 	width: 100%;
 	height: 100%;
-	object-fit: cover;
+	object-fit: contain;
 	display: block;
-	transition: transform .4s ease;
+	transition: opacity .3s ease;
 }
 .raf-vehicle-card:hover .raf-vehicle-image img {
-	transform: scale(1.05);
+	opacity: .9;
 }
 /* CONTRAST FIX: icon was --raf-border on --raf-bg (both light), now #C4A882 */
 .raf-vehicle-no-image {
@@ -1525,12 +1525,12 @@
 .raf-bike-card-image img {
 	width: 100%;
 	height: 100%;
-	object-fit: cover;
+	object-fit: contain;
 	display: block;
-	transition: transform .4s ease;
+	transition: opacity .3s ease;
 }
 .raf-bike-card:hover .raf-bike-card-image img {
-	transform: scale(1.05);
+	opacity: .9;
 }
 
 .raf-bike-card-body {
@@ -1730,9 +1730,10 @@ body.raf-modal-body-open {
 .raf-modal-vehicle-summary img {
 	width: 100px;
 	height: 68px;
-	object-fit: cover;
+	object-fit: contain;
 	border-radius: var(--raf-radius);
 	flex-shrink: 0;
+	background: var(--raf-bg);
 }
 /* CONTRAST FIX: details text on cream bg darkened from --raf-text-light to #3A3A3A */
 .raf-modal-vehicle-details {
@@ -1876,20 +1877,20 @@ body.raf-modal-body-open {
 	font-size: 11px;
 }
 .raf-price-row-sub .raf-price-label {
-	color: var(--raf-text-light);
+	color: #6A6A6A;
 }
 .raf-price-row-sub .raf-price-label-text {
 	font-weight: 400;
-	color: var(--raf-text-light);
+	color: #6A6A6A;
 }
 .raf-price-row-sub .raf-price-amount {
 	font-size: 11px;
 	font-weight: 500;
-	color: var(--raf-text-light);
+	color: #6A6A6A;
 }
 .raf-price-sub-dot {
 	font-size: 10px;
-	color: var(--raf-text-light);
+	color: #6A6A6A;
 	margin-right: 5px;
 	flex-shrink: 0;
 }
@@ -1967,7 +1968,7 @@ body.raf-modal-body-open {
 	font-size: 13px;
 	font-weight: 700;
 	background: var(--raf-border);
-	color: var(--raf-text-light);
+	color: #6A6A6A;
 	flex-shrink: 0;
 	transition: background var(--raf-transition), color var(--raf-transition);
 }
@@ -1975,7 +1976,7 @@ body.raf-modal-body-open {
 	font-family: var(--raf-font);
 	font-size: 13px;
 	font-weight: 600;
-	color: var(--raf-text-light);
+	color: #6A6A6A;
 	transition: color var(--raf-transition);
 }
 .raf-modal-step--active .raf-modal-step-num {
@@ -2022,7 +2023,7 @@ body.raf-modal-body-open {
 .raf-addons-none {
 	text-align: center;
 	padding: 16px;
-	color: var(--raf-text-light);
+	color: #6A6A6A;
 	font-size: 13px;
 }
 .raf-addons-list {
@@ -2346,7 +2347,7 @@ body.raf-modal-body-open {
 	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
-	color: var(--raf-text-light);
+	color: #6A6A6A;
 }
 .raf-vd-spec-value {
 	font-family: var(--raf-font);
@@ -2381,7 +2382,7 @@ body.raf-modal-body-open {
 .raf-vd-price-period {
 	font-size: 14px;
 	font-weight: 500;
-	color: var(--raf-text-light);
+	color: #6A6A6A;
 }
 
 /* Responsive — mobile: stack columns vertically */
@@ -2437,6 +2438,12 @@ body.raf-modal-body-open {
 	}
 	.raf-vd-image-col {
 		border-radius: 16px 16px 0 0;
+	}
+	/* Enlarge close button to 44px tap target on mobile */
+	.raf-vd-close {
+		width: 44px;
+		height: 44px;
+		font-size: 22px;
 	}
 }
 
@@ -2770,7 +2777,8 @@ body.raf-modal-body-open {
 .raf-terms-date-row {
 	display: flex;
 	align-items: center;
-	gap: 12px;
+	flex-wrap: wrap;
+	gap: 8px 12px;
 	margin-bottom: 16px;
 }
 
@@ -2790,6 +2798,7 @@ body.raf-modal-body-open {
 	color: var(--raf-text);
 	background: var(--raf-white);
 	max-width: 200px;
+	flex: 1 1 160px;
 }
 
 .raf-modal-terms-error {
@@ -2803,7 +2812,7 @@ body.raf-modal-body-open {
 .raf-deposit-notice {
 	font-size: 12px;
 	font-style: italic;
-	color: var(--raf-text-light);
+	color: #6A6A6A;
 	margin-top: 10px;
 	padding: 0 2px;
 	line-height: 1.5;
