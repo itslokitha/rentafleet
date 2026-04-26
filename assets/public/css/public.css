@@ -42,6 +42,77 @@
 }
 
 /* ═══════════════════════════════════════════════
+   Variable Override — Plugin Containers
+   Re-declare on each top-level plugin element so
+   a theme's :root definitions (specificity 0,0,1)
+   cannot win over these class-level rules (0,1,0).
+   ═══════════════════════════════════════════════ */
+.raf-search-form-wrap,
+.raf-vehicles-wrap,
+.raf-booking-wrap,
+.raf-confirmation-wrap,
+.raf-my-bookings-wrap,
+.raf-modal-overlay,
+.raf-vd-overlay,
+.raf-modal-dialog,
+.raf-vd-modal {
+	--raf-primary:        #E85C24;
+	--raf-primary-hover:  #C94E1A;
+	--raf-primary-light:  #FDF0E8;
+	--raf-secondary:      #FCC940;
+	--raf-secondary-light:#FFF8E1;
+	--raf-accent:         #FCC940;
+	--raf-success:        #2D9B5A;
+	--raf-success-light:  #E8F5EE;
+	--raf-warning:        #E8860A;
+	--raf-warning-light:  #FFF3E0;
+	--raf-danger:         #D94040;
+	--raf-danger-light:   #FDEAEA;
+	--raf-text:           #1A1A1A;
+	--raf-text-light:     #8A8A8A;
+	--raf-text-body:      #4A4A4A;
+	--raf-border:         #E8DCC8;
+	--raf-bg:             #FFEABA;
+	--raf-white:          #FFFFFF;
+	--raf-radius:         6px;
+	--raf-radius-sm:      3px;
+	--raf-radius-lg:      12px;
+}
+
+/* ═══════════════════════════════════════════════
+   Scoped Element Reset
+   Neutralise common theme overrides on table
+   cells, lists, and headings inside plugin areas.
+   ═══════════════════════════════════════════════ */
+.raf-search-form-wrap table,
+.raf-vehicles-wrap table,
+.raf-booking-wrap table,
+.raf-confirmation-wrap table,
+.raf-my-bookings-wrap table,
+.raf-modal-overlay table,
+.raf-vd-overlay table,
+.raf-modal-dialog table,
+.raf-vd-modal table {
+	border-collapse: collapse !important;
+	border-spacing: 0 !important;
+	width: 100% !important;
+}
+
+.raf-search-form-wrap td,
+.raf-vehicles-wrap td,
+.raf-booking-wrap td,
+.raf-confirmation-wrap td,
+.raf-my-bookings-wrap td,
+.raf-modal-overlay td,
+.raf-vd-overlay td,
+.raf-modal-dialog td,
+.raf-vd-modal td {
+	background: transparent !important;
+	border: none !important;
+	padding: 0 !important;
+}
+
+/* ═══════════════════════════════════════════════
    Base Reset
    ═══════════════════════════════════════════════ */
 [class*="raf-"] {
@@ -170,14 +241,14 @@
 }
 
 .raf-btn-primary {
-	background: var(--raf-primary);
-	color: var(--raf-white);
-	border-color: var(--raf-primary);
+	background: var(--raf-primary, #E85C24) !important;
+	color: #ffffff !important;
+	border-color: var(--raf-primary, #E85C24) !important;
 }
 .raf-btn-primary:hover {
-	background: var(--raf-primary-hover);
-	border-color: var(--raf-primary-hover);
-	color: var(--raf-white);
+	background: var(--raf-primary-hover, #C94E1A) !important;
+	border-color: var(--raf-primary-hover, #C94E1A) !important;
+	color: #ffffff !important;
 	box-shadow: var(--raf-shadow-md);
 }
 
@@ -589,7 +660,7 @@
 	position: relative;
 	height: 220px;
 	overflow: hidden;
-	background: var(--raf-bg);
+	background: var(--raf-bg, #FFEABA) !important;
 	border-radius: var(--raf-radius-lg) var(--raf-radius-lg) 0 0;
 }
 .raf-vehicle-image img {
@@ -1520,7 +1591,7 @@
 .raf-bike-card-image {
 	aspect-ratio: 16 / 10;
 	overflow: hidden;
-	background: var(--raf-bg);
+	background: var(--raf-bg, #FFEABA) !important;
 }
 .raf-bike-card-image img {
 	width: 100%;
@@ -1661,7 +1732,7 @@ body.raf-modal-body-open {
 
 /* Modal Header — Dark background for adventurous feel */
 .raf-modal-header {
-	background: var(--raf-text);
+	background: var(--raf-text, #1A1A1A) !important;
 	padding: 20px 24px;
 	border-radius: var(--raf-radius-lg) var(--raf-radius-lg) 0 0;
 	position: relative;
@@ -1828,12 +1899,13 @@ body.raf-modal-body-open {
 /* Receipt table */
 .raf-price-table {
 	width: 100%;
-	border-collapse: collapse;
+	border-collapse: collapse !important;
 	font-size: 13px;
 }
 .raf-price-row td {
-	padding: 10px 16px;
-	border-bottom: 1px solid var(--raf-border);
+	padding: 10px 16px !important;
+	border-bottom: 1px solid var(--raf-border, #E8DCC8) !important;
+	background: transparent !important;
 }
 .raf-price-label {
 	color: var(--raf-text-body);
@@ -1872,9 +1944,10 @@ body.raf-modal-body-open {
 }
 /* Sub-rows (pickup/dropoff breakdown under Location fee) */
 .raf-price-row-sub td {
-	padding: 4px 16px 4px 28px;
-	border-bottom: none;
+	padding: 4px 16px 4px 28px !important;
+	border-bottom: none !important;
 	font-size: 11px;
+	background: transparent !important;
 }
 .raf-price-row-sub .raf-price-label {
 	color: #6A6A6A;
@@ -1897,9 +1970,9 @@ body.raf-modal-body-open {
 
 /* Total row — orange accent */
 .raf-price-row-total td {
-	background: var(--raf-primary);
-	border-bottom: none;
-	padding: 12px 16px;
+	background: var(--raf-primary, #E85C24) !important;
+	border-bottom: none !important;
+	padding: 12px 16px !important;
 }
 .raf-price-row-total .raf-price-label {
 	font-weight: 700;
@@ -2643,7 +2716,7 @@ body.raf-modal-body-open {
 	/* Price table: reduced padding */
 	.raf-price-table td,
 	.raf-price-row td {
-		padding: 8px 12px;
+		padding: 8px 12px !important;
 	}
 
 	/* Price formula pill: break to new line on mobile */
